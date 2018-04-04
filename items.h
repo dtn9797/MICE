@@ -2,18 +2,24 @@
 #define __ITEMS_H 
 
 #include <iostream>
-#include "topping.h"
-#include "container.h"
-#include "scoop.h"
-#include <vector>
+#include <string>
 
-class Items{
+class Items {
   public:
-    void add_scoop(Scoop* scoop);
-  private:
-    std::vector<Scoop*> scoops;
-    //std::vector<Topping> tops;
-    //std::vector<Container> containers;
-}; 
+    Items (std::string n,std::string d, double c, double p, int s):
+      name{n},
+      description{d},
+      wholesale_cost{c},
+      retail_price{p},
+      stock_remaining{s} {}
+
+  protected:
+    std::string name;
+    std::string description;
+    double wholesale_cost;
+    double retail_price;
+    int stock_remaining;
+    //Image picture;
+};
 
 #endif
