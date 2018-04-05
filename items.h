@@ -11,7 +11,11 @@ class Items {
       description{d},
       wholesale_cost{c},
       retail_price{p},
-      stock_remaining{s} {}
+      stock_remaining{0} {}
+     void restock (int amount =25);
+     void consume (int amount =1);
+     virtual std::string type();
+     virtual std::string to_string();
 
   protected:
     std::string name;
