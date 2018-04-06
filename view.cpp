@@ -39,7 +39,7 @@ List of Ice Cream Flavors
 ----------------------------
 )";
   cout << header;
-  for (int i=0; i<emporium.number_of_scoop(); ++i) {
+  for (int i=0; i<emporium.number_of_scoops(); ++i) {
     cout << i << ") " << emporium.scoop_to_string(i) << endl;
   }
 }
@@ -51,7 +51,7 @@ void View::list_containers() {
 ----------------------------
 )";
   cout << header;
-  for (int i=0; i<emporium.number_of_container(); ++i) {
+  for (int i=0; i<emporium.number_of_containers(); ++i) {
     cout << i << ") " << emporium.container_to_string(i) << endl;
   }
 }
@@ -63,7 +63,7 @@ void View::list_toppings(){
 ----------------------------
 )";
   cout << header;
-  for (int i=0; i<emporium.number_of_top(); ++i) {
-    cout << i << ") " << emporium.top_to_string(i) << endl;
+  for (int i=0; i<emporium.number_of_toppings(); ++i) {
+    cout << i << ") " << emporium.topping_to_string(i) << endl;
   }
 }
