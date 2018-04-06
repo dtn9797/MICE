@@ -38,11 +38,11 @@ void Controller::execute_cmd (int cmd){
     cin>>retail_price;
     cin.ignore();
 
-    cout << "stock_remaining? ";
-    cin>>stock_remaining;
-    cin.ignore();
+   // cout << "stock_remaining? ";
+   // cin>>stock_remaining;
+   // cin.ignore();
 
-    emporium.add_scoop(new Scoop(name, description,wholesale_cost,retail_price,stock_remaining));
+    emporium.add_scoop(new Scoop(name, description,wholesale_cost,retail_price));
 }
 
  else if (cmd == 2) { // List all scoops
@@ -68,16 +68,16 @@ void Controller::execute_cmd (int cmd){
     cin>>retail_price;
     cin.ignore();
 
-    cout << "stock_remaining? ";
-    cin>>stock_remaining;
-    cin.ignore();
+   // cout << "stock_remaining? ";
+   // cin>>stock_remaining;
+   // cin.ignore();
 
     cout << "scoop_limit? ";
     cin>>scoop_limit;
     cin.ignore();
 
 
-    emporium.add_container(new Container(name, description,wholesale_cost,retail_price,stock_remaining,scoop_limit));
+    emporium.add_container(new Container(name, description,wholesale_cost,retail_price,scoop_limit));
 }
 
  else if (cmd == 4) { // List all containers
@@ -102,11 +102,11 @@ void Controller::execute_cmd (int cmd){
     cin>>retail_price;
     cin.ignore();
 
-    cout << "stock_remaining? ";
-    cin>>stock_remaining;
-    cin.ignore();
+   // cout << "stock_remaining? ";
+   // cin>>stock_remaining;
+   // cin.ignore();
 
-    emporium.add_top(new Topping(name, description,wholesale_cost,retail_price,stock_remaining));
+    emporium.add_top(new Topping(name, description,wholesale_cost,retail_price));
 }
 
  else if (cmd == 6) { // List all toppings

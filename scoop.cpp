@@ -9,3 +9,5 @@ std::string Scoop::to_string () {
      +  "\n" ;
   return result;
 }
+
+std::string Scoop::type () {return "Scoop";}

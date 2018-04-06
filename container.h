@@ -3,15 +3,16 @@
 
 #include <iostream>
 #include <string>
-#include "items.h"
+#include "item.h"
 
-class Container:public Items {
+class Container:public Item {
   protected:
    int scoop_limit;
   public:
-   Container(std::string na,std::string de,double wh,double re,int st,int li): 
-     Items(na,de,wh,re,st){ scoop_limit = li;};
-   std::string to_string();
+   Container(std::string na,std::string de,double wh,double re,int li): 
+    Item(na,de,wh,re){ scoop_limit = li;};
+  std::string to_string() override;
+  std::string type() override;
 
 };
 

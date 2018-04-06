@@ -8,6 +8,9 @@ std::string Container::to_string (){
      + ",stock_remaining:" + std::to_string(stock_remaining)
      + ",scoop_limit:" + std::to_string(scoop_limit)
      +  "\n" ;
-
   return result;
 }
+
+std::string Container::type () {return "Container";}
+
+

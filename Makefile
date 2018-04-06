@@ -39,3 +39,6 @@ debug: $(EXECUTABLE)
 clean:
 	-rm -f $(EXECUTABLE) test $(OBJECTS)
 
+div:
+	echo "###########################"
+

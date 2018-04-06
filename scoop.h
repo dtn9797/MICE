@@ -3,13 +3,14 @@
 
 #include <iostream>
 #include <string>
-#include "items.h"
+#include "item.h"
 
-class Scoop:public Items {
+class Scoop:public Item {
   public:
-   Scoop(std::string na,std::string de,double wh,double re,int st): 
-   Items(na,de,wh,re,st){};
-   std::string to_string();
+   Scoop(std::string na,std::string de,double wh,double re): 
+   Item(na,de,wh,re){};
+   std::string to_string() override;
+   std::string type () override;
 };
 
 #endif
