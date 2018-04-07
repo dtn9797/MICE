@@ -1,6 +1,6 @@
 #compiler options
 CXXFLAGS+=--std=c++11
-
+GTKFLAGS = `/usr/bin/pkg-config gtkmm-3.0 --cflags --libs`
 #source files
 SOURCES=$(wildcard *.cpp)
 
@@ -24,17 +24,17 @@ EXECUTABLE=mice
 #$@ - is the result name (in this case =$(EXECUTABLE) )
 
 $(EXECUTABLE): $(MOBJECTS)
-	$(CXX) $(CXXFLAGS) $^ -o $@ $(INCLUDE)
+	$(CXX) $(CXXFLAGS) $^ -o $@ $(INCLUDE) $(GTKFLAGS)
 
 test: CXXFLAGS+= -g
 test: $(TOBJECTS)
-	$(CXX) $(CXXFLAGS) $^ -o $@ $(INCLUDE)
+	$(CXX) $(CXXFLAGS) $^ -o $@ $(INCLUDE) $(GTKFLAGS)
 
 debug: CXXFLAGS+= -g
 debug: $(EXECUTABLE)
 
 %.o: %.cpp *.h
-	$(CXX) $(CXXFLAGS) $(INCLUDE) -c $< -o $@
+	$(CXX) $(CXXFLAGS) $(INCLUDE) -c $< -o $@ $(GTKFLAGS)
 
 clean:
 	-rm -f $(EXECUTABLE) test $(OBJECTS)
