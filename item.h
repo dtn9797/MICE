@@ -17,12 +17,17 @@ class Item {
      virtual std::string type();
      virtual std::string to_string();
 
+     std::string get_name();
+     std::string get_description();
+     double get_wholesale_cost();
+     double get_retail_price();
+     int get_stock_remaining();
   protected:
     std::string name;
     std::string description;
-    double wholesale_cost;
-    double retail_price;
-    int stock_remaining;
+    double wholesale_cost=0;
+    double retail_price=0;
+    int stock_remaining=0;
     //Image picture;
 };
 

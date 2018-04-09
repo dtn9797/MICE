@@ -1,10 +1,12 @@
 
-#include "test_items_scoop_container_topping.h"
 #include "test_emporium.h"
 #include "test_view.h"
+#include "test_scoop.h"
+#include "test_container.h"
+#include "test_topping.h"
 #include <iostream>
 
 int main() {
-  if (!(test_items_scoop_container_topping() && test_view() && test_emporium()))
+  if (!(test_topping() && test_scoop() && test_container() && test_emporium()))
     std::cerr << "fail" << std::endl;
 } 

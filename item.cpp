@@ -13,3 +13,10 @@
      +  "\n" ;
   return result;
 }
+
+
+ double Item::get_wholesale_cost(){return wholesale_cost;}
+ double Item::get_retail_price(){return retail_price;}
+ std::string Item::get_name(){return name;}
+ std::string Item::get_description(){return description;}
+ int Item::get_stock_remaining(){return stock_remaining;}

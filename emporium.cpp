@@ -38,8 +38,8 @@
       add_scoop(new Scoop ("Vanilla","General",1,1));
       add_scoop(new Scoop ("Cookies", "Sweet",1,1));
 
-      add_top(new Topping ("Light","General",1,1));
-      add_top(new Topping ("Normal", "Sweet",1,1));
+      add_top(new Topping ("Light","General",1,1,1));
+      add_top(new Topping ("Normal", "Sweet",1,1,1));
 
       add_container(new Container ("Cups","General",1,1,1));
       add_container(new Container ("Bowls", "Sweet",1,1,1));       

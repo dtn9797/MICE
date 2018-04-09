@@ -5,7 +5,7 @@ std::string Topping::type() {return "Topping";}
 
 std::string Topping::to_string () {
   std::string result = "name:" + name
-     + ",amount:"+ std::to_string(amount())
+     + ",amount:"+ to_string_amount()
      + ",description:" + description
      + ",wholesale_cost:" + std::to_string(wholesale_cost)
      + ",retail_price:" + std::to_string(retail_price)
@@ -14,10 +14,10 @@ std::string Topping::to_string () {
   return result;
 }
 
-int Topping::amount() {return _amount;}
+int Topping::get_amount() {return _amount;}
 
 void Topping::_set_amount(int amount) {
-    if (0 < amount && amount < 5) _amount = amount;
+    if (0 < amount && amount < 5) _amount =  amount;
     else throw std::runtime_error("Invalid topping amount");
 }
 

@@ -86,7 +86,7 @@ void Controller::execute_cmd (int cmd){
  else if (cmd == 5) { // Add topping
     string name, description;
     double wholesale_cost,retail_price;
-    int stock_remaining;
+    int amount;
 
     cout << "Name? ";
     getline(cin, name);
@@ -102,11 +102,16 @@ void Controller::execute_cmd (int cmd){
     cin>>retail_price;
     cin.ignore();
 
+    cout << "amount? ";
+    cin>>amount;
+    cin.ignore();
+
+
    // cout << "stock_remaining? ";
    // cin>>stock_remaining;
    // cin.ignore();
 
-    emporium.add_top(new Topping(name, description,wholesale_cost,retail_price));
+    emporium.add_top(new Topping(name, description,wholesale_cost,retail_price,amount));
 }
 
  else if (cmd == 6) { // List all toppings

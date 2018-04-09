@@ -12,5 +12,6 @@ std::string Container::to_string (){
 }
 
 std::string Container::type () {return "Container";}
+int Container::get_scoop_limit() {return scoop_limit;}
 
 

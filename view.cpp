@@ -115,7 +115,7 @@ void View::create_chosen_type_dialog(std::string type_name){
 
     std::string name,description;
     double wholesale_cost, retail_price;
-    int limit = 0;
+    int limit = 0; int amount = 1;
    
     //Name 
     Gtk::HBox b_name;
@@ -165,6 +165,7 @@ void View::create_chosen_type_dialog(std::string type_name){
     b_retail_price.pack_start(e_retail_price, Gtk::PACK_SHRINK);
     dialog->get_vbox()->pack_start(b_retail_price, Gtk::PACK_SHRINK);
     
+    Gtk::Entry e_scoop_limit;
     if (type_name == "Container"){
      // Scoop limit
      Gtk::HBox b_scoop_limit;
@@ -173,11 +174,27 @@ void View::create_chosen_type_dialog(std::string type_name){
      l_scoop_limit.set_width_chars(15);
      b_scoop_limit.pack_start(l_scoop_limit, Gtk::PACK_SHRINK);
 
-     Gtk::Entry e_scoop_limit;
      e_scoop_limit.set_max_length(50);
      b_scoop_limit.pack_start(e_scoop_limit, Gtk::PACK_SHRINK);
      dialog->get_vbox()->pack_start(b_scoop_limit, Gtk::PACK_SHRINK);
     }
+    Gtk::ComboBoxText c_amount;
+    if (type_name == "Topping"){
+    //Amount of topping
+    Gtk::HBox b_amount;
+
+    Gtk::Label l_amount{"Amount:"};
+    l_amount.set_width_chars(15);
+    b_amount.pack_start(l_amount, Gtk::PACK_SHRINK);
+
+    c_amount.set_size_request(160);
+    c_amount.append("Light");
+    c_amount.append("Normal");
+    c_amount.append("Extra");
+    c_amount.append("Drenched");
+    b_amount.pack_start(c_amount, Gtk::PACK_SHRINK);
+    dialog->get_vbox()->pack_start(b_amount, Gtk::PACK_SHRINK);     
+}
 
     // Show dialog
     dialog->add_button("Cancel", 0);
@@ -193,11 +210,13 @@ void View::create_chosen_type_dialog(std::string type_name){
     description = e_description.get_text();
     wholesale_cost = std::stod (e_wholesale_cost.get_text());
     retail_price = std::stod (e_retail_price.get_text());
+    limit =std::stoi(e_scoop_limit.get_text());
+    amount =c_amount.get_active_row_number()+1;
 
     if(result==1){
-      if (type_name == "Container") emporium.add_container(new Container(name, description,wholesale_cost,retail_price,0));
+      if (type_name == "Container") emporium.add_container(new Container(name, description,wholesale_cost,retail_price,limit));
       else if (type_name == "Ice Cream Flavor")emporium.add_scoop(new Scoop(name, description,wholesale_cost,retail_price));
-      else if (type_name == "Topping") emporium.add_top(new Topping(name, description,wholesale_cost,retail_price));
+      else if (type_name == "Topping") emporium.add_top(new Topping(name, description,wholesale_cost,retail_price,amount));
       show_create_item_dialog();
     }
 
