@@ -18,19 +18,19 @@ Main_window::Main_window (Controller& con): controller{con} {
   Gtk::MenuBar *menubar = Gtk::manage(new Gtk::MenuBar());
   vbox->pack_start(*menubar, Gtk::PACK_SHRINK, 0);
   //SUBMENUS FOR FILE 
-  std::vector<std::string> sub_names= {"_Quit","_Properties"};
+  std::vector<std::string> sub_names= {"_New","_Open","_Save","_Save As","_Properties","_Quit"};
   //     FILE
   create_menu_items(menubar,"_File", sub_names);
 
   //SUBMENUS FOR EDIT
-  sub_names= {};
+  sub_names= {"_Undo","_Restock","_Customer","_Server","_Manager","_Owner","_Item"};
   //     EDIT
   create_menu_items(menubar,"_Edit", sub_names);
   //         Quit for file
   // Append Quit to the File menu
  
   //SUBMENUS FOR CREATE
-  sub_names= {"_Order","_Item"};
+  sub_names= {"_Order","_Customer","_Item","_Server"};
   //    CREATE
   create_menu_items(menubar,"_Create", sub_names);
 
@@ -60,8 +60,8 @@ void Main_window::create_menu_items(Gtk::MenuBar *menubar, std::string name, std
   //create_submenu_items
   std::map<std::string,sigc::slot<void>> str_to_func = {{"_Quit", sigc::mem_fun(*this, &Main_window::on_quit_click)},
 							{"_Properties", sigc::mem_fun(*this, &Main_window::on_properties_click)},
-							{"_Order", sigc::mem_fun(*this, &Main_window::on_order_click)},
-							{"_Item", sigc::mem_fun(*this, &Main_window::on_item_click)}
+							{"_Order", sigc::mem_fun(*this, &Main_window::on_create_order_click)},
+							{"_Item", sigc::mem_fun(*this, &Main_window::on_create_item_click)}
 							};
   for(std::string sub_name:sub_names) create_submenu_items(namemenu ,sub_name,str_to_func[sub_name]);
 }
@@ -84,10 +84,12 @@ void Main_window::on_quit_click() {
 void Main_window::on_properties_click() {
     std::cout<< " On _properties_clicked\n";
 }
-void Main_window::on_order_click() {
+void Main_window::on_create_order_click() {
    std::cout<< " On _order_clicked\n"; 
+   //create serving
+   controller.execute_cmd(8);
 }
-void Main_window::on_item_click() {
+void Main_window::on_create_item_click() {
     std::cout<< " On _item_clicked\n";
     controller.execute_cmd(7);
 }

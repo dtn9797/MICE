@@ -12,9 +12,9 @@
 class Emporium {
   private:
     std::vector<Item*> items;
-    std::vector<Item*> classify_type(std::string type);
-
+   
   public:
+    std::vector<Item*> classify_type(std::string type);
     void add_scoop(Scoop* scoop);
     void add_top(Topping* top);
     void add_container(Container* con);

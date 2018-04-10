@@ -1,6 +1,7 @@
 #include "view.h"
 #include <string>
 #include <iostream>
+#include <stdlib.h>
 using namespace std;
 void View::show_menu (){
     string menu = R"(
@@ -68,6 +69,8 @@ void View::list_toppings(){
   }
 }
 
+//GUI
+
 void View::show_create_item_dialog(){
     int type;
 
@@ -105,10 +108,113 @@ void View::show_create_item_dialog(){
     }
 }
 
+void View::show_create_serving_dialog(){
+    int container;
 
+    Gtk::Dialog *dialog = new Gtk::Dialog();
+    dialog->set_title("Create Serving");
+    // Add Container
+    Gtk::HBox b_container;
+
+    Gtk::Label l_container{"Container:"};
+    l_container.set_width_chars(15);
+    b_container.pack_start(l_container, Gtk::PACK_SHRINK);
+
+    Gtk::ComboBoxText c_container;
+    c_container.set_size_request(160);
+    vector<Item*> containers = emporium.classify_type("Container");
+    for (Item* container : containers){
+      std::string container_info = container -> get_name ()+"," + container->get_description + "(Scoop Limit: " +std::to_string(dynamic_cast<Container*>(container)->get_scoop_limit())+')';
+      c_container.append(container_info);
+    }
+
+    b_container.pack_start(c_container, Gtk::PACK_SHRINK);
+    dialog->get_vbox()->pack_start(b_container, Gtk::PACK_SHRINK);  
+ 
+    //b_container.set_margin_left(105);
+    //Button:  button.signal_clicked().connect(sigc::mem_fun(*this, &Main_window::on_create_item_click))
+   
+    // Show dialog
+    dialog->add_button("Cancel", 0);
+    dialog->add_button("Add Scoop", 1);
+    dialog->show_all();
+    int result = dialog->run();
+
+    dialog->close();
+    while (Gtk::Main::events_pending())  Gtk::Main::iteration();   
+
+    if (result == 1){
+       create_scoop_for_serving (int scoop_limit);
+       //add container to serving 
+    }
+
+}
+
+//
 //PRIVATE FUNCTIONS
+//
+
+//Scoop for Serving
+void View::create_scoop_for_serving (int scoop_limit) {
+    //Design
+
+    // Show dialog
+    dialog->add_button("Cancel", 0);
+    dialog->add_button("Add Scoop", 2);
+    dialog->add_button("Add Topping", 3);
+    dialog->show_all();
+    int result = dialog->run();
+
+    dialog->close();
+    while (Gtk::Main::events_pending())  Gtk::Main::iteration();   
+
+    if (result == 2){
+       if (//scoop not reach limit)
+         create_scoop_for_serving (int scoop_limit);
+       else 
+         create_message_dialog (std::string message);
+    }
+    else if (result==3){
+       create_topping_for_serving();
+    }
+    else if (result ==1 ){
+       //if (scoop_limit >0 && scoop_limit <= scoop_limit from container) add to serving
+    }
+
+}
+//Topping for Serving
+void View::create_topping_for_serving () {
+    //Design
+
+    // Show dialog
+    dialog->add_button("Cancel", 0);
+    dialog->add_button("Complete Serving", 1);
+    dialog->add_button("Add Scoop", 2);
+    dialog->add_button("Add Topping", 3);
+
+    dialog->show_all();
+    int result = dialog->run();
+
+    dialog->close();
+    while (Gtk::Main::events_pending())  Gtk::Main::iteration();   
+
+    if (result == 2){
+       if (//scoop not reach limit)
+         create_scoop_for_serving (int scoop_limit);
+       else 
+         create_message_dialog (std::string message);
+    }
+    else if (result==3){
+       create_topping_for_serving();
+    }
+    else if (result==1){
+       //Add topping to order
+    }
+}
 
 
+
+//Emporium
 void View::create_chosen_type_dialog(std::string type_name){
     Gtk::Dialog *dialog = new Gtk::Dialog();
     dialog->set_title("Create "+type_name);
@@ -208,9 +314,9 @@ void View::create_chosen_type_dialog(std::string type_name){
 
     name = e_name.get_text();
     description = e_description.get_text();
-    wholesale_cost = std::stod (e_wholesale_cost.get_text());
-    retail_price = std::stod (e_retail_price.get_text());
-    limit =std::stoi(e_scoop_limit.get_text());
+    wholesale_cost = atof (e_wholesale_cost.get_text().c_str());
+    retail_price = atof (e_retail_price.get_text().c_str());
+    limit =atoi(e_scoop_limit.get_text().c_str());
     amount =c_amount.get_active_row_number()+1;
 
     if(result==1){
@@ -219,6 +325,5 @@ void View::create_chosen_type_dialog(std::string type_name){
       else if (type_name == "Topping") emporium.add_top(new Topping(name, description,wholesale_cost,retail_price,amount));
       show_create_item_dialog();
     }
-
 
 }

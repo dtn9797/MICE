@@ -17,6 +17,7 @@ class View {
    void list_toppings();
    //GUI
    void show_create_item_dialog();
+   void show_create_serving_dialog();
 };
 
 #endif

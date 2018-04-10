@@ -20,8 +20,8 @@ class Main_window: public Gtk::Window {
   protected:
     void on_quit_click();
     void on_properties_click();
-    void on_order_click();
-    void on_item_click();
+    void on_create_order_click();
+    void on_create_item_click();
 };
 
 

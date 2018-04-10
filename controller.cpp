@@ -120,5 +120,9 @@ void Controller::execute_cmd (int cmd){
  else if (cmd==7){ // Add item in dialogs
     view.show_create_item_dialog();
 }
+ else if (cmd==8){ // Create serving in dialogs
+    emporium.auto_add();
+    view.show_create_serving_dialog();
+}
 
 }
