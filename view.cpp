@@ -124,7 +124,7 @@ void View::show_create_serving_dialog(){
     c_container.set_size_request(160);
     vector<Item*> containers = emporium.classify_type("Container");
     for (Item* container : containers){
-      std::string container_info = container -> get_name ()+"," + container->get_description + "(Scoop Limit: " +std::to_string(dynamic_cast<Container*>(container)->get_scoop_limit())+')';
+      std::string container_info = container -> get_name ()+"," + container->get_description() + "(Scoop Limit: " +std::to_string(dynamic_cast<Container*>(container)->get_scoop_limit())+')';
       c_container.append(container_info);
     }
 
@@ -136,7 +136,7 @@ void View::show_create_serving_dialog(){
    
     // Show dialog
     dialog->add_button("Cancel", 0);
-    dialog->add_button("Add Scoop", 1);
+    dialog->add_button("Add Container", 1);
     dialog->show_all();
     int result = dialog->run();
 
@@ -144,8 +144,12 @@ void View::show_create_serving_dialog(){
     while (Gtk::Main::events_pending())  Gtk::Main::iteration();   
 
     if (result == 1){
-       create_scoop_for_serving (int scoop_limit);
-       //add container to serving 
+       int index  = c_container.get_active_row_number();
+       //add container to serving
+       Container* container_ptr = dynamic_cast<Container*>(containers[index]);
+       Serving serving (*container_ptr, std::vector<Scoop> (),std::vector<Topping> () );
+       int scoop_limit = container_ptr->get_scoop_limit();
+       create_scoop_for_serving (serving,0,scoop_limit);
     }
 
 }
@@ -155,11 +159,32 @@ void View::show_create_serving_dialog(){
 //
 
 //Scoop for Serving
-void View::create_scoop_for_serving (int scoop_limit) {
+void View::create_scoop_for_serving (Serving& serving, int scoop_amount, int scoop_limit) {
     //Design
+    Gtk::Dialog *dialog = new Gtk::Dialog();
+    dialog->set_title("Create Serving");
+
+    Gtk::HBox b_scoop;
+
+    Gtk::Label l_scoop{"Scoop:"};
+    l_scoop.set_width_chars(15);
+    b_scoop.pack_start(l_scoop, Gtk::PACK_SHRINK);
+
+    Gtk::ComboBoxText c_scoop;
+    c_scoop.set_size_request(160);
+
+    vector<Item*> scoops = emporium.classify_type("Scoop");
+    for (Item* scoop : scoops){
+      std::string scoop_info = scoop -> get_name ()+"," + scoop->get_description() + "(Price: " +std::to_string(scoop->get_retail_price())+')';
+      c_scoop.append(scoop_info);
+    }
+
+    b_scoop.pack_start(c_scoop, Gtk::PACK_SHRINK);
+    dialog->get_vbox()->pack_start(b_scoop, Gtk::PACK_SHRINK);  
 
     // Show dialog
     dialog->add_button("Cancel", 0);
+    if (scoop_amount > 0){ dialog->add_button("Complete Order",1);}
     dialog->add_button("Add Scoop", 2);
     dialog->add_button("Add Topping", 3);
     dialog->show_all();
@@ -167,21 +192,31 @@ void View::create_scoop_for_serving (int scoop_limit) {
 
     dialog->close();
     while (Gtk::Main::events_pending())  Gtk::Main::iteration();   
-
+    if (result ==0 )return;
+    int index = c_scoop.get_active_row_number();
+    Scoop* scoop =  dynamic_cast<Scoop*>(scoops[index]);
     if (result == 2){
-       if (//scoop not reach limit)
-         create_scoop_for_serving (int scoop_limit);
-       else 
-         create_message_dialog (std::string message);
+       if (scoop_amount+1 >= 0  && scoop_amount+1 <= scoop_limit){
+         serving.add_scoop(*scoop);
+         scoop_amount+=1;
+         create_scoop_for_serving (serving,scoop_amount,scoop_limit);
+       }
+       else{ 
+         create_message_dialog ("Error","Container reaches scoop limit if adding one more scoop.");
+         create_scoop_for_serving (serving,scoop_amount,scoop_limit);
+       }
     }
     else if (result==3){
-       create_topping_for_serving();
+       scoop_amount+=1;
+       serving.add_scoop(*scoop);
+       //create_topping_for_serving(serving);
     }
     else if (result ==1 ){
-       //if (scoop_limit >0 && scoop_limit <= scoop_limit from container) add to serving
+       serving.add_scoop(*scoop);
     }
 
 }
+/*
 //Topping for Serving
 void View::create_topping_for_serving () {
     //Design
@@ -212,7 +247,19 @@ void View::create_topping_for_serving () {
     }
 }
 
+*/
 
+//Dialog
+void View::create_message_dialog(std::string title, std::string msg) {
+    Gtk::MessageDialog *dialog = new Gtk::MessageDialog(title);
+    dialog->set_secondary_text(msg, true);
+    dialog->run();
+
+    dialog->close();
+    while (Gtk::Main::events_pending())  Gtk::Main::iteration();
+
+    delete dialog;
+}
 
 //Emporium
 void View::create_chosen_type_dialog(std::string type_name){
