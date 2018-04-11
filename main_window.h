@@ -17,6 +17,8 @@ class Main_window: public Gtk::Window {
     Controller& controller;
     void create_menu_items(Gtk::MenuBar *menubar, std::string name, std::vector<std::string> sub_names);
     void create_submenu_items(Gtk::Menu *namemenu, std::string name, sigc::slot<void> s); 
+    //Persons
+    void show_window_for_owner();
   protected:
     void on_quit_click();
     void on_properties_click();

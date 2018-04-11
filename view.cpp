@@ -188,6 +188,7 @@ void View::create_scoop_for_serving (Serving& serving, int scoop_amount, int sco
     if (scoop_amount > 0){ dialog->add_button("Complete Order Without Adding",1);}
     dialog->add_button("Add Scoop", 2);
     if (scoop_amount != 0)dialog->add_button("Go to Topping", 3);
+    dialog->add_button ("Serving Info",4);
     dialog->show_all();
     int result = dialog->run();
 
@@ -213,6 +214,10 @@ void View::create_scoop_for_serving (Serving& serving, int scoop_amount, int sco
     }
     else if (result ==1 ){
        //Need to add : add serving to order
+    }
+    else if (result==4){
+       show_serving_info (serving);
+       create_scoop_for_serving (serving,scoop_amount,scoop_limit);
     }
 
 }
@@ -262,6 +267,7 @@ void View::create_topping_for_serving (Serving& serving) {
     dialog->add_button("Complete Serving without Adding", 1);
     dialog->add_button("Go to Scoop", 2);
     dialog->add_button("Add Topping", 3);
+    dialog->add_button("Serving Info", 4);
 
     dialog->show_all();
     int result = dialog->run();
@@ -285,9 +291,16 @@ void View::create_topping_for_serving (Serving& serving) {
     else if (result==1){
        //Need to Add serving to order
     }
- 
+    else if (result==4){
+       show_serving_info (serving);
+       create_scoop_for_serving (serving,scoop_amount,scoop_limit);
+    }
 }
 
+//Show info for Serving
+void View::show_serving_info (Serving& serving){
+   create_message_dialog("Serving Info", serving.to_string_serving());
+}
 
 
 //Dialog
