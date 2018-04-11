@@ -22,6 +22,8 @@ class Main_window: public Gtk::Window {
     void on_properties_click();
     void on_create_order_click();
     void on_create_item_click();
+
+    void on_test_click();
 };
 
 

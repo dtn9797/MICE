@@ -4,6 +4,10 @@
 #include <iostream>
 #include <string>
 
+//
+//POLYMORPHISM
+//
+
 class Item {
   public:
     Item (std::string n,std::string d, double c, double p):

@@ -5,6 +5,12 @@
 #include <string>
 #include "item.h"
 
+
+//
+//POLYMORPHISM
+//
+
+
 class Topping:public Item{
 
   public:
@@ -13,13 +19,13 @@ class Topping:public Item{
     std::string to_string() override;
     std::string type() override;
     int get_amount();
+    void set_amount(int amount);
     const static int LIGHT_AMOUNT = 1;
     const static int NORMAL_AMOUNT = 2;
     const static int EXTRA_AMOUNT = 3;
     const static int DRENCHED_AMOUNT = 4;
     std::string to_string_amount ();
   private:
-    void _set_amount(int amount);
     int _amount;
 };
 

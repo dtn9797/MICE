@@ -18,7 +18,7 @@ Main_window::Main_window (Controller& con): controller{con} {
   Gtk::MenuBar *menubar = Gtk::manage(new Gtk::MenuBar());
   vbox->pack_start(*menubar, Gtk::PACK_SHRINK, 0);
   //SUBMENUS FOR FILE 
-  std::vector<std::string> sub_names= {"_New","_Open","_Save","_Save As","_Properties","_Quit"};
+  std::vector<std::string> sub_names= {"_New","_Open","_Save","_Save As","_Properties","_Test","_Quit"};
   //     FILE
   create_menu_items(menubar,"_File", sub_names);
 
@@ -61,7 +61,8 @@ void Main_window::create_menu_items(Gtk::MenuBar *menubar, std::string name, std
   std::map<std::string,sigc::slot<void>> str_to_func = {{"_Quit", sigc::mem_fun(*this, &Main_window::on_quit_click)},
 							{"_Properties", sigc::mem_fun(*this, &Main_window::on_properties_click)},
 							{"_Order", sigc::mem_fun(*this, &Main_window::on_create_order_click)},
-							{"_Item", sigc::mem_fun(*this, &Main_window::on_create_item_click)}
+							{"_Item", sigc::mem_fun(*this, &Main_window::on_create_item_click)},
+							{"_Test", sigc::mem_fun(*this, &Main_window::on_test_click)}
 							};
   for(std::string sub_name:sub_names) create_submenu_items(namemenu ,sub_name,str_to_func[sub_name]);
 }
@@ -92,6 +93,10 @@ void Main_window::on_create_order_click() {
 void Main_window::on_create_item_click() {
     std::cout<< " On _item_clicked\n";
     controller.execute_cmd(7);
+}
+void Main_window::on_test_click() {
+    std::cout<< " On _test_clicked\n";
+    controller.execute_cmd(99);
 }
 
 Main_window::~Main_window() { }

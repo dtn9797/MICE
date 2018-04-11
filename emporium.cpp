@@ -5,7 +5,7 @@
     void Emporium::add_container(Container* con) {items.push_back(con);}
 
     std::vector<Item*> Emporium::classify_type(std::string type) {
-	std::vector<Item*> results;	
+	std::vector<Item*> results={};	
 	for (int i=0 ; i< number_of_items(); i++) {
   	  if (items[i]->type() == type)
 	    results.push_back (items[i]);

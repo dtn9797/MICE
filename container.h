@@ -5,6 +5,10 @@
 #include <string>
 #include "item.h"
 
+//
+//POLYMORPHISM
+//
+
 class Container:public Item {
   protected:
    int scoop_limit;

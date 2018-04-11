@@ -16,7 +16,7 @@ std::string Topping::to_string () {
 
 int Topping::get_amount() {return _amount;}
 
-void Topping::_set_amount(int amount) {
+void Topping::set_amount(int amount) {
     if (0 < amount && amount < 5) _amount =  amount;
     else throw std::runtime_error("Invalid topping amount");
 }

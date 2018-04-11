@@ -13,6 +13,7 @@ class View {
     void create_chosen_type_dialog(std::string type_name);
     // serving
     void create_scoop_for_serving (Serving& serving,int scoop_amount,int scoop_limit);
+    void create_topping_for_serving (Serving& serving);
     //dialog
     void create_message_dialog(std::string title, std::string msg);
   public:
