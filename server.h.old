@@ -7,7 +7,19 @@
 class Server : public Person {
   public:
     Server (std::string na, int id, double sal): Person(na,id), hour_salary{sal} {}
-    Server () : Server("", 0, 0.0) { }
+    //Copy constructor 
+    Server (const Server &rhs ): hour_salary{rhs.get_hour_salary()},Person(rhs.get_name(),rhs.get_id()){}    
+    //Copy assignment
+    Server& operator=(const Server &rhs) {
+       if (this!=&rhs){
+          name= rhs.get_name();
+          id = rhs.get_id();
+          num_order_filled = rhs.get_num_order_filled();
+          hour_salary =rhs.get_hour_salary();
+       }
+      return *this;
+    }
+
     std::string type() override;
 
     double get_hour_salary() const;

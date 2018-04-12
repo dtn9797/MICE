@@ -1,0 +1,31 @@
+#ifndef CUSTOMER_H
+#define CUSTOMER_H
+
+#include "person.h"
+#include <iostream>
+#include <string>
+class Customer : public Person {
+  public:
+    Customer (std::string na, int id, std::string ph): Person(na,id), phone_num{ph} {}
+    Customer () : Customer("", 0, "00") { };
+    std::string type() override;
+    //Copy constructor 
+   // Customer (const Customer &rhs ): phone_num{rhs.get_phone_num()},Person(rhs.get_name(),rhs.get_id()){}
+    //Copy assignment
+    /*Customer& operator=(const Customer &rhs) {
+       if (this!=&rhs){
+          name= rhs.get_name();
+          id = rhs.get_id();
+          phone_num=rhs.get_phone_num();
+       }
+      return *this;
+    }
+*/
+    std::string get_phone_num() const;
+
+  private:
+    std::string phone_num;
+};
+
+
+#endif
