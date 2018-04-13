@@ -26,6 +26,11 @@ bool test_order () {
      std::cerr << "#Order Constructor Error";
      passed = false;
    }
+  //
+  // Test for add order
+  // 
+
+
  
    return passed;
 }

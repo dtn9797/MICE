@@ -5,6 +5,7 @@
     void Emporium::add_container(Container* con) {items.push_back(con);}
     void Emporium::add_server(Server* server) {persons.push_back(server);}
     void Emporium::add_customer(Customer* customer) {persons.push_back(customer);}
+    void Emporium::add_order (Order* order) {orders.push_back(order);}
 
     std::vector<Item*> Emporium::classify_type(std::string type) {
 	std::vector<Item*> results={};	
