@@ -11,18 +11,24 @@
 #include "person.h"
 #include "server.h"
 #include "customer.h"
+#include "order.h"
+#include "owner.h"
+#include "manager.h"
 
 class Emporium {
   private:
     std::vector<Item*> items;
     std::vector<Person*> persons;
+    std::vector<Order*>  orders;
    
   public:
-    std::vector<Item*> classify_type(std::string type);
     void add_scoop(Scoop* scoop);
     void add_top(Topping* top);
     void add_container(Container* con);
+    void add_order(Order* ord);
 
+    void add_owner (Owner* owner);
+    void add_manager (Manager* manager);
     void add_server (Server* server);
     void add_customer (Customer* customer);
 
@@ -31,10 +37,28 @@ class Emporium {
     std::string container_to_string(int index);
     std::string topping_to_string(int index);
 
+    std::vector<Item*> get_items ();
+    std::vector<Person*> get_persons ();
+    std::vector<Order*> get_orders ();
+
+    Person* get_active_person () ;
+
     int number_of_items();
     int number_of_scoops();
     int number_of_containers();
     int number_of_toppings();
+
+    template <class T>
+    T classify_type(T things, std::string type) {
+	T results={};	
+	for (int i=0 ; i< things.size(); i++) {
+  	  if (things[i]->type() == type)
+	    results.push_back (things[i]);
+	}
+	return results;
+    }
+
+    
 
     void auto_add();
 };

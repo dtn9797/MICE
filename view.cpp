@@ -122,7 +122,7 @@ void View::show_create_serving_dialog(){
 
     Gtk::ComboBoxText c_container;
     c_container.set_size_request(160);
-    vector<Item*> containers = emporium.classify_type("Container");
+    vector<Item*> containers = emporium.classify_type<vector<Item*>>(emporium.get_items(),"Container");;
     for (int i=0 ; i < emporium.number_of_containers();i++){
       std::string container_info = containers[i] -> get_name ()+"," + containers[i]->get_description() + "(Scoop Limit: " +std::to_string(dynamic_cast<Container*>(containers[i])->get_scoop_limit())+')';
       c_container.append(container_info);
@@ -174,7 +174,7 @@ void View::create_scoop_for_serving (Serving& serving, int scoop_amount, int sco
     Gtk::ComboBoxText c_scoop;
     c_scoop.set_size_request(160);
 
-    vector<Item*> scoops = emporium.classify_type("Scoop");
+    vector<Item*> scoops = emporium.classify_type<vector<Item*>>(emporium.get_items(),"Scoop");
     for (Item* scoop : scoops){
       std::string scoop_info = scoop -> get_name ()+"," + scoop->get_description() + "(Price: " +std::to_string(scoop->get_retail_price())+')';
       c_scoop.append(scoop_info);
@@ -237,7 +237,7 @@ void View::create_topping_for_serving (Serving& serving) {
     Gtk::ComboBoxText c_top;
     c_top.set_size_request(160);
 
-    vector<Item*> tops = emporium.classify_type("Topping");
+    vector<Item*> tops = emporium.classify_type<vector<Item*>>(emporium.get_items(),"Topping");
     for (Item* top : tops){
       std::string top_info = top -> get_name ()+"," + top->get_description() + "(Price: " +std::to_string(top->get_retail_price())+')';
       c_top.append(top_info);

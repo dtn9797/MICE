@@ -127,5 +127,7 @@ void Controller::execute_cmd (int cmd){
  else if (cmd==99) {//Test
     emporium.auto_add();
 }
-
 }
+
+//GET FUnCTIONS
+Emporium& Controller::get_emporium () {return emporium;} 

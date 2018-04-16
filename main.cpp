@@ -3,9 +3,16 @@
 #include "main_window.h"
 #include <gtkmm.h>
 #include <iostream>
+#include "owner.h"
 int main (int argc, char *argv[]) {
  auto app = Gtk::Application::create (argc, argv,"edu.com.uta.cse1325.mice");
  Emporium em;
+ //testing
+ Owner *owner = new Owner ("Duy Nguyen",1);
+ owner->set_active (true);
+ em.add_owner(owner);
+ em.add_manager(new Manager ("Thao Pham",1,2));
+
  Controller con(em);
  Main_window win(con);
  win.set_title ("Emporium System");

@@ -1,28 +1,20 @@
-#ifndef __MANAGER_H
-#define __MANAGER_H 
+#ifndef MANAGER_H
+#define MANAGER_H
 
+#include "person.h"
 #include <iostream>
 #include <string>
-#include "topping.h"
-#include "container.h"
-#include "scoop.h"
-#include "items.h"
-
-class Manager {
-  private:
-    std::string name;
-    int employee_id;
-    double hour_salary;
-    Items& items;
+class Manager : public Person {
   public:
-   Manager(std::string na,int id,double salary, Items& ite):
-    name {na},
-    employee_id {id},
-    hour_salary {salary},
-    items{ite} {}
+    Manager (std::string na, int id, double salary): Person(na,id), hour_salary{salary} {}
+    Manager () : Manager("", 0,0) { };
+    std::string type() override;
 
-   void create_scoop();
-   //void create_container();
-   //void create_topping();
+    double get_hour_salary() const ;
+  private:
+    double hour_salary;
+
 };
+
+
 #endif

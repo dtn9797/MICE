@@ -9,9 +9,12 @@ class Person {
    virtual std::string type ();
    std::string get_name() const;
    int get_id() const;
+   bool get_active() const; 
+   void set_active(bool b);
   protected:
    std::string name;
    int id;
+   bool active = false;
 };
 
 
