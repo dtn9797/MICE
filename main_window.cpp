@@ -92,7 +92,6 @@ void Main_window::create_toggletoolbuttons_with_toolbar (Person *person,Gtk::Box
   Gtk::Toolbar *bottomtoolbar = Gtk::manage(new Gtk::Toolbar);   
   vbox->add(*bottomtoolbar);
   //  SERVER
-  // set_active(true);
   Gtk::Image *server_button_image = Gtk::manage(new Gtk::Image("server.png"));
   server_button = Gtk::manage(new Gtk::ToggleToolButton(*server_button_image));
   server_button->set_tooltip_markup("Server");
@@ -141,7 +140,7 @@ void Main_window::create_toggletoolbuttons_with_toolbar (Person *person,Gtk::Box
 ///////////////////////
 void Main_window::show_window_for_owner(Person* person) {
   //
-  //GUI SETUP
+  //OWNER
   //
   set_default_size (768,768);
   //Put verticalbox container
@@ -158,7 +157,7 @@ void Main_window::show_window_for_owner(Person* person) {
   create_menu_items(menubar,"_File", sub_names);
 
   //SUBMENUS FOR EDIT
-  sub_names= {"_Undo","_Restock","_Customer","_Server","_Manager","_Owner","_Item"};
+  sub_names= {"_Undo","_Customer","_Server","_Manager","_Owner"};
   //     EDIT
   create_menu_items(menubar,"_Edit", sub_names);
   //         Quit for file
@@ -168,13 +167,12 @@ void Main_window::show_window_for_owner(Person* person) {
   sub_names= {"_Order","_Customer","_Item","_Server"};
   //    CREATE
   create_menu_items(menubar,"_Create", sub_names);
-
-  //SUBMENUS FOR PROCESS
-  sub_names= {};
-  //    PROCESS
-  create_menu_items(menubar,"_Process", sub_names);
+  //SUBMENUS FOR REPORT
+  sub_names = {"_Servers","_Customer","_Inventory","_Orders","_P&L"};
   //    REPORT
   create_menu_items(menubar,"_Report", sub_names);
+  //SUBMENUS FOR ROLE
+  sub_names= {"_Owner","_Manager", "_Server","_Customer"};
   //    ROLE
   create_menu_items(menubar,"_Role", sub_names);
   //    HELP
@@ -211,7 +209,7 @@ void Main_window::show_window_for_owner(Person* person) {
 
 void Main_window::show_window_for_manager(Person* person) {
   //
-  //GUI SETUP
+  //MANAGER 
   //
   set_default_size (768,768);
   //Put verticalbox container
@@ -223,30 +221,32 @@ void Main_window::show_window_for_manager(Person* person) {
   Gtk::MenuBar *menubar = Gtk::manage(new Gtk::MenuBar());
   vbox->pack_start(*menubar, Gtk::PACK_SHRINK, 0);
   //SUBMENUS FOR FILE 
-  std::vector<std::string> sub_names= {"_New","_Open","_Save","_Save As","_Properties","_Test","_Quit"};
+  std::vector<std::string> sub_names= {"_Test","_Properties","_Quit"};
   //     FILE
   create_menu_items(menubar,"_File", sub_names);
-
   //SUBMENUS FOR EDIT
-  sub_names= {"_Undo","_Restock","_Customer","_Server","_Manager","_Owner","_Item"};
+  sub_names= {"_Undo","_Customer","_Server","_Item"};
   //     EDIT
   create_menu_items(menubar,"_Edit", sub_names);
   //         Quit for file
-  // Append Quit to the File menu
- 
   //SUBMENUS FOR CREATE
   sub_names= {"_Order","_Customer","_Item","_Server"};
   //    CREATE
   create_menu_items(menubar,"_Create", sub_names);
-
   //SUBMENUS FOR PROCESS
-  sub_names= {};
+  sub_names= {"_Cancel Order"};
   //    PROCESS
   create_menu_items(menubar,"_Process", sub_names);
+  //SUBMENUS FOR REPORT
+  sub_names = {"_Servers","_Customer","_Inventory","_Orders","_P&L"};
   //    REPORT
   create_menu_items(menubar,"_Report", sub_names);
+  //SUBMENUS FOR ROLE
+  sub_names= {"_Owner","_Manager", "_Server","_Customer"};
   //    ROLE
   create_menu_items(menubar,"_Role", sub_names);
+  //SUBMENUS FOR HELP
+  sub_names= {"_Manual","_About"};
   //    HELP
   create_menu_items(menubar,"_Help", sub_names);
 
@@ -281,7 +281,7 @@ void Main_window::show_window_for_manager(Person* person) {
 
 void Main_window::show_window_for_server(Person* person) {
   //
-  //GUI SETUP
+  //SERVER
   //
   set_default_size (768,768);
   //Put verticalbox container
@@ -292,31 +292,32 @@ void Main_window::show_window_for_server(Person* person) {
   // Add a menu bar as the top item in the vertical box
   Gtk::MenuBar *menubar = Gtk::manage(new Gtk::MenuBar());
   vbox->pack_start(*menubar, Gtk::PACK_SHRINK, 0);
-  //SUBMENUS FOR FILE 
-  std::vector<std::string> sub_names= {"_New","_Open","_Save","_Save As","_Properties","_Test","_Quit"};
+  //SUBMENUS FOR FILE
+  std::vector<std::string> sub_names= {"_Properties"};
   //     FILE
   create_menu_items(menubar,"_File", sub_names);
-
   //SUBMENUS FOR EDIT
-  sub_names= {"_Undo","_Restock","_Customer","_Server","_Manager","_Owner","_Item"};
+  sub_names= {"_Undo","_Restock","_Customer"};
   //     EDIT
   create_menu_items(menubar,"_Edit", sub_names);
   //         Quit for file
   // Append Quit to the File menu
  
   //SUBMENUS FOR CREATE
-  sub_names= {"_Order","_Customer","_Item","_Server"};
+  sub_names= {"_Order","_Customer"};
   //    CREATE
   create_menu_items(menubar,"_Create", sub_names);
 
   //SUBMENUS FOR PROCESS
-  sub_names= {};
+  sub_names= {"_Fill Order","_Payment", "_Cancel Order"};
   //    PROCESS
   create_menu_items(menubar,"_Process", sub_names);
-  //    REPORT
-  create_menu_items(menubar,"_Report", sub_names);
+  //SUBMENUS FOR ROLE
+  sub_names= {"_Owner","_Manager", "_Server","_Customer"};
   //    ROLE
   create_menu_items(menubar,"_Role", sub_names);
+  //SUBMENUS FOR HELP
+  sub_names= {"_Manual","_About"};
   //    HELP
   create_menu_items(menubar,"_Help", sub_names);
 
@@ -351,7 +352,7 @@ void Main_window::show_window_for_server(Person* person) {
 
 void Main_window::show_window_for_customer(Person* person) {
   //
-  //GUI SETUP
+  //CUSTOMER
   //
   set_default_size (768,768);
   //Put verticalbox container
@@ -363,30 +364,28 @@ void Main_window::show_window_for_customer(Person* person) {
   Gtk::MenuBar *menubar = Gtk::manage(new Gtk::MenuBar());
   vbox->pack_start(*menubar, Gtk::PACK_SHRINK, 0);
   //SUBMENUS FOR FILE 
-  std::vector<std::string> sub_names= {"_New","_Open","_Save","_Save As","_Properties","_Test","_Quit"};
+  std::vector<std::string> sub_names= {"_Properties"};
   //     FILE
   create_menu_items(menubar,"_File", sub_names);
-
   //SUBMENUS FOR EDIT
   sub_names= {"_Undo","_Restock","_Customer","_Server","_Manager","_Owner","_Item"};
   //     EDIT
   create_menu_items(menubar,"_Edit", sub_names);
-  //         Quit for file
-  // Append Quit to the File menu
- 
   //SUBMENUS FOR CREATE
   sub_names= {"_Order","_Customer","_Item","_Server"};
   //    CREATE
   create_menu_items(menubar,"_Create", sub_names);
 
   //SUBMENUS FOR PROCESS
-  sub_names= {};
+  sub_names= {"_Cancel Order"};
   //    PROCESS
   create_menu_items(menubar,"_Process", sub_names);
-  //    REPORT
-  create_menu_items(menubar,"_Report", sub_names);
+  //SUBMENUS FOR ROLE
+  sub_names= {"_Owner","_Manager", "_Server","_Customer"};
   //    ROLE
   create_menu_items(menubar,"_Role", sub_names);
+  //SUBMENUS FOR HELP
+  sub_names= {"_About"};
   //    HELP
   create_menu_items(menubar,"_Help", sub_names);
 
