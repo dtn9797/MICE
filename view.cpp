@@ -68,9 +68,9 @@ void View::list_toppings(){
     cout << i << ") " << emporium.topping_to_string(i) << endl;
   }
 }
-
-//GUI
-
+///////////////////
+///////////GUI//////
+//////////////////////
 void View::show_create_item_dialog(){
     int type;
 
@@ -108,9 +108,8 @@ void View::show_create_item_dialog(){
     }
 }
 
-void View::show_create_serving_dialog(){
+void View::show_create_serving_dialog(Order &order){
     int container;
-
     Gtk::Dialog *dialog = new Gtk::Dialog();
     dialog->set_title("Create Serving");
     // Add Container
@@ -150,7 +149,7 @@ void View::show_create_serving_dialog(){
        Serving serving (*container_ptr, std::vector<Scoop> (),std::vector<Topping> () );
        int scoop_limit = container_ptr->get_scoop_limit();
 
-       create_scoop_for_serving (serving,0,scoop_limit);
+       create_scoop_for_serving (order,serving,0,scoop_limit);
     }
 
 }
@@ -160,7 +159,7 @@ void View::show_create_serving_dialog(){
 //
 
 //Scoop for Serving
-void View::create_scoop_for_serving (Serving& serving, int scoop_amount, int scoop_limit) {
+void View::create_scoop_for_serving (Order &order,Serving& serving, int scoop_amount, int scoop_limit) {
     //Design
     Gtk::Dialog *dialog = new Gtk::Dialog();
     dialog->set_title("Create Scoop for Serving");
@@ -185,7 +184,7 @@ void View::create_scoop_for_serving (Serving& serving, int scoop_amount, int sco
 
     // Show dialog
     dialog->add_button("Cancel", 0);
-    if (scoop_amount > 0){ dialog->add_button("Complete Order Without Adding",1);}
+    if (scoop_amount > 0){ dialog->add_button("Complete Serving",1);}
     dialog->add_button("Add Scoop", 2);
     if (scoop_amount != 0)dialog->add_button("Go to Topping", 3);
     dialog->add_button ("Serving Info",4);
@@ -202,28 +201,38 @@ void View::create_scoop_for_serving (Serving& serving, int scoop_amount, int sco
          Scoop* scoop =  dynamic_cast<Scoop*>(scoops[index]);
          serving.add_scoop(*scoop);
          scoop_amount=serving.get_number_scoops();
-         create_scoop_for_serving (serving,scoop_amount,scoop_limit);
+         create_scoop_for_serving (order,serving,scoop_amount,scoop_limit);
        }
        else{ 
          create_message_dialog ("Error","Container reaches scoop limit if adding one more scoop.");
-         create_scoop_for_serving (serving,scoop_amount,scoop_limit);
+         create_scoop_for_serving (order,serving,scoop_amount,scoop_limit);
        }
     }
     else if (result==3){//go to top
-       create_topping_for_serving(serving);
+       create_topping_for_serving(order,serving);
     }
     else if (result ==1 ){
        //Need to add : add serving to order
+       int answer= question("Do you want to add more serving in order?","Question",{"Yes","No"});
+       if (answer == 0 ){ //add serving to order then show dialogs again
+         order.add_serving(serving);
+         show_create_serving_dialog(order);
+         
+       }
+       else if (answer == 1){ //add serving then add order to emporium
+         order.add_serving(serving);
+         emporium.add_order(&order);       
+       }
     }
     else if (result==4){
        show_serving_info (serving);
-       create_scoop_for_serving (serving,scoop_amount,scoop_limit);
+       create_scoop_for_serving (order,serving,scoop_amount,scoop_limit);
     }
 
 }
 
 //Topping for Serving
-void View::create_topping_for_serving (Serving& serving) {
+void View::create_topping_for_serving (Order &order, Serving& serving) {
     //Design
     Gtk::Dialog *dialog = new Gtk::Dialog();
     dialog->set_title("Create Topping for Serving");
@@ -264,7 +273,7 @@ void View::create_topping_for_serving (Serving& serving) {
     dialog->get_vbox()->pack_start(b_amount, Gtk::PACK_SHRINK);  
     // Show dialog
     dialog->add_button("Cancel", 0);
-    dialog->add_button("Complete Serving without Adding", 1);
+    dialog->add_button("Complete Serving ", 1);
     dialog->add_button("Go to Scoop", 2);
     dialog->add_button("Add Topping", 3);
     dialog->add_button("Serving Info", 4);
@@ -278,7 +287,7 @@ void View::create_topping_for_serving (Serving& serving) {
     int scoop_amount = serving.get_number_scoops();
     int scoop_limit = serving.get_container().get_scoop_limit();
     if (result == 2){//go to scoop
-       create_scoop_for_serving (serving,scoop_amount,scoop_limit);
+       create_scoop_for_serving (order,serving,scoop_amount,scoop_limit);
     }
     else if (result==3){//Add topping
        int index_top = c_top.get_active_row_number();
@@ -286,14 +295,25 @@ void View::create_topping_for_serving (Serving& serving) {
        int index_amount = c_amount.get_active_row_number();
        top->set_amount(index_amount+1);
        serving.add_top(*top);
-       create_topping_for_serving(serving);
+       create_topping_for_serving(order,serving);
     }
     else if (result==1){
        //Need to Add serving to order
+       //Need to add : add serving to order
+       int answer= question("Do you want to add more serving in order?","Question",{"Yes","No"});
+       if (answer == 0 ){ //add serving to order then show dialogs again
+         order.add_serving(serving);
+         show_create_serving_dialog(order);
+         
+       }
+       else if (answer == 1){ //add serving then add order to emporium
+         order.add_serving(serving);
+         emporium.add_order(&order);       
+       }
     }
     else if (result==4){
        show_serving_info (serving);
-       create_scoop_for_serving (serving,scoop_amount,scoop_limit);
+       create_scoop_for_serving (order, serving,scoop_amount,scoop_limit);
     }
 }
 
@@ -303,19 +323,7 @@ void View::show_serving_info (Serving& serving){
 }
 
 
-//Dialog
-void View::create_message_dialog(std::string title, std::string msg) {
-    Gtk::MessageDialog *dialog = new Gtk::MessageDialog(title);
-    dialog->set_secondary_text(msg, true);
-    dialog->run();
 
-    dialog->close();
-    while (Gtk::Main::events_pending())  Gtk::Main::iteration();
-
-    delete dialog;
-}
-
-//Emporium
 void View::create_chosen_type_dialog(std::string type_name){
     Gtk::Dialog *dialog = new Gtk::Dialog();
     dialog->set_title("Create "+type_name);
@@ -426,5 +434,40 @@ void View::create_chosen_type_dialog(std::string type_name){
       else if (type_name == "Topping") emporium.add_top(new Topping(name, description,wholesale_cost,retail_price,amount));
       show_create_item_dialog();
     }
-
 }
+/////////////////////
+/////D I A L O G////
+////////////////////
+void View::create_message_dialog(std::string title, std::string msg) {
+    Gtk::MessageDialog *dialog = new Gtk::MessageDialog(title);
+    dialog->set_secondary_text(msg, true);
+    dialog->run();
+
+    dialog->close();
+    while (Gtk::Main::events_pending())  Gtk::Main::iteration();
+
+    delete dialog;
+}
+// A question is a message that allows the user to respond with a button
+int View::question(std::string msg, std::string title, std::vector<std::string> buttons) {
+    Gtk::Dialog *dialog = new Gtk::Dialog();
+    dialog->set_title(title);
+
+    Gtk::Label *label = new Gtk::Label(msg);
+    label->set_use_markup(true);
+    dialog->get_content_area()->pack_start(*label);
+    label->show();
+
+    for(int i=0; i<buttons.size(); ++i) dialog->add_button(buttons[i], i);
+
+    int result = dialog->run();
+
+    dialog->close();
+    while (Gtk::Main::events_pending())  Gtk::Main::iteration();
+
+    delete label;
+    delete dialog;
+
+    return result;
+}
+//Emporium

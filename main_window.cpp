@@ -46,15 +46,19 @@ void Main_window::show_window_for_person(){
        int index  = c_person.get_active_row_number();
          if (persons[index] -> type() == "Owner"){
            show_window_for_owner(persons[index]);
+           controller.get_emporium().set_active_person(index);
          }
          else if (persons[index]->type() == "Manager"){
            show_window_for_manager(persons[index]);
+           controller.get_emporium().set_active_person(index);
          }
          else if (persons[index]->type() == "Server"){
            show_window_for_server(persons[index]);
+           controller.get_emporium().set_active_person(index); 
          }
          else if (persons[index]->type() == "Customer"){
            show_window_for_customer(persons[index]);
+           controller.get_emporium().set_active_person(index);
          }
     }
  
@@ -321,7 +325,6 @@ void Main_window::show_window_for_server(Person* person) {
   //    HELP
   create_menu_items(menubar,"_Help", sub_names);
 
- // /////////////
   //T O P  T O O L B A R
   // Add a toolbar to the vertical box below the menu
   Gtk::Toolbar *toptoolbar = Gtk::manage(new Gtk::Toolbar);   

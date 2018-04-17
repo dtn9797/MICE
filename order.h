@@ -10,8 +10,11 @@
 
 class Order {
   public: 
-    Order (int id, Server &ser): id_number{id} ,server{ser}{}
-    Order (int id, Customer &cus): id_number{id}, customer{cus}{}
+    Order (int id, Person &per): id_number{id} {
+      if (per.type() == "Server"){ server= *(dynamic_cast<Server*>(&per));}
+      else if (per.type() == "Customer"){customer= *(dynamic_cast<Customer*>(&per));}      
+    }
+    //Order (int id, Customer &cus): id_number{id}, customer{cus}{}
     //Order (int id,Server ser, std::vector<Serving> sers): id_number{id}, server{ser} ,servings{sers} {}
     //Order (int id,Customer cus, std::vector<Serving> sers): id_number{id},customer{cus}, servings{sers} {}
     //Copy Constructor
@@ -29,7 +32,7 @@ class Order {
     void pay();
     void cancel();
 
-    void add_serving(Serving serving);
+    void add_serving(Serving& serving);
 
     int get_id_number ();
     std::vector<Serving> get_servings();

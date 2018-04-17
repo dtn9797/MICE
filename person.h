@@ -6,6 +6,7 @@
 class Person {
   public:
    Person (std::string na, int i):name{na},id{i} {}
+   Person () : Person ("Unknown", 0) {} 
    virtual std::string type ();
    std::string get_name() const;
    int get_id() const;

@@ -42,6 +42,7 @@ class Emporium {
     std::vector<Order*> get_orders ();
 
     Person* get_active_person () ;
+    void set_active_person( int index);    
 
     int number_of_items();
     int number_of_scoops();

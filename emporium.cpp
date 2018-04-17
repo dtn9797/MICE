@@ -21,6 +21,12 @@
         }
       }
     }
+   void Emporium::set_active_person (int index){
+     for (Person* person: persons){
+       person->set_active(false);
+     }
+     persons[index]->set_active(true);
+   }
 
 
     std::string Emporium::scoop_to_string(int index) {return classify_type<std::vector<Item*>>(get_items(),"Scoop")[index]->to_string();}

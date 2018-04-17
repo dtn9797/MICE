@@ -8,7 +8,7 @@
     void Order::pay(){ state = State:: paid;}
     void Order::cancel() {state= State:: canceled;}
 
-    void Order::add_serving(Serving serving) {
+    void Order::add_serving(Serving& serving) {
       servings.push_back(serving);
       cost+= serving.get_retail_price();
       price+= serving.get_wholesale_cost();

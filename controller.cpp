@@ -121,13 +121,15 @@ void Controller::execute_cmd (int cmd){
     view.show_create_item_dialog();
 }
  else if (cmd==8){ // Create serving in dialogs
-   
-    view.show_create_serving_dialog();
+    order_id+=1;
+    Person* person_ptr = emporium.get_active_person();
+    Order order (order_id, *person_ptr); 
+    view.show_create_serving_dialog( order);
 }
  else if (cmd==99) {//Test
     emporium.auto_add();
 }
 }
-
 //GET FUnCTIONS
 Emporium& Controller::get_emporium () {return emporium;} 
+
