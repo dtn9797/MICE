@@ -20,6 +20,8 @@ class Main_window: public Gtk::Window {
     void create_submenu_items(Gtk::Menu *namemenu, std::string name, sigc::slot<void> s);
     void create_toggletoolbuttons_with_toolbar (Person *person, Gtk::Box *vbox)  ;
     void show_window_for_person();
+    //Tree View
+    void add_row (int order_index);
     //Persons
     void show_window_for_owner(Person* person);
     void show_window_for_manager(Person* person);
@@ -32,6 +34,8 @@ class Main_window: public Gtk::Window {
     Gtk::ToggleToolButton *customer_button;
     Gtk::ToggleToolButton *server_button;
     Gtk::ToolButton *switch_person_button;
+    //Tree View
+    
   protected:
     void on_quit_click();
     void on_properties_click();
@@ -45,7 +49,7 @@ class Main_window: public Gtk::Window {
     void on_treeview_row_activated(const Gtk::TreeModel::Path& path, Gtk::TreeViewColumn* column);
     class ModelColumns : public Gtk::TreeModel::ColumnRecord{
       public:
-       /* ModelColumns(){
+          ModelColumns(){
           add (m_col_id);
           add (m_col_server);
           add (m_col_customer);
@@ -57,14 +61,7 @@ class Main_window: public Gtk::Window {
         Gtk::TreeModelColumn<Glib::ustring> m_col_customer;
         Gtk::TreeModelColumn<Glib::ustring> m_col_state;
         Gtk::TreeModelColumn<Glib::ustring> m_col_price;
-       */
-          ModelColumns()
-    { add(m_col_id); add(m_col_name); }
-
-    Gtk::TreeModelColumn<int> m_col_id;
-    Gtk::TreeModelColumn<Glib::ustring> m_col_name;
-   };
-
+    };
     
     ModelColumns m_Columns;  
     Gtk::ScrolledWindow m_ScrolledWindow;

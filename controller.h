@@ -3,7 +3,8 @@
 #include "emporium.h"
 #include "view.h"
 #include "person.h"
-
+#include <string>
+#include <vector>
 class Controller {
   private: 
     Emporium& emporium;
@@ -16,6 +17,8 @@ class Controller {
     void cli ();
     void execute_cmd (int cmd);
     void set_person (Person per);
+    //to string func
+    std::vector<std::string> order_to_strings(int index);
 };
 
 

@@ -32,6 +32,13 @@
     std::string Emporium::container_to_string(int index) {return classify_type<std::vector<Item*>>(get_items(),"Container")[index]->to_string();}
     std::string Emporium::topping_to_string(int index){return classify_type<std::vector<Item*>>(get_items(),"Topping")[index]->to_string();}
     std::vector<std::string> Emporium::order_to_strings(int index) { return orders[index]->to_strings();}
+    std::string Emporium::servings_to_string (int order_index) {
+       std::string result = "";
+       for (Serving serving : orders[order_index]->get_servings()){
+          result += serving.to_string_serving();
+       }
+       return result;
+    }
 
 
     int Emporium::number_of_items() {items.size();}
@@ -75,8 +82,13 @@
       Serving serving ( Container ("Cup","General",1,1,1), scoops, tops );
       //add order 
       //Order (int id, Server &ser): id_number{id} ,server{ser}{}
-      Order order0(1,*(dynamic_cast<Server*>(persons[2])));
+      Order order0(1,*(dynamic_cast<Manager*>(persons[1])));
       order0.add_serving(serving); 
       add_order(&order0);  
+      // test for order_to_string func
+      std::vector<std::string> record = order_to_strings(0);
+  
+      std::cout << "This is printing from emporium.cpp class" <<std::endl 
+                << "Id:" << record[0]<<"Name: "<< record[1]<< "Name"<< record[2]<<"State: "<< record[3]<<"Price:"<< record[4]<< std::endl;
       
     }

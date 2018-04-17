@@ -22,6 +22,12 @@
     Server Order::get_server(){return server;}
     Customer Order::get_customer(){return customer;}
 
+    int Order::number_of_servings() { return servings.size();}
+
+    /*std::string Order::serving_to_string (int index){
+      return servings[index].to_string_serving();
+    }*/
+
     std::vector<std::string> Order::to_strings(){
       std::vector<std::string> order;
       order.push_back(std::to_string(id_number));
@@ -29,4 +35,5 @@
       order.push_back(customer.get_name());
       order.push_back(state.to_string());
       order.push_back(std::to_string(price));
+      return order;
     }

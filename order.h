@@ -34,6 +34,10 @@ class Order {
     Server get_server();
     Customer get_customer();
 
+    int number_of_servings();
+    
+    //std::string serving_to_string (int index);
+       
     std::vector<std::string> to_strings();
   private:
     int id_number;

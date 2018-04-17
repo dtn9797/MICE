@@ -25,43 +25,44 @@ Main_window::Main_window (Controller& con): controller{con} {
   //Fill the TreeView's model
   Gtk::TreeModel::Row row = *(m_refTreeModel->append());
   row[m_Columns.m_col_id] = 1;
-  row[m_Columns.m_col_name] = "Billy Bob";
+  row[m_Columns.m_col_server] = "Server";
+  row[m_Columns.m_col_customer] = "Customer";
+  row[m_Columns.m_col_state] = "State";
+  row[m_Columns.m_col_price] = "10";
 
   Gtk::TreeModel::Row childrow = *(m_refTreeModel->append(row.children()));
-  childrow[m_Columns.m_col_id] = 11;
-  childrow[m_Columns.m_col_name] = "sadsadddddddddddddddddddddsdaddddddddddddddddddddddwadwdwadaedasdwadasdwadsdwasdwasdwdaawdaBilly Bob Junior";
-
-  childrow = *(m_refTreeModel->append(row.children()));
-  childrow[m_Columns.m_col_id] = 12;
-  childrow[m_Columns.m_col_name] = "Sue Bob";
-
-  row = *(m_refTreeModel->append());
-  row[m_Columns.m_col_id] = 2;
-  row[m_Columns.m_col_name] = "Joey Jojo";
+  childrow[m_Columns.m_col_id] = 1;
+  childrow[m_Columns.m_col_server] = "Serving Info :\n \tContainer:\n\t Box \n \tScoops: ....";
 
 
-  row = *(m_refTreeModel->append());
-  row[m_Columns.m_col_id] = 3;
-  row[m_Columns.m_col_name] = "Rob McRoberts";
+  row[m_Columns.m_col_id] = 1;
+  row[m_Columns.m_col_server] = "Server";
+  row[m_Columns.m_col_customer] = "Customer";
+  row[m_Columns.m_col_state] = "State";
+  row[m_Columns.m_col_price] = "10";
 
-  childrow = *(m_refTreeModel->append(row.children()));
-  childrow[m_Columns.m_col_id] = 31;
-  childrow[m_Columns.m_col_name] = "Xavier McRoberts";
+
 
   //Add the TreeView's view columns:
   m_TreeView.append_column("ID", m_Columns.m_col_id);
-  m_TreeView.append_column("Name", m_Columns.m_col_name);
+  m_TreeView.append_column("Server", m_Columns.m_col_server);
+  m_TreeView.append_column("Customer", m_Columns.m_col_customer);
+  m_TreeView.append_column("State", m_Columns.m_col_state);
+  m_TreeView.append_column("Price", m_Columns.m_col_price);
 
+  /*
   //Connect signal:
   m_TreeView.signal_row_activated().connect(sigc::mem_fun(*this,
               &Main_window::on_treeview_row_activated) );
+  */
 
   show_all_children();
 }
 
 
+/*
 void Main_window::on_treeview_row_activated(const Gtk::TreeModel::Path& path,
-        Gtk::TreeViewColumn* /* column */)
+        Gtk::TreeViewColumn* )
 {
   Gtk::TreeModel::iterator iter = m_refTreeModel->get_iter(path);
   if(iter)
@@ -71,6 +72,8 @@ void Main_window::on_treeview_row_activated(const Gtk::TreeModel::Path& path,
         << row[m_Columns.m_col_name] << std::endl;
   }
 }
+*/
+
 ///////////////////////
 //WHO IS CONTROLLING?//
 //////////////////////
@@ -486,6 +489,42 @@ void Main_window::show_window_for_customer(Person* person) {
   //SHOW ALL ITEMS
   vbox->show_all();
 }
+///////////////////////
+////U T I L I T I E S//
+//////////////////////
+void Main_window:: add_row (int order_index) {
+
+  Gtk::TreeModel::Row row = *(m_refTreeModel->append());
+  // This line of code cause the error 
+  //std::vector<std::string> record = controller.order_to_strings(order_index);
+  // Hard coded for testing
+  row[m_Columns.m_col_id] = 1;//std::stoi(record[0]);
+  row[m_Columns.m_col_server] = "Server";
+  row[m_Columns.m_col_customer] = "Customer";
+  row[m_Columns.m_col_state] = "State";
+  row[m_Columns.m_col_price] = "Price";
+
+ /*
+  std::vector<std::string> record = controller.order_to_strings(order_index);
+  
+  std::cout << record[0]<<' '<< record[1]<<' '<< record[2]<<std::endl;
+  
+  row[m_Columns.m_col_id] = order_index;//std::stoi(record[0]);
+  row[m_Columns.m_col_server] = record[1];
+  row[m_Columns.m_col_customer] = record[2];
+  row[m_Columns.m_col_state] = record[3];
+  row[m_Columns.m_col_price] = record[4];
+
+  //child row
+  Gtk::TreeModel::Row childrow = *(m_refTreeModel->append(row.children()));
+  std::string servings = controller.get_emporium().servings_to_string(order_index);
+  childrow[m_Columns.m_col_server] = "Serving Info :\n"+ servings;
+  */
+
+}
+
+
+
 
 ////////////////////////
 /////C A L L  B A C K s//
@@ -496,30 +535,33 @@ void Main_window::on_quit_click() {
     hide();
 }
 void Main_window::on_properties_click() {
+
     std::cout<< " On _properties_clicked\n";
 }
 void Main_window::on_create_order_click() {
-   std::cout<< " On _order_clicked\n"; 
    //create serving
    controller.execute_cmd(8);
+
+  
 }
 void Main_window::on_create_item_click() {
     std::cout<< " On _item_clicked\n";
     controller.execute_cmd(7);
 }
 void Main_window::on_test_click() {
+    int index = controller.get_emporium().number_of_orders();
     std::cout<< " On _test_clicked\n";
     controller.execute_cmd(99);
+  
+    for (int i = index ; i< controller.get_emporium().number_of_orders();i++) add_row(i);
 }
-
-
-///////////////////////////////
-//D E S C O N S T R U T O R////
-///////////////////////////////
 void Main_window::on_switch_person_click() {
   remove ();
   show_window_for_person();
 }
 
+///////////////////////////////
+//D E S C O N S T R U T O R////
+///////////////////////////////
 
 Main_window::~Main_window() { }

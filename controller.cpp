@@ -135,3 +135,8 @@ Emporium& Controller::get_emporium () {return emporium;}
 //Set Function
 void Controller::set_person ( Person per) {person =per;}
 
+//To String 
+std::vector<std::string> Controller::order_to_strings(int index) {
+   emporium.order_to_strings(index);
+}
+
