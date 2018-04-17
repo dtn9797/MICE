@@ -9,7 +9,6 @@ int main (int argc, char *argv[]) {
  Emporium em;
  //testing
  Owner *owner = new Owner ("Duy Nguyen",1);
- owner->set_active (true);
  em.add_owner(owner);
  em.add_manager(new Manager ("Thao Pham",1,2));
 

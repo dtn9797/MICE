@@ -14,24 +14,25 @@
     std::vector<Item*>  Emporium::get_items () {return items;}
     std::vector<Person*>  Emporium::get_persons () {return persons;}
     std::vector<Order*>  Emporium::get_orders () {return orders;}
-    Person* Emporium::get_active_person () {
+    std::vector<Person*> Emporium::get_active_persons () {
+      std::vector<Person*> pers ;
       for (Person* person : persons){
         if (person->get_active() == true){
-          return person;   
+          pers.push_back(person);
         }
       }
+     return pers;
     }
-   void Emporium::set_active_person (int index){
-     for (Person* person: persons){
-       person->set_active(false);
-     }
-     persons[index]->set_active(true);
+   void Emporium::set_active_person (int index, bool active){
+     persons[index]->set_active(active);
    }
 
 
     std::string Emporium::scoop_to_string(int index) {return classify_type<std::vector<Item*>>(get_items(),"Scoop")[index]->to_string();}
     std::string Emporium::container_to_string(int index) {return classify_type<std::vector<Item*>>(get_items(),"Container")[index]->to_string();}
     std::string Emporium::topping_to_string(int index){return classify_type<std::vector<Item*>>(get_items(),"Topping")[index]->to_string();}
+    std::vector<std::string> Emporium::order_to_strings(int index) { return orders[index]->to_strings();}
+
 
     int Emporium::number_of_items() {items.size();}
     int Emporium::number_of_scoops() {
@@ -46,6 +47,10 @@
       std::vector<Item*> results= classify_type<std::vector<Item*>>(get_items(),"Topping");
       return results.size();
     }
+    int Emporium::number_of_orders() {
+      return orders.size();
+    }
+
 
     void Emporium::auto_add() {
       //add sample to choose from

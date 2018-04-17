@@ -41,14 +41,18 @@ class Emporium {
     std::vector<Person*> get_persons ();
     std::vector<Order*> get_orders ();
 
-    Person* get_active_person () ;
-    void set_active_person( int index);    
+    std::vector<Person*> get_active_persons () ;
+    void set_active_person( int index, bool active);
+
+    std::vector<std::string> order_to_strings(int index);    
 
     int number_of_items();
     int number_of_scoops();
     int number_of_containers();
     int number_of_toppings();
+    int number_of_orders();
 
+    //TEMPLATE
     template <class T>
     T classify_type(T things, std::string type) {
 	T results={};	

@@ -122,8 +122,7 @@ void Controller::execute_cmd (int cmd){
 }
  else if (cmd==8){ // Create serving in dialogs
     order_id+=1;
-    Person* person_ptr = emporium.get_active_person();
-    Order order (order_id, *person_ptr); 
+    Order order (order_id, person); 
     view.show_create_serving_dialog( order);
 }
  else if (cmd==99) {//Test
@@ -132,4 +131,7 @@ void Controller::execute_cmd (int cmd){
 }
 //GET FUnCTIONS
 Emporium& Controller::get_emporium () {return emporium;} 
+
+//Set Function
+void Controller::set_person ( Person per) {person =per;}
 

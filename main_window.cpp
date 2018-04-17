@@ -6,6 +6,70 @@
 /////////////////////////
 Main_window::Main_window (Controller& con): controller{con} {
   show_window_for_person();
+  //Add the TreeView, inside a ScrolledWindow, with the button underneath:
+  m_ScrolledWindow.add(m_TreeView);
+
+  //Only show the scrollbars when they are necessary:
+  m_ScrolledWindow.set_policy(Gtk::POLICY_AUTOMATIC, Gtk::POLICY_AUTOMATIC);
+
+  vbox->pack_start(m_ScrolledWindow);
+  //vbox->pack_start(m_ButtonBox, Gtk::PACK_SHRINK);
+
+  //Create the Tree model:
+  m_refTreeModel = Gtk::TreeStore::create(m_Columns);
+  m_TreeView.set_model(m_refTreeModel);
+
+  //All the items to be reordered with drag-and-drop:
+  m_TreeView.set_reorderable();
+
+  //Fill the TreeView's model
+  Gtk::TreeModel::Row row = *(m_refTreeModel->append());
+  row[m_Columns.m_col_id] = 1;
+  row[m_Columns.m_col_name] = "Billy Bob";
+
+  Gtk::TreeModel::Row childrow = *(m_refTreeModel->append(row.children()));
+  childrow[m_Columns.m_col_id] = 11;
+  childrow[m_Columns.m_col_name] = "sadsadddddddddddddddddddddsdaddddddddddddddddddddddwadwdwadaedasdwadasdwadsdwasdwasdwdaawdaBilly Bob Junior";
+
+  childrow = *(m_refTreeModel->append(row.children()));
+  childrow[m_Columns.m_col_id] = 12;
+  childrow[m_Columns.m_col_name] = "Sue Bob";
+
+  row = *(m_refTreeModel->append());
+  row[m_Columns.m_col_id] = 2;
+  row[m_Columns.m_col_name] = "Joey Jojo";
+
+
+  row = *(m_refTreeModel->append());
+  row[m_Columns.m_col_id] = 3;
+  row[m_Columns.m_col_name] = "Rob McRoberts";
+
+  childrow = *(m_refTreeModel->append(row.children()));
+  childrow[m_Columns.m_col_id] = 31;
+  childrow[m_Columns.m_col_name] = "Xavier McRoberts";
+
+  //Add the TreeView's view columns:
+  m_TreeView.append_column("ID", m_Columns.m_col_id);
+  m_TreeView.append_column("Name", m_Columns.m_col_name);
+
+  //Connect signal:
+  m_TreeView.signal_row_activated().connect(sigc::mem_fun(*this,
+              &Main_window::on_treeview_row_activated) );
+
+  show_all_children();
+}
+
+
+void Main_window::on_treeview_row_activated(const Gtk::TreeModel::Path& path,
+        Gtk::TreeViewColumn* /* column */)
+{
+  Gtk::TreeModel::iterator iter = m_refTreeModel->get_iter(path);
+  if(iter)
+  {
+    Gtk::TreeModel::Row row = *iter;
+    std::cout << "Row activated: ID=" << row[m_Columns.m_col_id] << ", Name="
+        << row[m_Columns.m_col_name] << std::endl;
+  }
 }
 ///////////////////////
 //WHO IS CONTROLLING?//
@@ -46,19 +110,19 @@ void Main_window::show_window_for_person(){
        int index  = c_person.get_active_row_number();
          if (persons[index] -> type() == "Owner"){
            show_window_for_owner(persons[index]);
-           controller.get_emporium().set_active_person(index);
+           controller.set_person(*(persons[index]));
          }
          else if (persons[index]->type() == "Manager"){
            show_window_for_manager(persons[index]);
-           controller.get_emporium().set_active_person(index);
+           controller.set_person(*(persons[index]));
          }
          else if (persons[index]->type() == "Server"){
            show_window_for_server(persons[index]);
-           controller.get_emporium().set_active_person(index); 
+           controller.set_person(*(persons[index]));
          }
          else if (persons[index]->type() == "Customer"){
            show_window_for_customer(persons[index]);
-           controller.get_emporium().set_active_person(index);
+           controller.set_person(*(persons[index]));
          }
     }
  
@@ -148,7 +212,7 @@ void Main_window::show_window_for_owner(Person* person) {
   //
   set_default_size (768,768);
   //Put verticalbox container
-  Gtk::Box *vbox = Gtk::manage(new Gtk::Box(Gtk::ORIENTATION_VERTICAL, 0));
+  vbox = Gtk::manage(new Gtk::Box(Gtk::ORIENTATION_VERTICAL, 0));
   add(*vbox);
   // //////////
   // M E N U B A R///
@@ -217,7 +281,7 @@ void Main_window::show_window_for_manager(Person* person) {
   //
   set_default_size (768,768);
   //Put verticalbox container
-  Gtk::Box *vbox = Gtk::manage(new Gtk::Box(Gtk::ORIENTATION_VERTICAL, 0));
+  vbox = Gtk::manage(new Gtk::Box(Gtk::ORIENTATION_VERTICAL, 0));
   add(*vbox);
   // //////////
   // M E N U B A R///
@@ -289,7 +353,7 @@ void Main_window::show_window_for_server(Person* person) {
   //
   set_default_size (768,768);
   //Put verticalbox container
-  Gtk::Box *vbox = Gtk::manage(new Gtk::Box(Gtk::ORIENTATION_VERTICAL, 0));
+  vbox = Gtk::manage(new Gtk::Box(Gtk::ORIENTATION_VERTICAL, 0));
   add(*vbox);
   // //////////
   // M E N U B A R///
@@ -359,7 +423,7 @@ void Main_window::show_window_for_customer(Person* person) {
   //
   set_default_size (768,768);
   //Put verticalbox container
-  Gtk::Box *vbox = Gtk::manage(new Gtk::Box(Gtk::ORIENTATION_VERTICAL, 0));
+  vbox = Gtk::manage(new Gtk::Box(Gtk::ORIENTATION_VERTICAL, 0));
   add(*vbox);
   // //////////
   // M E N U B A R///

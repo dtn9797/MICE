@@ -21,3 +21,12 @@
     double Order::get_price(){return price;}
     Server Order::get_server(){return server;}
     Customer Order::get_customer(){return customer;}
+
+    std::vector<std::string> Order::to_strings(){
+      std::vector<std::string> order;
+      order.push_back(std::to_string(id_number));
+      order.push_back(server.get_name());
+      order.push_back(customer.get_name());
+      order.push_back(state.to_string());
+      order.push_back(std::to_string(price));
+    }

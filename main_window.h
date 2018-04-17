@@ -26,6 +26,7 @@ class Main_window: public Gtk::Window {
     void show_window_for_server(Person* person);
     void show_window_for_customer(Person* person);
     //Utilities
+    Gtk::Box *vbox;
     Gtk::ToggleToolButton *manager_button;
     Gtk::ToggleToolButton *owner_button;
     Gtk::ToggleToolButton *customer_button;
@@ -40,6 +41,37 @@ class Main_window: public Gtk::Window {
     void on_switch_person_click();
 
     void on_test_click();
+
+    void on_treeview_row_activated(const Gtk::TreeModel::Path& path, Gtk::TreeViewColumn* column);
+    class ModelColumns : public Gtk::TreeModel::ColumnRecord{
+      public:
+       /* ModelColumns(){
+          add (m_col_id);
+          add (m_col_server);
+          add (m_col_customer);
+          add (m_col_state);
+          add (m_col_price);
+        }
+        Gtk::TreeModelColumn<int> m_col_id;
+        Gtk::TreeModelColumn<Glib::ustring> m_col_server;
+        Gtk::TreeModelColumn<Glib::ustring> m_col_customer;
+        Gtk::TreeModelColumn<Glib::ustring> m_col_state;
+        Gtk::TreeModelColumn<Glib::ustring> m_col_price;
+       */
+          ModelColumns()
+    { add(m_col_id); add(m_col_name); }
+
+    Gtk::TreeModelColumn<int> m_col_id;
+    Gtk::TreeModelColumn<Glib::ustring> m_col_name;
+   };
+
+    
+    ModelColumns m_Columns;  
+    Gtk::ScrolledWindow m_ScrolledWindow;
+    Gtk::TreeView m_TreeView;
+    Glib::RefPtr<Gtk::TreeStore> m_refTreeModel;
+    //Gtk::ButtonBox m_ButtonBox;
+
 };
 
 

@@ -15,7 +15,7 @@ class Person {
   protected:
    std::string name;
    int id;
-   bool active = false;
+   bool active = true;
 };
 
 

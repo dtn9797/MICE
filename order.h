@@ -7,6 +7,7 @@
 #include "customer.h"
 #include "server.h"
 #include <vector>
+#include <string>
 
 class Order {
   public: 
@@ -18,16 +19,7 @@ class Order {
     //Order (int id,Server ser, std::vector<Serving> sers): id_number{id}, server{ser} ,servings{sers} {}
     //Order (int id,Customer cus, std::vector<Serving> sers): id_number{id},customer{cus}, servings{sers} {}
     //Copy Constructor
-    
-    //Copy assignment
-    /*Order& operator=(const Order &rhs) {
-       if (this!=&rhs){
-          id_number = rhs.get_id_number();
-          server =rhs.get_server();
-          customer= rhs.get_customer();
-       }
-    }
-*/
+
     void fill(Server &server);
     void pay();
     void cancel();
@@ -41,6 +33,8 @@ class Order {
     double get_price();
     Server get_server();
     Customer get_customer();
+
+    std::vector<std::string> to_strings();
   private:
     int id_number;
     std::vector<Serving> servings ={};
