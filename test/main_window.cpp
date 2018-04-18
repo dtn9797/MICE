@@ -59,7 +59,7 @@ void Main_window::create_submenu_items(Gtk::Menu *namemenu,std::string name,sigc
 void Main_window::on_test_click() {
     int index = controller.get_emporium().number_of_orders();
     std::cout<< " On _test_clicked\n";
-    //auto add order
+    //auto add 1 order
     controller.execute_cmd(99);
      //BUG
     std::vector<std::string> record = controller.order_to_strings(0);

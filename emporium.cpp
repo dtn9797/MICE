@@ -82,7 +82,7 @@
       Serving serving ( Container ("Cup","General",1,1,1), scoops, tops );
       //add order 
       //Order (int id, Server &ser): id_number{id} ,server{ser}{}
-      Order order0(1,*(dynamic_cast<Manager*>(persons[1])));
+      Order order0(1,*(persons[1]));
       order0.add_serving(serving); 
       add_order(&order0);  
       // test for order_to_string func

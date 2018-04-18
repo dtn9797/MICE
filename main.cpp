@@ -17,3 +17,5 @@ int main (int argc, char *argv[]) {
  win.set_title ("Emporium System");
  return app->run(win);
 }
+
+

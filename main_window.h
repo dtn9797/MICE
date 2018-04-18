@@ -7,7 +7,7 @@
 #include <vector>
 #include <string>
 #include <sigc++/functors/slot.h>
-#include "person.h"
+#include "emporium.h"
 
 
 class Main_window: public Gtk::Window {
@@ -24,9 +24,7 @@ class Main_window: public Gtk::Window {
     void add_row (int order_index);
     //Persons
     void show_window_for_owner(Person* person);
-    void show_window_for_manager(Person* person);
-    void show_window_for_server(Person* person);
-    void show_window_for_customer(Person* person);
+
     //Utilities
     Gtk::Box *vbox;
     Gtk::ToggleToolButton *manager_button;
