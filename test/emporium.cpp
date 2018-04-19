@@ -17,9 +17,12 @@
     }
 
     void Emporium::auto_add() {
-      Order order0(1);
-      add_order(&order0);  
+   
+      add_order(new Order(1));  
       std::vector<std::string> record = order_to_strings(0);
       std::cout << "This is printing from emporium.cpp class" <<std::endl 
                 << "Id:" << record[0] <<"State: "<< record[1]<<"Price:"<< record[2]<< std::endl;    
+    }
+    Emporium::~Emporium() {
+       delete orders;
     }

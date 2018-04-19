@@ -1,0 +1,1 @@
+bool cash_register();

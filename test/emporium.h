@@ -12,6 +12,7 @@ class Emporium {
     std::vector<Order*>  orders;
   public:
     std::vector<Order*> get_orders ();
+    virtual ~Emporium();
     void add_order (Order* order);   
     std::vector<std::string> order_to_strings(int index);
     std::string servings_to_string (int order_index);    
