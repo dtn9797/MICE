@@ -23,7 +23,7 @@ class Item {
 
      std::string get_name();
      std::string get_description();
-     double get_wholesale_cost();
+     double get_wholesale_cost() const ;
      double get_retail_price();
      int get_stock_remaining();
   protected:

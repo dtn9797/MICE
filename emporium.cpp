@@ -79,16 +79,19 @@
       //Serving(Container con,std::vector<Scoop> scos,std::vector<Topping> tops) ;
       std::vector<Scoop> scoops = {Scoop ("Vanilla","General",1,1),Scoop ("Cookies", "Sweet",1,1)};
       std::vector<Topping> tops = {Topping("Whipped Cream","General",1,1,1), Topping("Chocolate Sauce", "Sweet",1,1,1) };
-      Serving serving ( Container ("Cup","General",1,1,1), scoops, tops );
+      Serving serving0 ( Container ("Cup","General",1,1,1), scoops, tops );
+       
       //add order 
       //Order (int id, Server &ser): id_number{id} ,server{ser}{}
-      Order order0(1,*(dynamic_cast<Manager*>(persons[1])));
-      order0.add_serving(serving); 
-      add_order(&order0);  
+      Order order0(1,*(persons[0]));
+      order0.add_serving(serving0); 
+      add_order(&order0);
+       
       // test for order_to_string func
       std::vector<std::string> record = order_to_strings(0);
   
       std::cout << "This is printing from emporium.cpp class" <<std::endl 
                 << "Id:" << record[0]<<"Name: "<< record[1]<< "Name"<< record[2]<<"State: "<< record[3]<<"Price:"<< record[4]<< std::endl;
+       
       
     }

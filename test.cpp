@@ -9,9 +9,10 @@
 #include "test_server.h"
 #include "test_customer.h"
 #include "test_order.h"
+#include "test_cash_register.h"
 #include <iostream>
 
 int main() {
-  if (!(test_topping() && test_scoop() && test_container() && test_serving() &&test_emporium() && test_person() && test_customer() && test_server() && test_order()))
+  if (!(test_topping() && test_scoop() && test_container() && test_serving() &&test_emporium() && test_person() && test_customer() && test_server() && test_order() && test_cash_register()))
     std::cerr << "fail" << std::endl;
 } 

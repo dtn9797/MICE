@@ -30,7 +30,7 @@ class Order {
     std::vector<Serving> get_servings();
     State get_state();
     double get_cost();
-    double get_price();
+    double get_price() const;
     Server get_server();
     Customer get_customer();
 

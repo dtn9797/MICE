@@ -18,7 +18,7 @@
     std::vector<Serving> Order::get_servings(){return servings;}
     State Order::get_state(){return state;}
     double Order::get_cost(){return cost;}
-    double Order::get_price(){return price;}
+    double Order::get_price() const {return price;}
     Server Order::get_server(){return server;}
     Customer Order::get_customer(){return customer;}
 
