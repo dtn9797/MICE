@@ -55,7 +55,6 @@ bool test_cash_register() {
     passed = false;
   }
      
-  
 
   return passed;
 

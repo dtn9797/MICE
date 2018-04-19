@@ -83,7 +83,8 @@
        
       //add order 
       //Order (int id, Server &ser): id_number{id} ,server{ser}{}
-      Order order0(1,*(persons[0]));
+      Server server ("Duy",1,100);
+      Order order0(1, server);
       order0.add_serving(serving0); 
       add_order(&order0);
        

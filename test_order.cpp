@@ -19,6 +19,7 @@ bool test_order () {
    Server x_ser ("S",3,7.25);
    Order order0 (x_id,x_cus);
    Order order1 (x_id,x_ser);
+
    if (order0.get_id_number() != x_id || 
        order1.get_id_number() != x_id ||
        order0.get_customer().get_name() != "C" ||
@@ -26,6 +27,7 @@ bool test_order () {
      std::cerr << "#Order Constructor Error";
      passed = false;
    }
+
   //
   // Test for add order
   // 
