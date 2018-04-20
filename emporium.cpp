@@ -58,6 +58,9 @@
       return orders.size();
     }
 
+    void Emporium::restock_item(int index , int amount){
+      items[index]->restock(amount);
+    }
 
     void Emporium::auto_add() {
       //add sample to choose from
@@ -86,13 +89,5 @@
       Server server ("Duy",1,100);
       Order order0(1, server);
       order0.add_serving(serving0); 
-      add_order(&order0);
-       
-      // test for order_to_string func
-      std::vector<std::string> record = order_to_strings(0);
-  
-      std::cout << "This is printing from emporium.cpp class" <<std::endl 
-                << "Id:" << record[0]<<"Name: "<< record[1]<< "Name"<< record[2]<<"State: "<< record[3]<<"Price:"<< record[4]<< std::endl;
-       
-      
+      add_order(&order0);      
     }

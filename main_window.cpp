@@ -147,7 +147,8 @@ void Main_window::create_menu_items(Gtk::MenuBar *menubar, std::string name, std
 							{"_Properties", sigc::mem_fun(*this, &Main_window::on_properties_click)},
 							{"_Order", sigc::mem_fun(*this, &Main_window::on_create_order_click)},
 							{"_Item", sigc::mem_fun(*this, &Main_window::on_create_item_click)},
-							{"_Test", sigc::mem_fun(*this, &Main_window::on_test_click)}
+							{"_Test", sigc::mem_fun(*this, &Main_window::on_test_click)},
+							{"_Restock", sigc::mem_fun(*this, &Main_window::on_restock_click)},
 							};
   for(std::string sub_name:sub_names) create_submenu_items(namemenu ,sub_name,str_to_func[sub_name]);
 }
@@ -438,7 +439,7 @@ void Main_window::show_window_for_customer(Person* person) {
   //     FILE
   create_menu_items(menubar,"_File", sub_names);
   //SUBMENUS FOR EDIT
-  sub_names= {"_Undo","_Restock","_Customer","_Server","_Manager","_Owner","_Item"};
+  sub_names= {"_Undo","_Customer","_Server","_Manager","_Owner","_Item"};
   //     EDIT
   create_menu_items(menubar,"_Edit", sub_names);
   //SUBMENUS FOR CREATE
@@ -541,8 +542,6 @@ void Main_window::on_properties_click() {
 void Main_window::on_create_order_click() {
    //create serving
    controller.execute_cmd(8);
-
-  
 }
 void Main_window::on_create_item_click() {
     std::cout<< " On _item_clicked\n";
@@ -551,15 +550,17 @@ void Main_window::on_create_item_click() {
 void Main_window::on_test_click() {
     int index = controller.get_emporium().number_of_orders();
     std::cout<< " On _test_clicked\n";
-    controller.execute_cmd(99);
-  
+    controller.execute_cmd(99);  
     for (int i = index ; i< controller.get_emporium().number_of_orders();i++) add_row(i);
 }
 void Main_window::on_switch_person_click() {
   remove ();
   show_window_for_person();
 }
-
+void Main_window::on_restock_click() {
+  std::cout<< " On _restock_clicked" << std::endl;
+  controller.execute_cmd(9);
+}
 ///////////////////////////////
 //D E S C O N S T R U T O R////
 ///////////////////////////////

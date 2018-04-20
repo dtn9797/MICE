@@ -5,6 +5,7 @@
 #include "scoop.h"
 #include "person.h"
 #include "order.h"
+#include "emporium.h"
 
 bool test_cash_register() {
   std::string expected = "";
@@ -55,7 +56,6 @@ bool test_cash_register() {
     passed = false;
   }
      
-
   return passed;
 
 

@@ -2,6 +2,9 @@
 #include <string>
 #include <iostream>
 #include <stdlib.h>
+#include <exception>
+#include <stdexcept>
+
 using namespace std;
 void View::show_menu (){
     string menu = R"(
@@ -151,18 +154,53 @@ void View::show_create_serving_dialog(Order &order){
 
        create_scoop_for_serving (order,serving,0,scoop_limit);
     }
-
 }
+
+int View::show_items () {
+    int item_index = -1;
+    //Design
+    Gtk::Dialog dialog;
+    dialog.set_title("Items");
+
+    Gtk::HBox b_item;
+
+    Gtk::Label l_item{"Items:"};
+    l_item.set_width_chars(15);
+    b_item.pack_start(l_item, Gtk::PACK_SHRINK);
+
+    Gtk::ComboBoxText c_item;
+    c_item.set_size_request(160);
+
+    vector<Item*> items = emporium.get_items();
+    for (Item* item : items){
+      std::string item_info = item -> get_name ()+"," + item->get_description() + "(Amount: " +std::to_string(item->get_stock_remaining())+')';
+      c_item.append(item_info);
+    }
+
+    b_item.pack_start(c_item, Gtk::PACK_SHRINK);
+    dialog.get_vbox()->pack_start(b_item, Gtk::PACK_SHRINK);  
+
+    // Show dialog
+    dialog.add_button("Cancel", 0);
+    dialog.add_button ("OK",1);
+    dialog.show_all();
+    int result = dialog.run();
+    dialog.close();
+    if (result == 1 ){
+      item_index= c_item.get_active_row_number();
+    }
+    return item_index;
+} 
 
 //
 //PRIVATE FUNCTIONS
 //
 
-//Scoop for Serving
+//Scoop for Serving///WARNING NEW DIALOG
 void View::create_scoop_for_serving (Order &order,Serving& serving, int scoop_amount, int scoop_limit) {
     //Design
-    Gtk::Dialog *dialog = new Gtk::Dialog();
-    dialog->set_title("Create Scoop for Serving");
+    Gtk::Dialog dialog ;
+    dialog.set_title("Create Scoop for Serving");
 
     Gtk::HBox b_scoop;
 
@@ -180,18 +218,18 @@ void View::create_scoop_for_serving (Order &order,Serving& serving, int scoop_am
     }
 
     b_scoop.pack_start(c_scoop, Gtk::PACK_SHRINK);
-    dialog->get_vbox()->pack_start(b_scoop, Gtk::PACK_SHRINK);  
+    dialog.get_vbox()->pack_start(b_scoop, Gtk::PACK_SHRINK);  
 
     // Show dialog
-    dialog->add_button("Cancel", 0);
-    if (scoop_amount > 0){ dialog->add_button("Complete Serving",1);}
-    dialog->add_button("Add Scoop", 2);
-    if (scoop_amount != 0)dialog->add_button("Go to Topping", 3);
-    dialog->add_button ("Serving Info",4);
-    dialog->show_all();
-    int result = dialog->run();
+    dialog.add_button("Cancel", 0);
+    if (scoop_amount > 0){ dialog.add_button("Complete Serving",1);}
+    dialog.add_button("Add Scoop", 2);
+    if (scoop_amount != 0)dialog.add_button("Go to Topping", 3);
+    dialog.add_button ("Serving Info",4);
+    dialog.show_all();
+    int result = dialog.run();
 
-    dialog->close();
+    dialog.close();
     while (Gtk::Main::events_pending())  Gtk::Main::iteration();   
     if (result ==0 )return;
 
@@ -469,5 +507,49 @@ int View::question(std::string msg, std::string title, std::vector<std::string> 
     delete dialog;
 
     return result;
+}
+int View::entry_amount_dialog(std::string msg, std::string title){
+ Gtk::Dialog *dialog = new Gtk::Dialog();
+    dialog->set_title(title);
+
+    Gtk::Label *label = new Gtk::Label(msg);
+    label->set_use_markup(true);
+    dialog->get_content_area()->pack_start(*label);
+    label->show();
+
+    Gtk::HBox b_amount;
+
+    Gtk::Entry e_amount;
+    e_amount.set_max_length(50);
+    b_amount.pack_start(e_amount, Gtk::PACK_SHRINK);
+    dialog->get_vbox()->pack_start(b_amount, Gtk::PACK_SHRINK);
+
+    dialog->add_button("Cancel", 0);
+    dialog->add_button("OK", 1);
+    dialog->show_all();
+
+    bool valid_data=false;
+    int amount ;
+
+    while (!valid_data){
+      if (dialog->run()!=1){
+         dialog -> close();
+         return -1;
+      }
+      valid_data = true;
+      try {
+        amount = std::stoi(e_amount.get_text());
+      }
+      catch (std::exception e) {
+        e_amount.set_text("*****Invalid Amount*****");
+        valid_data=false;  
+      }
+      if (amount < 0 || amount > 25){
+        e_amount.set_text("*****Amount Reach Limit*****");
+        valid_data=false;  
+      }
+    }
+  dialog->close();
+  return amount;
 }
 //Emporium

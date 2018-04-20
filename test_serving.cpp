@@ -44,9 +44,9 @@ bool test_serving () {
   //
   //Check for out put
   //
-  std::cout << "#####Check for cout from serving"<< std::endl
+  /*std::cout << "#####Check for cout from serving"<< std::endl
   << serving.to_string_serving() << std::endl;
-  
+  */
   //
   // Report results
   //

@@ -125,6 +125,14 @@ void Controller::execute_cmd (int cmd){
     Order order (order_id, person); 
     view.show_create_serving_dialog( order);
 }
+ else if (cmd==9){ // Restock items
+    int item_index = view.show_items();
+    if(item_index == -1) return;
+    int amount = view.entry_amount_dialog("Amount?","How many do you want to restock?");
+    std::cout << "Item_index: "<<item_index << std::endl
+              << "Amount " << amount << std::endl;
+    emporium.restock_item(item_index,amount);
+}
  else if (cmd==99) {//Test
     emporium.auto_add();
 }

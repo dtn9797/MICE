@@ -28,6 +28,9 @@ class View {
    //GUI
    void show_create_item_dialog();
    void show_create_serving_dialog(Order &order);
+   int show_items();
+   //dialog
+   int entry_amount_dialog(std::string title, std::string msg);
 };
 
 #endif

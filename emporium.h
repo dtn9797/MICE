@@ -65,7 +65,7 @@ class Emporium {
     }
 
     
-
+    void restock_item(int index, int amount);
     void auto_add();
 };
 
