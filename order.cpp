@@ -1,9 +1,9 @@
 #include "order.h"
 
 
-    void Order::fill(Server &server) {
+    void Order::fill(Server *server) {
       state = State:: filled;
-      server.add_order_filled();
+      server->add_order_filled();
     }
     void Order::pay(){ state = State:: paid;}
     void Order::cancel() {state= State:: canceled;}
@@ -17,6 +17,7 @@
     int Order::get_id_number () {return id_number;}
     std::vector<Serving> Order::get_servings(){return servings;}
     State Order::get_state(){return state;}
+    std::string Order::get_state_string (){return state.to_string();}
     double Order::get_cost(){return cost;}
     double Order::get_price() const {return price;}
     Server Order::get_server(){return server;}
@@ -28,12 +29,3 @@
       return servings[index].to_string_serving();
     }*/
 
-    std::vector<std::string> Order::to_strings(){
-      std::vector<std::string> order;
-      order.push_back(std::to_string(id_number));
-      order.push_back(server.get_name());
-      order.push_back(customer.get_name());
-      order.push_back(state.to_string());
-      order.push_back(std::to_string(price));
-      return order;
-    }

@@ -22,6 +22,7 @@ class Main_window: public Gtk::Window {
     void show_window_for_person();
     //Tree View
     void add_row (int order_index);
+    void update_rows();
     //Persons
     void show_window_for_owner(Person* person);
     void show_window_for_manager(Person* person);
@@ -42,7 +43,7 @@ class Main_window: public Gtk::Window {
     void on_create_order_click();
     void on_create_item_click();
     void on_restock_click();
-    
+    void on_filled_click();
 
     void on_switch_person_click();
 

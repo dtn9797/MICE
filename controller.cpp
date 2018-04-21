@@ -122,8 +122,8 @@ void Controller::execute_cmd (int cmd){
 }
  else if (cmd==8){ // Create serving in dialogs
     order_id+=1;
-    Order order (order_id, person); 
-    view.show_create_serving_dialog( order);
+    Order* order_ptr = new Order(order_id, *person_ptr); 
+    view.show_create_serving_dialog( order_ptr);
 }
  else if (cmd==9){ // Restock items
     int item_index = view.show_items();
@@ -133,6 +133,12 @@ void Controller::execute_cmd (int cmd){
               << "Amount " << amount << std::endl;
     emporium.restock_item(item_index,amount);
 }
+ else if (cmd==10){ // Fill Order
+    int order_index = view.show_unfilled_orders();
+    if(order_index == -1) return;
+    emporium.fill_order(order_index,dynamic_cast<Server*>(person_ptr));
+}
+
  else if (cmd==99) {//Test
     emporium.auto_add();
 }
@@ -141,10 +147,6 @@ void Controller::execute_cmd (int cmd){
 Emporium& Controller::get_emporium () {return emporium;} 
 
 //Set Function
-void Controller::set_person ( Person per) {person =per;}
+void Controller::set_person ( Person* per) {person_ptr =per;}
 
-//To String 
-std::vector<std::string> Controller::order_to_strings(int index) {
-   emporium.order_to_strings(index);
-}
 

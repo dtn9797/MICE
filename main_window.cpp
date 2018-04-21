@@ -22,26 +22,6 @@ Main_window::Main_window (Controller& con): controller{con} {
   //All the items to be reordered with drag-and-drop:
   m_TreeView.set_reorderable();
 
-  //Fill the TreeView's model
-  Gtk::TreeModel::Row row = *(m_refTreeModel->append());
-  row[m_Columns.m_col_id] = 1;
-  row[m_Columns.m_col_server] = "Server";
-  row[m_Columns.m_col_customer] = "Customer";
-  row[m_Columns.m_col_state] = "State";
-  row[m_Columns.m_col_price] = "10";
-
-  Gtk::TreeModel::Row childrow = *(m_refTreeModel->append(row.children()));
-  childrow[m_Columns.m_col_id] = 1;
-  childrow[m_Columns.m_col_server] = "Serving Info :\n \tContainer:\n\t Box \n \tScoops: ....";
-
-
-  row[m_Columns.m_col_id] = 1;
-  row[m_Columns.m_col_server] = "Server";
-  row[m_Columns.m_col_customer] = "Customer";
-  row[m_Columns.m_col_state] = "State";
-  row[m_Columns.m_col_price] = "10";
-
-
 
   //Add the TreeView's view columns:
   m_TreeView.append_column("ID", m_Columns.m_col_id);
@@ -50,29 +30,10 @@ Main_window::Main_window (Controller& con): controller{con} {
   m_TreeView.append_column("State", m_Columns.m_col_state);
   m_TreeView.append_column("Price", m_Columns.m_col_price);
 
-  /*
-  //Connect signal:
-  m_TreeView.signal_row_activated().connect(sigc::mem_fun(*this,
-              &Main_window::on_treeview_row_activated) );
-  */
 
   show_all_children();
 }
 
-
-/*
-void Main_window::on_treeview_row_activated(const Gtk::TreeModel::Path& path,
-        Gtk::TreeViewColumn* )
-{
-  Gtk::TreeModel::iterator iter = m_refTreeModel->get_iter(path);
-  if(iter)
-  {
-    Gtk::TreeModel::Row row = *iter;
-    std::cout << "Row activated: ID=" << row[m_Columns.m_col_id] << ", Name="
-        << row[m_Columns.m_col_name] << std::endl;
-  }
-}
-*/
 
 ///////////////////////
 //WHO IS CONTROLLING?//
@@ -113,19 +74,19 @@ void Main_window::show_window_for_person(){
        int index  = c_person.get_active_row_number();
          if (persons[index] -> type() == "Owner"){
            show_window_for_owner(persons[index]);
-           controller.set_person(*(persons[index]));
+           controller.set_person(persons[index]);
          }
          else if (persons[index]->type() == "Manager"){
            show_window_for_manager(persons[index]);
-           controller.set_person(*(persons[index]));
+           controller.set_person(persons[index]);
          }
          else if (persons[index]->type() == "Server"){
            show_window_for_server(persons[index]);
-           controller.set_person(*(persons[index]));
+           controller.set_person(persons[index]);
          }
          else if (persons[index]->type() == "Customer"){
            show_window_for_customer(persons[index]);
-           controller.set_person(*(persons[index]));
+           controller.set_person(persons[index]);
          }
     }
  
@@ -149,6 +110,7 @@ void Main_window::create_menu_items(Gtk::MenuBar *menubar, std::string name, std
 							{"_Item", sigc::mem_fun(*this, &Main_window::on_create_item_click)},
 							{"_Test", sigc::mem_fun(*this, &Main_window::on_test_click)},
 							{"_Restock", sigc::mem_fun(*this, &Main_window::on_restock_click)},
+							{"_Fill Order", sigc::mem_fun(*this, &Main_window::on_filled_click)},
 							};
   for(std::string sub_name:sub_names) create_submenu_items(namemenu ,sub_name,str_to_func[sub_name]);
 }
@@ -365,7 +327,7 @@ void Main_window::show_window_for_server(Person* person) {
   Gtk::MenuBar *menubar = Gtk::manage(new Gtk::MenuBar());
   vbox->pack_start(*menubar, Gtk::PACK_SHRINK, 0);
   //SUBMENUS FOR FILE
-  std::vector<std::string> sub_names= {"_Properties"};
+  std::vector<std::string> sub_names= {"_Properties","_Test"};
   //     FILE
   create_menu_items(menubar,"_File", sub_names);
   //SUBMENUS FOR EDIT
@@ -490,39 +452,7 @@ void Main_window::show_window_for_customer(Person* person) {
   //SHOW ALL ITEMS
   vbox->show_all();
 }
-///////////////////////
-////U T I L I T I E S//
-//////////////////////
-void Main_window:: add_row (int order_index) {
 
-  Gtk::TreeModel::Row row = *(m_refTreeModel->append());
-  // This line of code cause the error 
-  //std::vector<std::string> record = controller.order_to_strings(order_index);
-  // Hard coded for testing
-  row[m_Columns.m_col_id] = 1;//std::stoi(record[0]);
-  row[m_Columns.m_col_server] = "Server";
-  row[m_Columns.m_col_customer] = "Customer";
-  row[m_Columns.m_col_state] = "State";
-  row[m_Columns.m_col_price] = "Price";
-
- /*
-  std::vector<std::string> record = controller.order_to_strings(order_index);
-  
-  std::cout << record[0]<<' '<< record[1]<<' '<< record[2]<<std::endl;
-  
-  row[m_Columns.m_col_id] = order_index;//std::stoi(record[0]);
-  row[m_Columns.m_col_server] = record[1];
-  row[m_Columns.m_col_customer] = record[2];
-  row[m_Columns.m_col_state] = record[3];
-  row[m_Columns.m_col_price] = record[4];
-
-  //child row
-  Gtk::TreeModel::Row childrow = *(m_refTreeModel->append(row.children()));
-  std::string servings = controller.get_emporium().servings_to_string(order_index);
-  childrow[m_Columns.m_col_server] = "Serving Info :\n"+ servings;
-  */
-
-}
 
 
 
@@ -540,8 +470,10 @@ void Main_window::on_properties_click() {
     std::cout<< " On _properties_clicked\n";
 }
 void Main_window::on_create_order_click() {
+   int index = controller.get_emporium().number_of_orders();
    //create serving
    controller.execute_cmd(8);
+   for (int i = index ; i< controller.get_emporium().number_of_orders();i++) add_row(i);
 }
 void Main_window::on_create_item_click() {
     std::cout<< " On _item_clicked\n";
@@ -561,8 +493,52 @@ void Main_window::on_restock_click() {
   std::cout<< " On _restock_clicked" << std::endl;
   controller.execute_cmd(9);
 }
+void Main_window::on_filled_click() {
+  std::cout<< " On _filled_clicked" << std::endl;
+  controller.execute_cmd(10);
+  //std::cout<< " Current filled num"<< dynamic_cast<Server*>(controller.get_emporium().get_persons()[2])->get_num_order_filled() << std::endl;
+  update_rows();
+}
+
 ///////////////////////////////
 //D E S C O N S T R U T O R////
 ///////////////////////////////
 
 Main_window::~Main_window() { }
+
+//////////////////////////
+// U T I L I T I E S//////
+//////////////////////////
+void Main_window::update_rows() {
+    Gtk::TreeIter iter = m_refTreeModel->get_iter("0");
+    for(int i=0; i<controller.get_emporium().number_of_orders(); ++i) {
+        //Update state
+        std::string state = controller.get_emporium().get_orders()[i]->get_state_string();
+        (*iter)[m_Columns.m_col_state] = state;
+        iter++;
+    }
+}
+
+void Main_window:: add_row (int order_index) {
+
+  Gtk::TreeModel::Row row = *(m_refTreeModel->append());
+  // This line of code cause the error 
+  //std::vector<std::string> record = controller.order_to_strings(order_index);
+  int id = order_index;
+  std::string server = controller.get_emporium().get_orders()[order_index]->get_server().get_name();
+  std::string customer = controller.get_emporium().get_orders()[order_index]->get_customer().get_name();
+  std::string state = controller.get_emporium().get_orders()[order_index]->get_state_string();
+  std::string price = std::to_string(controller.get_emporium().get_orders()[order_index]->get_price());
+
+  row[m_Columns.m_col_id] = id;
+  row[m_Columns.m_col_server] = server;
+  row[m_Columns.m_col_customer] = customer;
+  row[m_Columns.m_col_state] = state;
+  row[m_Columns.m_col_price] = price;
+
+  //child row
+  Gtk::TreeModel::Row childrow = *(m_refTreeModel->append(row.children()));
+  std::string servings = controller.get_emporium().servings_to_string(order_index);
+  childrow[m_Columns.m_col_server] = "Serving Info :\n"+ servings;
+}
+

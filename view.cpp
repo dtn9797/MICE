@@ -110,11 +110,11 @@ void View::show_create_item_dialog(){
       create_chosen_type_dialog(type_name[type]);
     }
 }
-
-void View::show_create_serving_dialog(Order &order){
+//WARNING CHANGE DIALOG
+void View::show_create_serving_dialog(Order* order_ptr){
     int container;
-    Gtk::Dialog *dialog = new Gtk::Dialog();
-    dialog->set_title("Create Serving");
+    Gtk::Dialog dialog;
+    dialog.set_title("Create Serving");
     // Add Container
     Gtk::HBox b_container;
 
@@ -131,18 +131,18 @@ void View::show_create_serving_dialog(Order &order){
     }
 
     b_container.pack_start(c_container, Gtk::PACK_SHRINK);
-    dialog->get_vbox()->pack_start(b_container, Gtk::PACK_SHRINK);  
+    dialog.get_vbox()->pack_start(b_container, Gtk::PACK_SHRINK);  
  
     //b_container.set_margin_left(105);
     //Button:  button.signal_clicked().connect(sigc::mem_fun(*this, &Main_window::on_create_item_click))
    
     // Show dialog
-    dialog->add_button("Cancel", 0);
-    dialog->add_button("Add Container", 1);
-    dialog->show_all();
-    int result = dialog->run();
+    dialog.add_button("Cancel", 0);
+    dialog.add_button("Add Container", 1);
+    dialog.show_all();
+    int result = dialog.run();
 
-    dialog->close();
+    dialog.close();
     while (Gtk::Main::events_pending())  Gtk::Main::iteration();   
 
     if (result == 1){
@@ -152,7 +152,7 @@ void View::show_create_serving_dialog(Order &order){
        Serving serving (*container_ptr, std::vector<Scoop> (),std::vector<Topping> () );
        int scoop_limit = container_ptr->get_scoop_limit();
 
-       create_scoop_for_serving (order,serving,0,scoop_limit);
+       create_scoop_for_serving (order_ptr,serving,0,scoop_limit);
     }
 }
 
@@ -187,9 +187,53 @@ int View::show_items () {
     int result = dialog.run();
     dialog.close();
     if (result == 1 ){
-      item_index= c_item.get_active_row_number();
+      try {item_index= c_item.get_active_row_number();}
+      catch (std::exception e){
+        create_message_dialog("Error", "Need to select Item first");
+        return -1;
+      }     
     }
     return item_index;
+} 
+int View::show_unfilled_orders () {
+    int order_index = -1;
+    //Design
+    Gtk::Dialog dialog;
+    dialog.set_title("Unfilled Orders");
+
+    Gtk::HBox b_order;
+
+    Gtk::Label l_order{"Unfilled Orders:"};
+    l_order.set_width_chars(15);
+    b_order.pack_start(l_order, Gtk::PACK_SHRINK);
+
+    Gtk::ComboBoxText c_order;
+    c_order.set_size_request(160);
+
+    vector<Order*> unfilled_orders = emporium.get_unfilled_orders();
+//    std::cout << "Unfilled_orderr size in view :" << unfilled_orders.size() << std::endl;
+    for (Order* unfilled_order : unfilled_orders){
+      std::string unfilled_order_info = std::to_string(unfilled_order -> get_id_number())+ "(Cost: " +std::to_string(unfilled_order->get_cost())+')';
+      c_order.append(unfilled_order_info);
+    }
+
+    b_order.pack_start(c_order, Gtk::PACK_SHRINK);
+    dialog.get_vbox()->pack_start(b_order, Gtk::PACK_SHRINK);  
+
+    // Show dialog
+    dialog.add_button("Cancel", 0);
+    dialog.add_button ("OK",1);
+    dialog.show_all();
+    int result = dialog.run();
+    dialog.close();
+    if (result == 1 ){
+      try {order_index= c_order.get_active_row_number();}
+      catch (std::exception e){
+        create_message_dialog("Error", "Need to select Order first");
+        return -1;
+      }
+    }
+    return order_index;
 } 
 
 //
@@ -197,7 +241,7 @@ int View::show_items () {
 //
 
 //Scoop for Serving///WARNING NEW DIALOG
-void View::create_scoop_for_serving (Order &order,Serving& serving, int scoop_amount, int scoop_limit) {
+void View::create_scoop_for_serving (Order* order_ptr,Serving& serving, int scoop_amount, int scoop_limit) {
     //Design
     Gtk::Dialog dialog ;
     dialog.set_title("Create Scoop for Serving");
@@ -239,38 +283,38 @@ void View::create_scoop_for_serving (Order &order,Serving& serving, int scoop_am
          Scoop* scoop =  dynamic_cast<Scoop*>(scoops[index]);
          serving.add_scoop(*scoop);
          scoop_amount=serving.get_number_scoops();
-         create_scoop_for_serving (order,serving,scoop_amount,scoop_limit);
+         create_scoop_for_serving (order_ptr,serving,scoop_amount,scoop_limit);
        }
        else{ 
          create_message_dialog ("Error","Container reaches scoop limit if adding one more scoop.");
-         create_scoop_for_serving (order,serving,scoop_amount,scoop_limit);
+         create_scoop_for_serving (order_ptr,serving,scoop_amount,scoop_limit);
        }
     }
     else if (result==3){//go to top
-       create_topping_for_serving(order,serving);
+       create_topping_for_serving(order_ptr,serving);
     }
     else if (result ==1 ){
        //Need to add : add serving to order
        int answer= question("Do you want to add more serving in order?","Question",{"Yes","No"});
        if (answer == 0 ){ //add serving to order then show dialogs again
-         order.add_serving(serving);
-         show_create_serving_dialog(order);
+         order_ptr->add_serving(serving);
+         show_create_serving_dialog(order_ptr);
          
        }
        else if (answer == 1){ //add serving then add order to emporium
-         order.add_serving(serving);
-         emporium.add_order(&order);       
+         order_ptr->add_serving(serving);
+         emporium.add_order(order_ptr);       
        }
     }
     else if (result==4){
        show_serving_info (serving);
-       create_scoop_for_serving (order,serving,scoop_amount,scoop_limit);
+       create_scoop_for_serving (order_ptr,serving,scoop_amount,scoop_limit);
     }
 
 }
 
 //Topping for Serving
-void View::create_topping_for_serving (Order &order, Serving& serving) {
+void View::create_topping_for_serving (Order* order_ptr, Serving& serving) {
     //Design
     Gtk::Dialog *dialog = new Gtk::Dialog();
     dialog->set_title("Create Topping for Serving");
@@ -325,7 +369,7 @@ void View::create_topping_for_serving (Order &order, Serving& serving) {
     int scoop_amount = serving.get_number_scoops();
     int scoop_limit = serving.get_container().get_scoop_limit();
     if (result == 2){//go to scoop
-       create_scoop_for_serving (order,serving,scoop_amount,scoop_limit);
+       create_scoop_for_serving (order_ptr,serving,scoop_amount,scoop_limit);
     }
     else if (result==3){//Add topping
        int index_top = c_top.get_active_row_number();
@@ -333,25 +377,25 @@ void View::create_topping_for_serving (Order &order, Serving& serving) {
        int index_amount = c_amount.get_active_row_number();
        top->set_amount(index_amount+1);
        serving.add_top(*top);
-       create_topping_for_serving(order,serving);
+       create_topping_for_serving(order_ptr,serving);
     }
     else if (result==1){
        //Need to Add serving to order
        //Need to add : add serving to order
        int answer= question("Do you want to add more serving in order?","Question",{"Yes","No"});
        if (answer == 0 ){ //add serving to order then show dialogs again
-         order.add_serving(serving);
-         show_create_serving_dialog(order);
+         order_ptr->add_serving(serving);
+         show_create_serving_dialog(order_ptr);
          
        }
        else if (answer == 1){ //add serving then add order to emporium
-         order.add_serving(serving);
-         emporium.add_order(&order);       
+         order_ptr->add_serving(serving);
+         emporium.add_order(order_ptr);       
        }
     }
     else if (result==4){
        show_serving_info (serving);
-       create_scoop_for_serving (order, serving,scoop_amount,scoop_limit);
+       create_scoop_for_serving (order_ptr, serving,scoop_amount,scoop_limit);
     }
 }
 

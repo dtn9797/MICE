@@ -40,11 +40,11 @@ class Emporium {
     std::vector<Item*> get_items ();
     std::vector<Person*> get_persons ();
     std::vector<Order*> get_orders ();
+    std::vector<Order*> get_unfilled_orders ();
 
     std::vector<Person*> get_active_persons () ;
     void set_active_person( int index, bool active);
 
-    std::vector<std::string> order_to_strings(int index);
     std::string servings_to_string (int order_index);    
 
     int number_of_items();
@@ -66,6 +66,7 @@ class Emporium {
 
     
     void restock_item(int index, int amount);
+    void fill_order (int index, Server* server_ptr);
     void auto_add();
 };
 

@@ -12,8 +12,8 @@ class View {
     //create fresh one for emporium
     void create_chosen_type_dialog(std::string type_name);
     // serving
-    void create_scoop_for_serving (Order& order,Serving& serving,int scoop_amount,int scoop_limit);
-    void create_topping_for_serving (Order& order,Serving& serving);
+    void create_scoop_for_serving (Order* order_ptr,Serving& serving,int scoop_amount,int scoop_limit);
+    void create_topping_for_serving (Order* order_ptr,Serving& serving);
     void show_serving_info (Serving& serving);
     //dialog
     void create_message_dialog(std::string title, std::string msg);
@@ -27,8 +27,9 @@ class View {
    void list_toppings();
    //GUI
    void show_create_item_dialog();
-   void show_create_serving_dialog(Order &order);
+   void show_create_serving_dialog(Order* order_ptr);
    int show_items();
+   int show_unfilled_orders();
    //dialog
    int entry_amount_dialog(std::string title, std::string msg);
 };

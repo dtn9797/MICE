@@ -9,16 +9,14 @@ class Controller {
   private: 
     Emporium& emporium;
     View view;
-    Person person; 
+    Person* person_ptr; 
     int order_id = -1;
   public:
     Controller (Emporium& emp):emporium{emp}, view{View(emporium)} {}
     Emporium& get_emporium () ;
     void cli ();
     void execute_cmd (int cmd);
-    void set_person (Person per);
-    //to string func
-    std::vector<std::string> order_to_strings(int index);
+    void set_person (Person* per);
 };
 
 

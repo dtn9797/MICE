@@ -1,5 +1,6 @@
 #include "emporium.h"
 #include <stdlib.h>
+#include "state.h"
     void Emporium::add_scoop(Scoop* scoop) {items.push_back(scoop);}
     void Emporium::add_top(Topping* top) {items.push_back(top);}
     void Emporium::add_container(Container* con) {items.push_back(con);}
@@ -14,6 +15,18 @@
     std::vector<Item*>  Emporium::get_items () {return items;}
     std::vector<Person*>  Emporium::get_persons () {return persons;}
     std::vector<Order*>  Emporium::get_orders () {return orders;}
+    std::vector<Order*> Emporium::get_unfilled_orders () {
+      std::vector<Order*> unfilled_orders;
+      for (Order* order: orders){
+        if ( order->get_state_string() == "unfilled") unfilled_orders.push_back(order);
+      }
+      std::cout << "Unfilled_orderr size in emporium :" << unfilled_orders.size() << std::endl;
+      std::cout << "order size in emporium :" << orders.size() << std::endl;
+      std::cout << "State of order: " << orders[0]->get_state_string()<< std::endl;
+      std::cout << "Id of order: " << orders[0]->get_id_number()<< std::endl;
+
+      return unfilled_orders;
+    }
     std::vector<Person*> Emporium::get_active_persons () {
       std::vector<Person*> pers ;
       for (Person* person : persons){
@@ -31,7 +44,6 @@
     std::string Emporium::scoop_to_string(int index) {return classify_type<std::vector<Item*>>(get_items(),"Scoop")[index]->to_string();}
     std::string Emporium::container_to_string(int index) {return classify_type<std::vector<Item*>>(get_items(),"Container")[index]->to_string();}
     std::string Emporium::topping_to_string(int index){return classify_type<std::vector<Item*>>(get_items(),"Topping")[index]->to_string();}
-    std::vector<std::string> Emporium::order_to_strings(int index) { return orders[index]->to_strings();}
     std::string Emporium::servings_to_string (int order_index) {
        std::string result = "";
        for (Serving serving : orders[order_index]->get_servings()){
@@ -62,6 +74,10 @@
       items[index]->restock(amount);
     }
 
+    void Emporium::fill_order (int index, Server* server_ptr){
+      orders[index]->fill(server_ptr);
+    }
+
     void Emporium::auto_add() {
       //add sample to choose from
       add_scoop(new Scoop ("Vanilla","General",1,1));
@@ -87,7 +103,7 @@
       //add order 
       //Order (int id, Server &ser): id_number{id} ,server{ser}{}
       Server server ("Duy",1,100);
-      Order order0(1, server);
-      order0.add_serving(serving0); 
-      add_order(&order0);      
+      //Order order0(1, server);
+      //order0.add_serving(serving0); 
+      add_order(new Order(1,server));      
     }

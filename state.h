@@ -2,7 +2,7 @@
  #ifndef __STATE_H
  #define __STATE_H 
  #include <iostream>
-
+ #include <string>
  class State {
    public:
      State(int val) : value(val) { }
@@ -23,6 +23,6 @@
        }
      }
    private:
-     int value;
+     int value = 0;
  };
  #endif

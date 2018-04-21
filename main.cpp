@@ -11,6 +11,7 @@ int main (int argc, char *argv[]) {
  Owner *owner = new Owner ("Duy Nguyen",1);
  em.add_owner(owner);
  em.add_manager(new Manager ("Thao Pham",1,2));
+ em.add_server(new Server ("Server",1,1));
 
  Controller con(em);
  Main_window win(con);

@@ -13,14 +13,15 @@ class Order {
   public: 
     Order (int id, Person &per): id_number{id} {
       if (per.type() == "Server"){ server= *(dynamic_cast<Server*>(&per));}
-      else if (per.type() == "Customer"){customer= *(dynamic_cast<Customer*>(&per));}      
+      else if (per.type() == "Customer"){customer= *(dynamic_cast<Customer*>(&per));
+      }      
     }
     //Order (int id, Customer &cus): id_number{id}, customer{cus}{}
     //Order (int id,Server ser, std::vector<Serving> sers): id_number{id}, server{ser} ,servings{sers} {}
     //Order (int id,Customer cus, std::vector<Serving> sers): id_number{id},customer{cus}, servings{sers} {}
     //Copy Constructor
 
-    void fill(Server &server);
+    void fill(Server* server);
     void pay();
     void cancel();
 
@@ -29,6 +30,7 @@ class Order {
     int get_id_number ();
     std::vector<Serving> get_servings();
     State get_state();
+    std::string get_state_string();
     double get_cost();
     double get_price() const;
     Server get_server();
@@ -38,11 +40,10 @@ class Order {
     
     //std::string serving_to_string (int index);
        
-    std::vector<std::string> to_strings();
   private:
     int id_number;
     std::vector<Serving> servings ={};
-    State state = State :: unfilled;
+    State state = State::unfilled;
     double cost=0;
     double price=0;
     Server server;
