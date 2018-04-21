@@ -14,12 +14,14 @@
 #include "order.h"
 #include "owner.h"
 #include "manager.h"
+#include "cash_register.h"
 
 class Emporium {
   private:
     std::vector<Item*> items;
     std::vector<Person*> persons;
     std::vector<Order*>  orders;
+    Cash_register* cash_register_ptr = new Cash_register(1000);
    
   public:
     void add_scoop(Scoop* scoop);

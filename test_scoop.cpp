@@ -39,9 +39,16 @@ bool test_scoop() {
     passed = false;
   }
 
+  Scoop scoop0{x_name, x_description, x_cost, x_price};
+  if (!(scoop == scoop0)){
+    std::cerr << "#### Scoop over loading failed" << std::endl; 
+    passed = false;  
+  }
   //
-  // Report results
+  // Test overloading
   //
+
+
 
   return passed;
 }

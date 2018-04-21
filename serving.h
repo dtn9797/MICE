@@ -20,6 +20,8 @@ class Serving {
     Container get_container();
     Scoop get_scoop(int index);
     Topping get_topping(int index);
+    std::vector<Scoop> get_scoops();
+    std::vector<Topping> get_toppings();
     double get_retail_price();
     double get_wholesale_cost();
     int get_number_scoops();

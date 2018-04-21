@@ -15,7 +15,8 @@
     double Serving::get_retail_price(){return retail_price;}
     int Serving::get_number_scoops(){return scoops.size();}
     int Serving::get_number_toppings(){return toppings.size();}
-
+    std::vector<Scoop> Serving::get_scoops () {return scoops;}
+    std::vector<Topping> Serving::get_toppings() {return toppings;}
     void Serving::add_scoop(Scoop sco) {
       //if it reachs its limit
       wholesale_cost+= sco.get_wholesale_cost();

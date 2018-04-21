@@ -1,9 +1,10 @@
 #include "order.h"
 
 
-    void Order::fill(Server *server) {
+    void Order::fill(Server *server_ptr) {
       state = State:: filled;
-      server->add_order_filled();
+      server_ptr->add_order_filled();
+
     }
     void Order::pay(){ state = State:: paid;}
     void Order::cancel() {state= State:: canceled;}

@@ -17,6 +17,10 @@
 
  double Item::get_wholesale_cost() const {return wholesale_cost;}
  double Item::get_retail_price(){return retail_price;}
- std::string Item::get_name(){return name;}
- std::string Item::get_description(){return description;}
+ std::string Item::get_name() const {return name;}
+ std::string Item::get_description() const{return description;}
  int Item::get_stock_remaining(){return stock_remaining;}
+
+ bool Item::operator== (const Item& rhs){
+   return name == rhs.get_name() && description == rhs.get_description(); 
+ }

@@ -138,6 +138,9 @@ void Controller::execute_cmd (int cmd){
     if(order_index == -1) return;
     emporium.fill_order(order_index,dynamic_cast<Server*>(person_ptr));
 }
+ else if (cmd==11){ // Cancel Order
+
+}
 
  else if (cmd==99) {//Test
     emporium.auto_add();

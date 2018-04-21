@@ -76,6 +76,26 @@
 
     void Emporium::fill_order (int index, Server* server_ptr){
       orders[index]->fill(server_ptr);
+      //std::vector<Serving> servings =orders[index]->get_servings();
+      //consume item
+/*
+      for (Item* item_ptr : items){
+        for (Serving serving: servings){
+          Container container = serving.get_container();
+          if (*item_ptr == container) item_ptr -> consume();
+          std::vector<Scoop> scoops = serving.get_scoops();
+          for (Scoop scoop: scoops){
+            if (*item_ptr == scoop) item_ptr -> consume();
+          }
+          std::vector<Topping> tops = serving.get_toppings();
+          for (Topping top: tops){
+            if (*item_ptr == top) item_ptr -> consume();
+          }
+        }
+      }
+      //deduct cash register from item
+*/
+      // if filled from server == 10 => c-=server
     }
 
     void Emporium::auto_add() {

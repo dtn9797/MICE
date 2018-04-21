@@ -111,6 +111,7 @@ void Main_window::create_menu_items(Gtk::MenuBar *menubar, std::string name, std
 							{"_Test", sigc::mem_fun(*this, &Main_window::on_test_click)},
 							{"_Restock", sigc::mem_fun(*this, &Main_window::on_restock_click)},
 							{"_Fill Order", sigc::mem_fun(*this, &Main_window::on_filled_click)},
+							{"_Cancel Order", sigc::mem_fun(*this, &Main_window::on_cancel_click)},
 							};
   for(std::string sub_name:sub_names) create_submenu_items(namemenu ,sub_name,str_to_func[sub_name]);
 }
@@ -497,6 +498,11 @@ void Main_window::on_filled_click() {
   std::cout<< " On _filled_clicked" << std::endl;
   controller.execute_cmd(10);
   //std::cout<< " Current filled num"<< dynamic_cast<Server*>(controller.get_emporium().get_persons()[2])->get_num_order_filled() << std::endl;
+  update_rows();
+}
+void Main_window::on_cancel_click() {
+  std::cout<< " On _cancel_clicked" << std::endl;
+  controller.execute_cmd(11);
   update_rows();
 }
 
