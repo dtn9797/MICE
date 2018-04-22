@@ -211,6 +211,7 @@ int View::show_unfilled_orders () {
     c_order.set_size_request(160);
 
     vector<Order*> unfilled_orders = emporium.get_unfilled_orders();
+    if (unfilled_orders.size()<=0) throw std:: runtime_error ("No order to show"); 
 //    std::cout << "Unfilled_orderr size in view :" << unfilled_orders.size() << std::endl;
     for (Order* unfilled_order : unfilled_orders){
       std::string unfilled_order_info = std::to_string(unfilled_order -> get_id_number())+ "(Cost: " +std::to_string(unfilled_order->get_cost())+')';
@@ -235,7 +236,88 @@ int View::show_unfilled_orders () {
     }
     return order_index;
 } 
+int View::show_filled_orders () {
+    int order_index = -1;
+    //Design
+    Gtk::Dialog dialog;
+    dialog.set_title("Filled Orders");
 
+    Gtk::HBox b_order;
+
+    Gtk::Label l_order{"Filled Orders:"};
+    l_order.set_width_chars(15);
+    b_order.pack_start(l_order, Gtk::PACK_SHRINK);
+
+    Gtk::ComboBoxText c_order;
+    c_order.set_size_request(160);
+
+    vector<Order*> filled_orders = emporium.get_filled_orders();
+
+
+    for (Order* filled_order : filled_orders){
+      std::string filled_order_info = std::to_string(filled_order -> get_id_number())+ "(Cost: " +std::to_string(filled_order->get_cost())+')';
+      c_order.append(filled_order_info);
+    }
+
+    b_order.pack_start(c_order, Gtk::PACK_SHRINK);
+    dialog.get_vbox()->pack_start(b_order, Gtk::PACK_SHRINK);  
+
+    // Show dialog
+    dialog.add_button("Cancel", 0);
+    dialog.add_button ("OK",1);
+    dialog.show_all();
+    int result = dialog.run();
+    dialog.close();
+    if (result == 1 ){
+      try {order_index= c_order.get_active_row_number();}
+      catch (std::exception e){
+        create_message_dialog("Error", "Need to select Order first");
+        return -1;
+      }
+    }
+    return order_index;
+} 
+int View::show_unfilled_orders_for_customer(Person* person_ptr){
+    int order_index = -1;
+    //Design
+    Gtk::Dialog dialog;
+    dialog.set_title("Unfilled Orders");
+
+    Gtk::HBox b_order;
+
+    Gtk::Label l_order{"Unfilled Orders:"};
+    l_order.set_width_chars(15);
+    b_order.pack_start(l_order, Gtk::PACK_SHRINK);
+
+    Gtk::ComboBoxText c_order;
+    c_order.set_size_request(160);
+
+    vector<Order*> unfilled_orders = emporium.get_unfilled_orders_for_customer(person_ptr);
+    if (unfilled_orders.size()<=0) throw std:: runtime_error ("No order to show for current customer"); 
+//    std::cout << "Unfilled_orderr size in view :" << unfilled_orders.size() << std::endl;
+    for (Order* unfilled_order : unfilled_orders){
+      std::string unfilled_order_info = std::to_string(unfilled_order -> get_id_number())+ "(Cost: " +std::to_string(unfilled_order->get_cost())+')';
+      c_order.append(unfilled_order_info);
+    }
+
+    b_order.pack_start(c_order, Gtk::PACK_SHRINK);
+    dialog.get_vbox()->pack_start(b_order, Gtk::PACK_SHRINK);  
+
+    // Show dialog
+    dialog.add_button("Cancel", 0);
+    dialog.add_button ("OK",1);
+    dialog.show_all();
+    int result = dialog.run();
+    dialog.close();
+    if (result == 1 ){
+      try {order_index= c_order.get_active_row_number();}
+      catch (std::exception e){
+        create_message_dialog("Error", "Need to select Order first");
+        return -1;
+      }
+    }
+    return order_index;
+}
 //
 //PRIVATE FUNCTIONS
 //

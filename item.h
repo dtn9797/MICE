@@ -21,11 +21,12 @@ class Item {
      virtual std::string type();
      virtual std::string to_string();
 
-     std::string get_name();
-     std::string get_description();
-     double get_wholesale_cost() const ;
+     std::string get_name ()const ;
+     std::string get_description () const ;
+     double get_wholesale_cost ()const ;
      double get_retail_price();
      int get_stock_remaining();
+     bool operator== (const Item& rhs);
   protected:
     std::string name;
     std::string description;

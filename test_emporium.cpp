@@ -15,7 +15,6 @@ bool test_emporium () {
   //
  // if (em.serving)
 
- // Test order_to_strings
-  std::vector<std::string> record = em.order_to_strings(0);
+
   return true;
 }

@@ -12,7 +12,7 @@ class Server : public Person {
 
     double get_hour_salary() const;
     int get_num_order_filled() const;
-    
+    void reset_num_order_filled();
     void add_order_filled();
   private:
     int num_order_filled=0;

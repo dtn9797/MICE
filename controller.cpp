@@ -134,9 +134,42 @@ void Controller::execute_cmd (int cmd){
     emporium.restock_item(item_index,amount);
 }
  else if (cmd==10){ // Fill Order
-    int order_index = view.show_unfilled_orders();
-    if(order_index == -1) return;
-    emporium.fill_order(order_index,dynamic_cast<Server*>(person_ptr));
+    int order_index;
+    try{ 
+      order_index = view.show_unfilled_orders();
+      if(order_index == -1) return;
+      emporium.fill_order(order_index,dynamic_cast<Server*>(person_ptr));
+    }
+    catch (std::exception &e){
+      view.create_message_dialog("Error",e.what());
+    } 
+}
+ else if (cmd==11){ // Cancel Order
+    int order_index;
+    try{ 
+      if (person_ptr -> type() == "Customer"){
+        order_index = view.show_unfilled_orders_for_customer(person_ptr);
+      }
+      else {
+        order_index = view.show_unfilled_orders();
+      }
+      if(order_index == -1) return;
+      emporium.cancel_order(order_index,person_ptr);
+    }
+    catch (std::exception &e){
+      view.create_message_dialog("Error",e.what());
+    }   
+}
+ else if (cmd==12){//Pay order
+   int order_index;
+   try {
+     order_index = view.show_filled_orders();
+     if(order_index == -1) return;
+     emporium.pay_order(order_index,person_ptr);
+   } 
+    catch (std::exception &e){
+      view.create_message_dialog("Error",e.what());
+    }  
 }
 
  else if (cmd==99) {//Test

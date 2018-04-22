@@ -16,7 +16,6 @@ class View {
     void create_topping_for_serving (Order* order_ptr,Serving& serving);
     void show_serving_info (Serving& serving);
     //dialog
-    void create_message_dialog(std::string title, std::string msg);
     int question(std::string msg, std::string title,
              std::vector<std::string> buttons);
   public:
@@ -30,8 +29,11 @@ class View {
    void show_create_serving_dialog(Order* order_ptr);
    int show_items();
    int show_unfilled_orders();
+   int show_filled_orders();
+   int show_unfilled_orders_for_customer(Person *person_ptr);
    //dialog
    int entry_amount_dialog(std::string title, std::string msg);
+   void create_message_dialog(std::string title, std::string msg);   
 };
 
 #endif

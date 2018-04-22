@@ -14,13 +14,14 @@
 #include "order.h"
 #include "owner.h"
 #include "manager.h"
+#include "cash_register.h"
 
 class Emporium {
   private:
     std::vector<Item*> items;
     std::vector<Person*> persons;
     std::vector<Order*>  orders;
-   
+    Cash_register* cash_register_ptr = new Cash_register(1000);
   public:
     void add_scoop(Scoop* scoop);
     void add_top(Topping* top);
@@ -41,6 +42,9 @@ class Emporium {
     std::vector<Person*> get_persons ();
     std::vector<Order*> get_orders ();
     std::vector<Order*> get_unfilled_orders ();
+    std::vector<Order*> get_unfilled_orders_for_customer (Person* person_ptr);
+    std::vector<Order*> get_filled_orders ();
+    std::vector<Order*> get_canceled_orders ();
 
     std::vector<Person*> get_active_persons () ;
     void set_active_person( int index, bool active);
@@ -67,6 +71,8 @@ class Emporium {
     
     void restock_item(int index, int amount);
     void fill_order (int index, Server* server_ptr);
+    void cancel_order(int index, Person* person_ptr);
+    void pay_order(int index, Person* person_ptr);
     void auto_add();
 };
 

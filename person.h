@@ -12,6 +12,7 @@ class Person {
    int get_id() const;
    bool get_active() const; 
    void set_active(bool b);
+   bool operator== (const Person& rhs);
   protected:
    std::string name;
    int id;

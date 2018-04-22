@@ -21,7 +21,7 @@ class Order {
     //Order (int id,Customer cus, std::vector<Serving> sers): id_number{id},customer{cus}, servings{sers} {}
     //Copy Constructor
 
-    void fill(Server* server);
+    void fill(Server* server_ptr);
     void pay();
     void cancel();
 

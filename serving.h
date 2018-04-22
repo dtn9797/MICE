@@ -24,6 +24,8 @@ class Serving {
     double get_wholesale_cost();
     int get_number_scoops();
     int get_number_toppings();
+    std::vector<Scoop> get_scoops();
+    std::vector<Topping> get_toppings();
 
     void add_scoop(Scoop sco);
     void add_top(Topping top);

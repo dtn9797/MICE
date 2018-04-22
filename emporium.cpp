@@ -20,13 +20,31 @@
       for (Order* order: orders){
         if ( order->get_state_string() == "unfilled") unfilled_orders.push_back(order);
       }
-      std::cout << "Unfilled_orderr size in emporium :" << unfilled_orders.size() << std::endl;
-      std::cout << "order size in emporium :" << orders.size() << std::endl;
-      std::cout << "State of order: " << orders[0]->get_state_string()<< std::endl;
-      std::cout << "Id of order: " << orders[0]->get_id_number()<< std::endl;
-
       return unfilled_orders;
     }
+    std::vector<Order*> Emporium::get_filled_orders () {
+      std::vector<Order*> filled_orders;
+      for (Order* order: orders){
+        if ( order->get_state_string() == "filled") filled_orders.push_back(order);
+      }
+      return filled_orders;
+    }
+    std::vector<Order*> Emporium::get_canceled_orders () {
+      std::vector<Order*> canceled_orders;
+      for (Order* order: orders){
+        if ( order->get_state_string() == "canceled") canceled_orders.push_back(order);
+      }
+      return canceled_orders;
+    }
+    std::vector<Order*> Emporium::get_unfilled_orders_for_customer (Person* person_ptr) {
+      std::vector<Order*> unfilled_orders;
+      for (Order* order: orders){
+        if ( order->get_state_string() == "unfilled" && order->get_customer() == *person_ptr) unfilled_orders.push_back(order);
+      }
+      return unfilled_orders;
+    }
+
+
     std::vector<Person*> Emporium::get_active_persons () {
       std::vector<Person*> pers ;
       for (Person* person : persons){
@@ -75,7 +93,50 @@
     }
 
     void Emporium::fill_order (int index, Server* server_ptr){
-      orders[index]->fill(server_ptr);
+     //consume and deduct cash register from item
+     std::vector<Order*> unfilled_orders = get_unfilled_orders();
+     std::vector<Serving> servings = unfilled_orders[index]->get_servings();
+     for (Item* item_ptr : items){
+       for (Serving serving: servings){
+         Container container = serving.get_container();
+         if (*item_ptr == container){
+           item_ptr -> consume();
+           *cash_register_ptr-= *item_ptr;
+         }
+         std::vector<Scoop> scoops = serving.get_scoops();
+         for (Scoop scoop: scoops){
+           if (*item_ptr == scoop){
+             item_ptr -> consume();
+             *cash_register_ptr-= *item_ptr;
+           }
+         }
+         std::vector<Topping> tops = serving.get_toppings();
+         for (Topping top: tops){
+           if (*item_ptr == top){
+             item_ptr -> consume();
+             *cash_register_ptr-= *item_ptr;
+           }
+         }
+      }
+     }
+     server_ptr->add_order_filled();
+     //c-=server if fill==10
+     if (server_ptr -> get_num_order_filled() == 10){
+        *cash_register_ptr-=*server_ptr;
+        server_ptr-> reset_num_order_filled();
+     }
+     unfilled_orders[index]->fill(server_ptr);
+    }
+
+    void Emporium::cancel_order (int index, Person* person_ptr){
+       //need to update feature show order for customer only
+       std::vector<Order*> unfilled_orders = get_unfilled_orders();
+       unfilled_orders[index]->cancel();
+    }
+    void Emporium::pay_order (int index, Person* person_ptr){
+       std::vector<Order*> filled_orders = get_filled_orders();
+       filled_orders[index]->pay();
+       *cash_register_ptr+=*filled_orders[index];
     }
 
     void Emporium::auto_add() {
