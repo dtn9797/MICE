@@ -182,7 +182,7 @@ void Mainwin::on_open_click() {
         std::ifstream ifs{dialog.get_filename(), std::ifstream::in};
         view->load(ifs);
         view->queue_draw(); // refresh the DrawingArea with loaded drawing
-        view->set_filename(dialog.get_filename());
+        //view->set_filename(dialog.get_filename());
     }
 }
 

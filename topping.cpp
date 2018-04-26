@@ -1,6 +1,12 @@
 #include "topping.h"
 #include <stdexcept>
 
+Topping::Topping(std::istream& ist){
+   std::getline (ist, name);
+   std::getline (ist, description);
+   ist >> wholesale_cost >> retail_price >> _amount; 
+}
+
 std::string Topping::type() {return "Topping";}
 
 std::string Topping::to_string () {
@@ -20,6 +26,13 @@ void Topping::set_amount(int amount) {
     if (0 < amount && amount < 5) _amount =  amount;
     else throw std::runtime_error("Invalid topping amount");
 }
+
+void Topping::save (std::ostream& ost){
+   ost << type() << std::endl 
+       << name << std::endl << description << std::endl
+       << wholesale_cost << ' ' << retail_price << ' ' 
+       << _amount << ' ';
+ } 
 
 std::string Topping::to_string_amount () {
   switch (_amount){

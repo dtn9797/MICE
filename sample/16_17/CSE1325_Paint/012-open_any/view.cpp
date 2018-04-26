@@ -44,13 +44,14 @@ void View::set_pen_width(double new_width) {
 double View::get_pen_width() {return width;}
 
 // Add a line to the vector
-void View::new_line(int _x1, int _y1, int _x2, int _y2, Gdk::RGBA _color, double _width) {
+/*void View::new_line(int _x1, int _y1, int _x2, int _y2, Gdk::RGBA _color, double _width) {
     lines.push_back(Line(_x1, _y1, _x2, _y2, _color, _width));
     dirty = true;
 }
+*/
 
 void View::new_line(std::istream& is) {lines.push_back(Line(is));}
-
+/*
 bool View::on_button_press_event(GdkEventButton * event) {
     // If this is a left-mouse button press, we're interested!
     if( (event->type == GDK_BUTTON_PRESS) && (event->button == 1)) {
@@ -70,6 +71,7 @@ bool View::on_button_press_event(GdkEventButton * event) {
     }
     return false;  // We did NOT handle this event
 }
+*/
 
 // Draw the lines any time gtkmm needs to refresh the widget
 bool View::on_draw(const Cairo::RefPtr<Cairo::Context>& cr) {

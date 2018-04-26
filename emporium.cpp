@@ -139,6 +139,81 @@
        *cash_register_ptr+=*filled_orders[index];
     }
 
+    void Emporium::save(std::ostream& ost) {
+      for (Item* item_ptr : items){
+        item_ptr->save(ost);
+        ost << std::endl;
+      }
+        ost << std::endl<<std::endl;
+      for (Person* person_ptr : persons){
+        person_ptr->save(ost);
+        ost << std::endl;
+      }
+        ost << std::endl<<std::endl;
+      for (Order* order_ptr: orders){
+        order_ptr->save(ost);
+      }
+      dirty = false;
+    }
+
+    void Emporium::load(std::istream& ist) {
+      clear();
+      dirty = (items.size() > 0 && orders.size () > 0 && persons.size() >0);
+      while(ist){
+        std::string type;
+        std::getline (ist, type);
+        if (type!= "Order"){
+          new_item_person(ist,type);
+        }
+        else {
+          new_order(ist);
+        } 
+      }
+    }
+
+    void Emporium::new_order ( std:: istream& ist){
+       orders.push_back(new Order(ist));
+    }
+
+    void Emporium::new_item_person (std::istream& ist, std::string type) {
+       if (type == "Container"){
+          items.push_back(new Container(ist));
+       }
+       else if (type == "Scoop"){
+          items.push_back(new Scoop(ist));
+       }
+       else if (type == "Topping"){
+          items.push_back(new Topping(ist));
+       }
+       else if (type == "Owner"){
+          persons.push_back(new Owner(ist));
+       }
+       else if (type == "Manager"){
+          persons.push_back(new Manager(ist));
+       }
+       else if (type == "Customer"){
+          persons.push_back(new Customer(ist));
+       }
+       else if (type == "Server"){
+          persons.push_back(new Server(ist));
+       }
+    }
+
+    void Emporium::clear () {
+      for (Item* item: items){
+        delete item;
+      }
+      for (Person* person: persons){
+        delete person;
+      }
+      for (Order* order: orders){
+        delete order;
+      }
+      items.clear();
+      persons.clear();
+      orders.clear();
+    }
+
     void Emporium::auto_add() {
       //add sample to choose from
       add_scoop(new Scoop ("Vanilla","General",1,1));
@@ -152,9 +227,9 @@
       
       //Create Person
       //  Server (std::string na, int id, double sal)
-      add_server (new Server("Server",1,11));
+      add_server (new Server("D-Server",1,11));
       //Customer (std::string na, int id, std::string ph)
-      add_customer (new Customer ("Customer", 1, "6829999999"));
+      add_customer (new Customer ("D-Customer", 1, "6829999999"));
       //Create serving
       //Serving(Container con,std::vector<Scoop> scos,std::vector<Topping> tops) ;
       std::vector<Scoop> scoops = {Scoop ("Vanilla","General",1,1),Scoop ("Cookies", "Sweet",1,1)};
@@ -162,9 +237,8 @@
       Serving serving0 ( Container ("Cup","General",1,1,1), scoops, tops );
        
       //add order 
-      //Order (int id, Server &ser): id_number{id} ,server{ser}{}
       Server server ("Duy",1,100);
-      //Order order0(1, server);
-      //order0.add_serving(serving0); 
-      add_order(new Order(1,server));      
+      Order* order_ptr = new Order (1,server);
+      order_ptr->add_serving(serving0);
+      add_order(order_ptr);      
     }

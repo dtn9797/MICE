@@ -14,8 +14,9 @@
 class Topping:public Item{
 
   public:
-   Topping(std::string na,std::string de,double wh,double re, int am):
-     Item(na,de,wh,re){_amount = am;};
+    Topping(std::string na,std::string de,double wh,double re, int am):
+     Item(na,de,wh,re){_amount = am;}
+    Topping(std::istream &ist);
     std::string to_string() override;
     std::string type() override;
     int get_amount();
@@ -25,6 +26,7 @@ class Topping:public Item{
     const static int EXTRA_AMOUNT = 3;
     const static int DRENCHED_AMOUNT = 4;
     std::string to_string_amount ();
+    void save(std::ostream& ost) override;
   private:
     int _amount;
 };

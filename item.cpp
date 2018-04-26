@@ -17,7 +17,11 @@
      +  "\n" ;
   return result;
 }
-
+ void Item::save (std::ostream& ost){
+   ost << type() << ' ' << name << ' ' 
+       << description << ' '<< wholesale_cost << ' ' 
+       << retail_price << ' ';
+ } 
 
  double Item::get_wholesale_cost() const {return wholesale_cost;}
  double Item::get_retail_price(){return retail_price;}

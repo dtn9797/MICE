@@ -1,5 +1,6 @@
 #include "main_window.h"
 #include <vector>
+#include <fstream>
 
 /////////////////////////
 //C O N S T R U C T O R//
@@ -113,6 +114,8 @@ void Main_window::create_menu_items(Gtk::MenuBar *menubar, std::string name, std
 							{"_Fill Order", sigc::mem_fun(*this, &Main_window::on_filled_click)},
 							{"_Cancel Order", sigc::mem_fun(*this, &Main_window::on_cancel_click)},
 							{"_Payment", sigc::mem_fun(*this, &Main_window::on_pay_click)},
+							{"_Save", sigc::mem_fun(*this, &Main_window::on_save_click)},
+							{"_Open", sigc::mem_fun(*this, &Main_window::on_load_click)},
 
 							};
   for(std::string sub_name:sub_names) create_submenu_items(namemenu ,sub_name,str_to_func[sub_name]);
@@ -511,6 +514,31 @@ void Main_window::on_pay_click() {
   std::cout<< " On _pay_clicked" << std::endl;
   controller.execute_cmd(12);
   update_rows();
+}
+void Main_window::on_save_click() {
+  std::cout<< " On _save_clicked" << std::endl;
+  controller.execute_cmd(13);
+}
+void Main_window::on_load_click() {
+  std::cout<< " On _load_clicked" << std::endl;
+    Gtk::FileChooserDialog dialog("Please choose a file",
+          Gtk::FileChooserAction::FILE_CHOOSER_ACTION_OPEN);
+    dialog.set_transient_for(*this);
+
+    //Add response buttons the the dialog:
+    dialog.add_button("_Cancel", 0);
+    dialog.add_button("_Open", 1);
+
+    int result = dialog.run();
+
+    //Handle the response:
+    if (result == 1) {
+        std::ifstream ifs{dialog.get_filename(), std::ifstream::in};
+        controller.get_emporium().load(ifs);
+        //refresh
+       // view.set_file_name(dialog.get_filename());
+    }
+
 }
 
 ///////////////////////////////

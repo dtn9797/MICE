@@ -22,6 +22,7 @@ class Emporium {
     std::vector<Person*> persons;
     std::vector<Order*>  orders;
     Cash_register* cash_register_ptr = new Cash_register(1000);
+    bool dirty = false;
   public:
     void add_scoop(Scoop* scoop);
     void add_top(Topping* top);
@@ -73,7 +74,15 @@ class Emporium {
     void fill_order (int index, Server* server_ptr);
     void cancel_order(int index, Person* person_ptr);
     void pay_order(int index, Person* person_ptr);
+
     void auto_add();
+    //files
+    void save(std::ostream& ost);
+    void load(std::istream& ist);
+    void new_item_person(std::istream& ist, std::string type);
+    void new_order(std::istream& ist);
+    void clear ();
+
 };
 
 

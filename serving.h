@@ -9,13 +9,15 @@
 
 class Serving {
   private:
+    double wholesale_cost=0;
+    double retail_price=0;
     Container container;
     std::vector<Scoop> scoops;
     std::vector<Topping> toppings;
-    double wholesale_cost=0;
-    double retail_price=0;
+
   public:
     Serving(Container con,std::vector<Scoop> scos,std::vector<Topping> tops) ;
+    Serving (std::istream& ist);
 
     Container get_container();
     Scoop get_scoop(int index);
@@ -35,6 +37,7 @@ class Serving {
     void replace_container(Container con);
 
     std::string to_string_serving();
+    void save(std::ostream& ost);
 };
 
 #endif

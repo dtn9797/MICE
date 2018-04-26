@@ -8,3 +8,7 @@ void Person::set_active (bool b) { active = b;}
 bool Person::operator== (const Person& rhs){
   return name == rhs.get_name() && id == rhs.get_id();
 }
+void Person::save(std::ostream& ost){
+  ost << type() << ' '<< name << ' ' 
+      << id << ' ' << active << ' ';
+}

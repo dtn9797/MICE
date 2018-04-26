@@ -46,6 +46,9 @@ class Main_window: public Gtk::Window {
     void on_filled_click();
     void on_cancel_click();
     void on_pay_click();
+    void on_save_click();
+    void on_load_click();
+    
 
     void on_switch_person_click();
 

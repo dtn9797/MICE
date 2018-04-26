@@ -18,6 +18,7 @@ class View {
     //dialog
     int question(std::string msg, std::string title,
              std::vector<std::string> buttons);
+    std::string file_name = "untitle.cpt";
   public:
    View (Emporium& emp): emporium{emp} {}
    void show_menu ();
@@ -33,7 +34,9 @@ class View {
    int show_unfilled_orders_for_customer(Person *person_ptr);
    //dialog
    int entry_amount_dialog(std::string title, std::string msg);
-   void create_message_dialog(std::string title, std::string msg);   
+   void create_message_dialog(std::string title, std::string msg);  
+   std::string get_file_name(); 
+   void set_file_name(std::string name);
 };
 
 #endif

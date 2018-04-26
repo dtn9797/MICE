@@ -22,6 +22,7 @@
          default: return "UNKNOWN";
        }
      }
+     int get_value() { return value;}
    private:
      int value = 0;
  };

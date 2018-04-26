@@ -3,6 +3,7 @@
 #include "server.h"
 #include "serving.h"
 #include "order.h"
+#include <fstream>
 bool test_order () {
   bool passed = true;
   //
@@ -28,10 +29,24 @@ bool test_order () {
      passed = false;
    }
 
-  //
-  // Test for add order
-  // 
+  std::vector<Scoop> scoops = {Scoop ("Vanilla","General",1,1),Scoop ("Cookies", "Sweet",1,1)};
+  std::vector<Topping> tops = {Topping("Whipped Cream","General",1,1,1), Topping("Chocolate Sauce", "Sweet",1,1,1) };
+  Serving serving0 ( Container ("Cup","General",1,1,1), scoops, tops );
+       
+  //add order 
+  order1.add_serving(serving0);     
 
+  //test load/save
+  std::ofstream ofs{"test_order.cpt", std::ofstream::out};
+  order1.save(ofs);
+  ofs.close();
+  std::ifstream ifs{"test_order.cpt", std::ofstream::in}; 
+
+  order0 = Order(ifs); 
+ //order result
+  std::ofstream ofs0{"test_order_result.cpt", std::ofstream::out};
+  order0.save(ofs0);
+  ofs0.close();
 
  
    return passed;

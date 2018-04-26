@@ -8,6 +8,7 @@ class Person {
    Person (std::string na, int i):name{na},id{i} {}
    Person () : Person ("Unknown", 0) {} 
    virtual std::string type ();
+   virtual void save(std::ostream& ost);
    std::string get_name() const;
    int get_id() const;
    bool get_active() const; 

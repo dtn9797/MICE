@@ -678,4 +678,7 @@ int View::entry_amount_dialog(std::string msg, std::string title){
   dialog->close();
   return amount;
 }
+
+std::string View::get_file_name() {return file_name;}
+void View::set_file_name(std::string name) { file_name =name;}
 //Emporium

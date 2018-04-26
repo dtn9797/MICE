@@ -7,6 +7,7 @@ Line::Line(std::istream& ist) {
        std::string rgba_color;
        ist >> _x1 >> _y1 >> _x2 >> _y2 >> _width >> rgba_color;
        _color = Gdk::RGBA{rgba_color};
+       std::cout << " x1: "<< _x1 << " y2:" << _y1<<std::endl;
      }
 double Line::x1() {return _x1;}
 double Line::y1() {return _y1;}

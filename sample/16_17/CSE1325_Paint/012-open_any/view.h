@@ -56,7 +56,7 @@ class View : public Gtk::DrawingArea {
 
   protected:
      // Response to a button press
-     bool on_button_press_event(GdkEventButton * event) override;
+    // bool on_button_press_event(GdkEventButton * event) override;
 
   private:
 

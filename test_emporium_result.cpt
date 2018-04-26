@@ -1,0 +1,72 @@
+Scoop
+Vanilla
+General
+1 1 
+Scoop
+Cookies
+Sweet
+1 1 
+Topping
+Whipped Cream
+General
+1 1 1 
+Topping
+Chocolate Sauce
+Sweet
+1 1 1 
+Container
+Cup
+General
+1 1 1 
+Container
+Bowl
+Sweet
+1 1 1 
+
+
+Server
+D-Server
+1 1 11 0 
+Customer
+D-Customer
+6829999999
+1 1 
+Server
+Duy
+1 1 100 0 
+Customer
+
+00
+0 1 
+
+
+Order
+1 0 5 5Serving
+5 5Container
+Cup
+General
+1 1 1 
+Scoop
+Vanilla
+General
+1 1 
+Scoop
+Cookies
+Sweet
+1 1 
+Topping
+Whipped Cream
+General
+1 1 1 
+Topping
+Chocolate Sauce
+Sweet
+1 1 1 
+
+Server
+
+0 1 0 0 
+Customer
+
+00
+0 1 

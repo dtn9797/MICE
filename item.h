@@ -16,10 +16,12 @@ class Item {
       wholesale_cost{c},
       retail_price{p},
       stock_remaining{0} {}
+    Item (): Item("","",0,0){}
      void restock (int amount =25);
      void consume (int amount =1);
      virtual std::string type();
      virtual std::string to_string();
+     virtual void save(std::ostream& ost);
 
      std::string get_name ()const ;
      std::string get_description () const ;

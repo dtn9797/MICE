@@ -8,8 +8,9 @@ class Manager : public Person {
   public:
     Manager (std::string na, int id, double salary): Person(na,id), hour_salary{salary} {}
     Manager () : Manager("", 0,0) { };
+    Manager(std::istream& ist);
     std::string type() override;
-
+    void save(std::ostream& ost) override;
     double get_hour_salary() const ;
   private:
     double hour_salary;

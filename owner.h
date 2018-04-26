@@ -7,8 +7,10 @@
 class Owner : public Person {
   public:
     Owner (std::string na, int id): Person(na,id) {}
-    Owner () : Owner("", 0) { };
+    Owner () : Owner("", 0) { }
+    Owner(std::istream& ist);
     std::string type() override;
+    void save(std::ostream& ost) override;
 
 };
 

@@ -1,5 +1,31 @@
 #include "serving.h"
 #include <sstream>
+
+    Serving::Serving(std::istream& ist){
+      ist >> wholesale_cost >> retail_price;
+      while (ist){
+        std::string type;
+        int len = ist.tellg();
+        std::getline (ist, type); 
+        if (type == "Container"){
+           container = Container(ist);
+        }
+        else if (type == "Scoop"){
+           scoops.push_back(Scoop(ist));
+        }
+        else if (type == "Topping"){
+           toppings.push_back(Topping(ist));
+        }
+        else if (type == " " || type == "\n"){
+           continue;
+        }
+        else {
+         ist.seekg(len,std::ios_base::beg);
+         break;
+        }        
+      }
+    }
+
     Serving::Serving(Container con,std::vector<Scoop> scos,std::vector<Topping> tops):container{con}{
        wholesale_cost+= con.get_wholesale_cost();
        retail_price+= con.get_retail_price();      
@@ -46,6 +72,22 @@
       retail_price+= con.get_retail_price();      
       container = con;
     }
+
+    void Serving::save(std::ostream& ost) {
+      ost<< "Serving" << std::endl 
+         << wholesale_cost << ' ' << retail_price ;
+      container.save(ost);
+      ost <<std::endl;
+      for (Scoop scoop : scoops){
+        scoop.save(ost);
+        ost <<std::endl;
+      }
+      for (Topping topping : toppings) {
+        topping.save(ost);
+        ost <<std::endl;
+      }
+    }
+
     std::string Serving::to_string_serving(){
       std::stringstream buffer;
       buffer << "Container:" << std:: endl;

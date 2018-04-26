@@ -4,6 +4,8 @@
 #include "topping.h"
 #include "scoop.h"
 #include "container.h"
+#include <fstream>
+#include "view.h"
 
 using namespace std;
 
@@ -170,6 +172,13 @@ void Controller::execute_cmd (int cmd){
     catch (std::exception &e){
       view.create_message_dialog("Error",e.what());
     }  
+}
+ else if (cmd==13){//Save
+    std::ofstream ofs(view.get_file_name(),std::ofstream::out);
+    emporium.save(ofs);
+}
+ else if (cmd==14){//Load
+
 }
 
  else if (cmd==99) {//Test

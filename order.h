@@ -16,6 +16,7 @@ class Order {
       else if (per.type() == "Customer"){customer= *(dynamic_cast<Customer*>(&per));
       }      
     }
+    Order (std::istream& ist);
     //Order (int id, Customer &cus): id_number{id}, customer{cus}{}
     //Order (int id,Server ser, std::vector<Serving> sers): id_number{id}, server{ser} ,servings{sers} {}
     //Order (int id,Customer cus, std::vector<Serving> sers): id_number{id},customer{cus}, servings{sers} {}
@@ -37,6 +38,8 @@ class Order {
     Customer get_customer();
 
     int number_of_servings();
+
+    void save(std::ostream& ost);
     
     //std::string serving_to_string (int index);
        
