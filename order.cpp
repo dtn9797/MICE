@@ -2,28 +2,30 @@
 
    
     Order::Order (std::istream& ist){
-      int value;
-      ist >> id_number >> value >> cost >> price;
-      while (ist){
-        std::string type;
-        int len = ist.tellg();
-        std::getline (ist, type); 
-        if (type == "Serving") {
-          servings.push_back(Serving(ist));
-        }
-        else if (type == "Customer"){
-          customer = Customer(ist);
-        }
-        else if (type == "Server"){
-          server = Server (ist);
-        }
-        else if (type == " " || type == "\n" || type == " \n"){
-           continue;
-        }
-        else {
-         ist.seekg(len,std::ios_base::beg);
-         break;
-        }  
+      int value;std::string header1,header2;
+      ist >> id_number; ist.ignore();
+      ist >> value;ist.ignore();
+      ist >> cost;ist.ignore();
+      ist >> price;ist.ignore();
+      std::getline(ist, header1);
+      std::getline(ist, header2);
+      if (header1 != "#") throw std::runtime_error("missing # during Order's Customer input ");
+      if (header2 != "Customer") throw std::runtime_error("missing CUSTOMER during Order input ");
+      customer = Customer{ist};
+
+      std::getline(ist, header1);
+      std::getline(ist, header2);
+      if (header1 != "#") throw std::runtime_error("missing # during Order's Server input");
+      if (header2 != "Server") throw std::runtime_error("missing SERVER during Order input");
+      server = Server{ist};
+
+      while (true){
+            std::getline(ist, header1); // header
+            std::getline(ist, header2);
+            if (header1 != "#") throw std::runtime_error("missing # during Order input");
+            if (header2 == "END ORDER") break;  // footer
+            else if (header2 == "SERVING") servings.push_back(Serving{ist});
+            else throw std::runtime_error("invalid serving in Order");
       }  
       switch(value) {
          case(0):state= State::unfilled;break;
@@ -59,17 +61,16 @@
     int Order::number_of_servings() { return servings.size();}
 
     void Order::save(std::ostream& ost){
-      ost << "Order" << std::endl;
+    ost << "#" << std::endl << "ORDER" << std::endl; // header
       ost << id_number << ' '
           << state.get_value() << ' ' << cost << ' '
-          << price ;
+          << price << ' '  ;
+      customer.save(ost);
+      server.save(ost);
       for (Serving serving : servings){
         serving.save(ost);
-        ost<<std::endl;
       }
-      server.save(ost);
-      ost<<std::endl;
-      customer.save(ost);
+    ost << "#" << std::endl << "END ORDER" << std::endl; // header
     }
 
 

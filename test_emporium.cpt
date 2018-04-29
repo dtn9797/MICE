@@ -1,65 +1,74 @@
+MICE
+0.1
+#
+EMPORIUM
+#
 Scoop
 Vanilla
 General
-1 1 
+1 1 #
 Scoop
 Cookies
 Sweet
-1 1 
+1 1 #
 Topping
 Whipped Cream
 General
-1 1 1 
+1 1 1 #
 Topping
 Chocolate Sauce
 Sweet
-1 1 1 
+1 1 1 #
 Container
 Cup
 General
-1 1 1 
+1 1 1 #
 Container
 Bowl
 Sweet
-1 1 1 
-
-
+1 1 1 #
 Server
 D-Server
-1 1 11 0 
+1 1 11 0 #
 Customer
 D-Customer
 6829999999
-1 1 
-
-
-Order
-1 0 5 5Serving
-5 5Container
-Cup
-General
-1 1 1 
-Scoop
-Vanilla
-General
-1 1 
-Scoop
-Cookies
-Sweet
-1 1 
-Topping
-Whipped Cream
-General
-1 1 1 
-Topping
-Chocolate Sauce
-Sweet
-1 1 1 
-
-Server
-Duy
-1 1 100 0 
+1
+#
+ORDER
+1 0 5 5 #
 Customer
 
 00
-0 1 
+0
+#
+Server
+Duy
+1 1 100 0 #
+SERVING
+5 5 #
+Container
+Cup
+General
+1 1 1 #
+Scoop
+Vanilla
+General
+1 1 #
+Scoop
+Cookies
+Sweet
+1 1 #
+Topping
+Whipped Cream
+General
+1 1 1 #
+Topping
+Chocolate Sauce
+Sweet
+1 1 1 #
+END SERVING
+#
+END ORDER
+#
+END EMPORIUM

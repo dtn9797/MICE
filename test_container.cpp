@@ -47,15 +47,17 @@ bool test_container() {
   //
   // Read files
   //
+  Container container0("D","D",1,1,1);
   std::ofstream ofs ("test_container.cpt",std::ifstream::out);
   container.save(ofs);
   ofs.close();
   std::ifstream ifs ("test_container.cpt",std::ifstream::in);
-  std::string type ;
-  if (std::getline (ifs, type));
-  std::cout << type << std::endl;
-  Container container0("D","D",1,1,1);
-  if (type == "Container") {container0 = Container(ifs);};
+  std::string header1,header2 ;
+  std::getline(ifs, header1); // header
+  std::getline(ifs, header2);
+  if (header1 != "#") throw std::runtime_error("No Container records in file");
+  else if (header2 != "Container") throw std::runtime_error("Malformed Container  record");
+  else { container0 = Container{ifs};}
 
 
   if (container0.get_name() != x_name ||

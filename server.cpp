@@ -3,8 +3,10 @@
 
 Server::Server(std::istream& ist){
    std::getline (ist, name);
-   ist >> id >> active
-       >> hour_salary >> num_order_filled; 
+   ist >> id; ist.ignore();
+   ist >> active; ist.ignore();
+   ist >> hour_salary; ist.ignore(); 
+   ist >> num_order_filled; ist.ignore();
 }
 
 std::string Server::type() {return "Server";}
@@ -16,8 +18,8 @@ void Server::reset_num_order_filled() {num_order_filled = 0;}
 void Server::add_order_filled(){num_order_filled+=1;}
 
     void Server::save(std::ostream& ost){
-       ost << type() << std::endl 
-           << name << std::endl 
+       ost << "#" << std::endl << "Server" << std::endl; 
+       ost << name << std::endl 
            << id << ' ' << active << ' '
            << hour_salary << ' ' << num_order_filled << ' ';
     }

@@ -3,7 +3,8 @@
 Scoop::Scoop(std::istream& ist){
    std::getline (ist, name);
    std::getline (ist, description);
-   ist >> wholesale_cost >> retail_price; 
+   ist >> wholesale_cost; ist.ignore();  
+   ist >> retail_price; ist.ignore();
 }
 
 std::string Scoop::to_string () {
@@ -19,7 +20,7 @@ std::string Scoop::to_string () {
 std::string Scoop::type () {return "Scoop";}
 
 void Scoop::save (std::ostream& ost){
-   ost << type() << std::endl
+   ost << "#" << std::endl << type() << std::endl
        << name << std::endl << description << std::endl
        << wholesale_cost << ' ' << retail_price << ' ';
  } 

@@ -2,27 +2,18 @@
 #include <sstream>
 
     Serving::Serving(std::istream& ist){
-      ist >> wholesale_cost >> retail_price;
-      while (ist){
-        std::string type;
-        int len = ist.tellg();
-        std::getline (ist, type); 
-        if (type == "Container"){
-           container = Container(ist);
-        }
-        else if (type == "Scoop"){
-           scoops.push_back(Scoop(ist));
-        }
-        else if (type == "Topping"){
-           toppings.push_back(Topping(ist));
-        }
-        else if (type == " " || type == "\n"){
-           continue;
-        }
-        else {
-         ist.seekg(len,std::ios_base::beg);
-         break;
-        }        
+      std::string header1,header2;
+      ist >> wholesale_cost; ist.ignore();
+      ist >> retail_price; ist.ignore();
+      while (true){
+        std::getline(ist, header1); // header
+        std::getline(ist, header2);
+        if (header1 != "#") throw std::runtime_error("missing # during input");
+        if (header2 == "END SERVING") break;  // footer
+        else if (header2 == "Container") container = Container{ist};
+        else if (header2 == "Scoop") scoops.push_back(Scoop{ist});
+        else if (header2 == "Topping") toppings.push_back(Topping{ist});
+        else throw std::runtime_error("invalid item type in Serving");       
       }
     }
 
@@ -74,18 +65,16 @@
     }
 
     void Serving::save(std::ostream& ost) {
-      ost<< "Serving" << std::endl 
-         << wholesale_cost << ' ' << retail_price ;
+    ost << "#" << std::endl << "SERVING" << std::endl; // header
+    ost << wholesale_cost << ' ' << retail_price << ' ' ;
       container.save(ost);
-      ost <<std::endl;
-      for (Scoop scoop : scoops){
-        scoop.save(ost);
-        ost <<std::endl;
+      for (Scoop scoop : scoops){       
+	scoop.save(ost);
       }
       for (Topping topping : toppings) {
         topping.save(ost);
-        ost <<std::endl;
       }
+    ost << "#" << std::endl << "END SERVING" << std::endl; // footer
     }
 
     std::string Serving::to_string_serving(){

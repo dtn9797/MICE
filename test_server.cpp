@@ -1,6 +1,7 @@
 #include "test_server.h"
 #include <iostream>
 #include "server.h"
+#include <fstream>
 bool test_server () {
   std::string expected = "";
   bool passed = true; // Optimist!
@@ -39,5 +40,23 @@ bool test_server () {
     std::cerr << "Actual: " << server.get_num_order_filled()<<std::endl;
     passed = false;
   }
+
+  //test files
+
+  std::ofstream ofs ("test_server.cpt",std::ifstream::out);
+  server.save(ofs);
+  ofs.close();
+  std::ifstream ifs ("test_server.cpt",std::ifstream::in);
+  std::string header1,header2 ;
+  Server server0;
+  std::getline(ifs, header1); // header
+  std::getline(ifs, header2);
+  if (header1 != "#") throw std::runtime_error("No Server records in file");
+  else if (header2 != "Server") throw std::runtime_error("Malformed Sever record");
+  //std::cout << type << std::endl;
+  else {server0 = Server(ifs);};
+
+  std::ofstream ofs0 ("test_server_result.cpt",std::ifstream::out);
+  server0.save(ofs0);
   return passed;
 }

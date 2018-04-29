@@ -140,34 +140,50 @@
     }
 
     void Emporium::save(std::ostream& ost) {
+      ost << "MICE" << std::endl << "0.1" << std::endl; // magic cookie
+      ost << "#" << std::endl << "EMPORIUM" << std::endl; // header
+      //ost << name << std::endl;
+      //ost << cash_register << std::endl;
+     // ost << id << std::endl;
+
       for (Item* item_ptr : items){
         item_ptr->save(ost);
-        ost << std::endl;
       }
-        ost << std::endl<<std::endl;
       for (Person* person_ptr : persons){
         person_ptr->save(ost);
-        ost << std::endl;
       }
-        ost << std::endl<<std::endl;
       for (Order* order_ptr: orders){
         order_ptr->save(ost);
       }
       dirty = false;
+      ost << "#" << std::endl << "END EMPORIUM" << std::endl; // footer
+
     }
 
     void Emporium::load(std::istream& ist) {
       clear();
-      dirty = (items.size() > 0 && orders.size () > 0 && persons.size() >0);
-      while(ist){
-        std::string type;
-        std::getline (ist, type);
-        if (type!= "Order"){
-          new_item_person(ist,type);
-        }
-        else {
-          new_order(ist);
-        } 
+      std::string header1, header2;
+
+      std::getline(ist, header1); // header
+      std::getline(ist, header2);
+      if (header1 != "#") throw std::runtime_error("No Emporium records in file");
+      if (header2 != "EMPORIUM") throw std::runtime_error("Malformed Emporium record");
+
+      while(ist) {
+        std::getline(ist, header1); // header
+        std::getline(ist, header2);
+        if (header1 != "#") throw std::runtime_error("missing # during input");
+        if (header2 == "Container") items.push_back(new Container{ist});
+        else if (header2 == "Scoop") items.push_back(new Scoop{ist});
+        else if (header2 == "Topping") items.push_back(new Topping{ist});
+        else if (header2 == "ORDER") orders.push_back(new Order{ist});
+        else if (header2 == "Server") persons.push_back(new Server{ist});
+        else if (header2 == "Customer") persons.push_back(new Customer{ist});
+        else if (header2 == "Owner") persons.push_back(new Owner{ist});
+        else if (header2 == "Manager") persons.push_back(new Manager{ist});
+
+        else if (header2 == "END EMPORIUM") break;
+        else throw std::runtime_error("invalid item type in Emporium");
       }
     }
 
@@ -175,29 +191,9 @@
        orders.push_back(new Order(ist));
     }
 
-    void Emporium::new_item_person (std::istream& ist, std::string type) {
-       if (type == "Container"){
-          items.push_back(new Container(ist));
-       }
-       else if (type == "Scoop"){
-          items.push_back(new Scoop(ist));
-       }
-       else if (type == "Topping"){
-          items.push_back(new Topping(ist));
-       }
-       else if (type == "Owner"){
-          persons.push_back(new Owner(ist));
-       }
-       else if (type == "Manager"){
-          persons.push_back(new Manager(ist));
-       }
-       else if (type == "Customer"){
-          persons.push_back(new Customer(ist));
-       }
-       else if (type == "Server"){
-          persons.push_back(new Server(ist));
-       }
-    }
+  void Emporium::new_item_person (std::istream& ist, std::string type) {
+
+  }
 
     void Emporium::clear () {
       for (Item* item: items){
@@ -213,6 +209,7 @@
       persons.clear();
       orders.clear();
     }
+
 
     void Emporium::auto_add() {
       //add sample to choose from

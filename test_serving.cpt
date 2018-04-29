@@ -1,17 +1,20 @@
-Serving
-4 8Container
+#
+SERVING
+4 8 #
+Container
 xContainer
 xThis is a container
-1 2 3 
+1 2 3 #
 Scoop
 xScoop
 xThis is the first scoop
-1 2 
+1 2 #
 Scoop
 xScoop
 xThis is the second scoop
-1 2 
+1 2 #
 Topping
 xToppings
 xThese are scoops
-1 2 1 
+1 2 1 #
+END SERVING

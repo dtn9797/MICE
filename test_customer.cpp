@@ -39,12 +39,14 @@ bool test_customer () {
   customer.save(ofs);
   ofs.close();
   std::ifstream ifs ("test_customer.cpt",std::ifstream::in);
-  std::string type ;
-  if (std::getline (ifs, type));
-  //std::cout << type << std::endl;
+  std::string header1,header2 ;
   Customer customer0("D",1,"999");
-  if (type == "Customer") {customer0 = Customer(ifs);};
-
+  std::getline(ifs, header1); // header
+  std::getline(ifs, header2);
+  if (header1 != "#") throw std::runtime_error("No Customer records in file");
+  else if (header2 != "Customer") throw std::runtime_error("Malformed Customer record");
+  //std::cout << type << std::endl;
+  else {customer0 = Customer(ifs);};
 
   if (customer0.get_name() != x_name ||
       customer0.get_id() != x_id ||

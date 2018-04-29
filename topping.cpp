@@ -4,7 +4,9 @@
 Topping::Topping(std::istream& ist){
    std::getline (ist, name);
    std::getline (ist, description);
-   ist >> wholesale_cost >> retail_price >> _amount; 
+   ist >> wholesale_cost; ist.ignore(); 
+   ist >> retail_price; ist.ignore();
+   ist >> _amount; ist.ignore();
 }
 
 std::string Topping::type() {return "Topping";}
@@ -28,7 +30,7 @@ void Topping::set_amount(int amount) {
 }
 
 void Topping::save (std::ostream& ost){
-   ost << type() << std::endl 
+   ost << "#" << std::endl << type() << std::endl
        << name << std::endl << description << std::endl
        << wholesale_cost << ' ' << retail_price << ' ' 
        << _amount << ' ';

@@ -145,7 +145,7 @@ void Controller::execute_cmd (int cmd){
     catch (std::exception &e){
       view.create_message_dialog("Error",e.what());
     } 
-}
+}//STATE MACHINE
  else if (cmd==11){ // Cancel Order
     int order_index;
     try{ 

@@ -37,11 +37,15 @@ bool test_order () {
   order1.add_serving(serving0);     
 
   //test load/save
+  std::string header1,header2;
   std::ofstream ofs{"test_order.cpt", std::ofstream::out};
   order1.save(ofs);
   ofs.close();
   std::ifstream ifs{"test_order.cpt", std::ofstream::in}; 
-
+  std::getline(ifs, header1);
+  std::getline(ifs, header2);
+  if (header1 != "#") throw std::runtime_error("missing # during Order input ");
+  if (header2 != "ORDER") throw std::runtime_error("missing ORDER during Order input ");
   order0 = Order(ifs); 
  //order result
   std::ofstream ofs0{"test_order_result.cpt", std::ofstream::out};

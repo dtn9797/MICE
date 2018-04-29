@@ -51,8 +51,10 @@ bool test_serving () {
   //
   // Report results
   //
-/*
+
   //test load/save
+  std::string header1,header2;
+
   std::ofstream ofs{"test_serving.cpt", std::ofstream::out};
   serving.save(ofs);
   ofs.close();
@@ -63,14 +65,18 @@ bool test_serving () {
   std::vector<Topping> y_toppings={Topping("yToppings","yThese are scoops",2,3,2)};
   double y_wholesale_cost = y_container.get_wholesale_cost()+y_scoops[0].get_wholesale_cost()+y_scoops[1].get_wholesale_cost()+y_toppings[0].get_wholesale_cost();
   double y_retail_price = y_container.get_retail_price()+y_scoops[0].get_retail_price()+y_scoops[1].get_retail_price()+y_toppings[0].get_retail_price();
-  Serving serving0{y_container,y_scoops,y_toppings};
 
-  serving0 = Serving(ifs); 
+  Serving serving0{y_container,y_scoops,y_toppings};
+  std::getline(ifs, header1); // header
+  std::getline(ifs, header2);
+  if (header1 != "#") throw std::runtime_error("No Serving records in file");
+  else if (header2 != "SERVING") throw std::runtime_error("Malformed Serving record");
+  else {serving0 = Serving(ifs);};
  //serving result
   std::ofstream ofs0{"test_serving_result.cpt", std::ofstream::out};
   serving0.save(ofs0);
   ofs0.close();
-
+/*
   if (serving0.get_container().get_description() != x_container.get_description() ||
       serving0.get_scoop(0).get_description() != x_scoops[0].get_description() ||
       serving0.get_topping(0).get_description() != x_toppings[0].get_description() ||
