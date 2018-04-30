@@ -190,5 +190,5 @@ Emporium& Controller::get_emporium () {return emporium;}
 
 //Set Function
 void Controller::set_person ( Person* per) {person_ptr =per;}
-
+Person* Controller::get_person_ptr () {return person_ptr;}
 

@@ -1,74 +1,175 @@
+#
+EMPORIUM
+#
 Scoop
 Vanilla
 General
-1 1 
+0.5 1 #
 Scoop
 Cookies
 Sweet
-1 1 
+0.5 1 #
+Scoop
+Strawberry
+Chunks of strawberry wrapped in vanilla ice cream
+0.2 0.5 #
 Topping
 Whipped Cream
 General
-1 1 1 
+0.1 0.2 1 #
 Topping
 Chocolate Sauce
 Sweet
-1 1 1 
+0.1 0.25 0 #
+Topping
+Cherry
+Classic marichino cherry
+0.1 0.2 0 #
 Container
 Cup
 General
-1 1 1 
+0.35 0.75 3 #
 Container
 Bowl
 Sweet
-1 1 1 
-
-
+1 1 5 #
+Container
+Cone
+Crispy airy delight
+0.25 0.5 1 #
 Owner
-Duy Nguyen
-1 1 
-Manager
-Thao Pham
-1 1 2 
-Server
-Server
-1 1 1 0 
+New Owner
+1 1 #
 Server
 D-Server
-1 1 11 0 
+1 1 11 0 #
+Server
+Henry Jackson
+2 1 15 1 #
 Customer
 D-Customer
 6829999999
-1 1 
-
-
-Order
-1 0 5 5Serving
-5 5Container
-Cup
-General
-1 1 1 
-Scoop
-Vanilla
-General
-1 1 
-Scoop
-Cookies
-Sweet
-1 1 
-Topping
-Whipped Cream
-General
-1 1 1 
-Topping
-Chocolate Sauce
-Sweet
-1 1 1 
-
-Server
-Duy
-1 1 100 0 
+1
+#
+Customer
+Elton John
+817-555-1313
+2
+#
+ORDER
+1 3 3.7 4.5 #
 Customer
 
 00
-0 1 
+0
+#
+Server
+Duy
+1 1 100 0 #
+SERVING
+3.7 4.5 #
+Container
+Cup
+General
+1 1 1 #
+Scoop
+Strawberry
+Chunks of strawberry wrapped in vanilla ice cream
+0.2 0.5 #
+Scoop
+Cookies
+Sweet
+0.5 1 #
+Topping
+Whipped Cream
+General
+1 1 1 #
+Topping
+Chocolate Sauce
+Sweet
+1 1 1 #
+END SERVING
+#
+END ORDER
+#
+ORDER
+0 2 0.85 1.75 #
+Customer
+
+00
+0
+#
+Server
+Henry Jackson
+2 1 15 1 #
+SERVING
+0.85 1.75 #
+Container
+Cup
+General
+0.35 0.75 3 #
+Scoop
+Vanilla
+General
+0.5 1 #
+END SERVING
+#
+END ORDER
+#
+ORDER
+1 3 2 3 #
+Customer
+D-Customer
+6829999999
+1
+#
+Server
+
+0 1 0 0 #
+SERVING
+2 3 #
+Container
+Bowl
+Sweet
+1 1 5 #
+Scoop
+Vanilla
+General
+0.5 1 #
+Scoop
+Cookies
+Sweet
+0.5 1 #
+END SERVING
+#
+END ORDER
+#
+ORDER
+2 0 0.55 1.2 #
+Customer
+Elton John
+817-555-1313
+2
+#
+Server
+
+0 1 0 0 #
+SERVING
+0.55 1.2 #
+Container
+Cone
+Crispy airy delight
+0.25 0.5 1 #
+Scoop
+Strawberry
+Chunks of strawberry wrapped in vanilla ice cream
+0.2 0.5 #
+Topping
+Whipped Cream
+General
+0.1 0.2 1 #
+END SERVING
+#
+END ORDER
+#
+END EMPORIUM

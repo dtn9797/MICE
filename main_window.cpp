@@ -6,7 +6,76 @@
 //C O N S T R U C T O R//
 /////////////////////////
 Main_window::Main_window (Controller& con): controller{con} {
-  show_window_for_person();
+
+  set_default_size (768,768);
+  //Put verticalbox container
+  vbox = Gtk::manage(new Gtk::Box(Gtk::ORIENTATION_VERTICAL, 0));
+  add(*vbox);
+  // //////////
+  // M E N U B A R///
+  // Add a menu bar as the top item in the vertical box
+  Gtk::MenuBar *menubar = Gtk::manage(new Gtk::MenuBar());
+  vbox->pack_start(*menubar, Gtk::PACK_SHRINK, 0);
+  //SUBMENUS FOR FILE 
+  std::vector<std::string> sub_names= {"_New","_Open","_Save","_Save As","_Properties","_Test","_Quit"};
+  //     FILE
+  create_menu_items(menubar,"_File", sub_names);
+
+  //SUBMENUS FOR EDIT
+  sub_names= {"_Undo","_Customer","_Server","_Manager","_Owner"};
+  //     EDIT
+  create_menu_items(menubar,"_Edit", sub_names);
+  //         Quit for file
+  // Append Quit to the File menu
+ 
+  //SUBMENUS FOR CREATE
+  sub_names= {"_Order","_Customer","_Item","_Server"};
+  //    CREATE
+  create_menu_items(menubar,"_Create", sub_names);
+  //SUBMENUS FOR PROCESS
+  sub_names= {"_Cancel Order","_Fill Order","_Payment", "_Restock"};
+  //    PROCESS
+  create_menu_items(menubar,"_Process", sub_names);
+  //SUBMENUS FOR REPORT
+  sub_names = {"_Servers","_Customer","_Inventory","_Orders","_P&L"};
+  //    REPORT
+  create_menu_items(menubar,"_Report", sub_names);
+/*
+  //SUBMENUS FOR ROLE
+  sub_names= {"_Owner","_Manager", "_Server","_Customer"};
+  //    ROLE
+  create_menu_items(menubar,"_Role", sub_names);
+*/
+  //    HELP
+  create_menu_items(menubar,"_Help", sub_names);
+
+ // /////////////
+  //T O P  T O O L B A R
+  // Add a toolbar to the vertical box below the menu
+  Gtk::Toolbar *toptoolbar = Gtk::manage(new Gtk::Toolbar);   
+  vbox->add(*toptoolbar);
+  //     N E W   E M P O R I UM
+  // Add a new emporium icon
+  Gtk::ToolButton *new_emporium_button = Gtk::manage(new Gtk::ToolButton(Gtk::Stock::NEW));
+  new_emporium_button->set_tooltip_markup("Create a New Emporium");
+  //new_emporium_button->signal_clicked().connect(sigc::mem_fun(*this, &Mainwin::on_new_emporium_click));
+  toptoolbar->append(*new_emporium_button);
+
+  //     Q U I T
+  // Add a icon for quitting
+  Gtk::ToolButton *quit_button = Gtk::manage(new Gtk::ToolButton(Gtk::Stock::QUIT));
+  quit_button->set_tooltip_markup("Exit MICE");
+  quit_button->signal_clicked().connect(sigc::mem_fun(*this, &Main_window::on_quit_click));
+  Gtk::SeparatorToolItem *sep = Gtk::manage(new Gtk::SeparatorToolItem());
+  sep->set_expand(true);  // The expanding sep forces the Quit button to the right
+  toptoolbar->append(*sep);
+  toptoolbar->append(*quit_button); 
+  //////////////
+  //B O T T O M  T O O L  B A R
+  create_toggletoolbuttons_with_toolbar ( controller.get_person_ptr(),vbox); 
+  
+  ///////////////
+  //T R E E V I E W
   //Add the TreeView, inside a ScrolledWindow, with the button underneath:
   m_ScrolledWindow.add(m_TreeView);
 
@@ -31,8 +100,12 @@ Main_window::Main_window (Controller& con): controller{con} {
   m_TreeView.append_column("State", m_Columns.m_col_state);
   m_TreeView.append_column("Price", m_Columns.m_col_price);
 
+  show_window_for_person();
 
   show_all_children();
+   
+  //SHOW ALL ITEMS
+  vbox->show_all();
 }
 
 
@@ -55,7 +128,7 @@ void Main_window::show_window_for_person(){
     c_person.set_size_request(160);
     std::vector<Person*> persons = controller.get_emporium().get_persons();
     for (Person* person: persons){
-      std::string person_info = person -> get_name () + "(Id: " ; //atoi(person -> get_id ()) +" )";
+      std::string person_info = person -> type () + " : " + person -> get_name () + "(Id: " + std::to_string(person -> get_id ()) +" )";
       c_person.append(person_info);
     }
 
@@ -75,22 +148,35 @@ void Main_window::show_window_for_person(){
        int index  = c_person.get_active_row_number();
          if (persons[index] -> type() == "Owner"){
            show_window_for_owner(persons[index]);
-           controller.set_person(persons[index]);
          }
          else if (persons[index]->type() == "Manager"){
            show_window_for_manager(persons[index]);
-           controller.set_person(persons[index]);
          }
          else if (persons[index]->type() == "Server"){
            show_window_for_server(persons[index]);
-           controller.set_person(persons[index]);
          }
          else if (persons[index]->type() == "Customer"){
            show_window_for_customer(persons[index]);
-           controller.set_person(persons[index]);
          }
     }
- 
+    else if (result == 0 ){
+        Person* person = controller.get_person_ptr();
+          if (person -> type() == "Owner"){
+           show_window_for_owner(person);
+         }
+         else if (person->type() == "Manager"){
+           show_window_for_manager(person);
+         }
+         else if (person->type() == "Server"){
+           show_window_for_server(person);
+         }
+         else if (person->type() == "Customer"){
+           show_window_for_customer(person);
+         }
+         else {
+          hide();
+         }
+    }
 }
 
 
@@ -100,6 +186,7 @@ void Main_window::show_window_for_person(){
 
 
 void Main_window::create_menu_items(Gtk::MenuBar *menubar, std::string name, std::vector<std::string> sub_names){
+
  Gtk::MenuItem *menuitem_name = Gtk::manage(new Gtk::MenuItem(name, true));
   menubar->append(*menuitem_name);
   Gtk::Menu *namemenu = Gtk::manage(new Gtk::Menu());
@@ -118,13 +205,30 @@ void Main_window::create_menu_items(Gtk::MenuBar *menubar, std::string name, std
 							{"_Open", sigc::mem_fun(*this, &Main_window::on_load_click)},
 
 							};
-  for(std::string sub_name:sub_names) create_submenu_items(namemenu ,sub_name,str_to_func[sub_name]);
+  for(std::string sub_name:sub_names){
+     create_submenu_items(namemenu ,sub_name,str_to_func[sub_name]);
+  }
 }
 
 void Main_window::create_submenu_items(Gtk::Menu *namemenu,std::string name,sigc::slot<void> s){
  Gtk::MenuItem *menuitem_name = Gtk::manage(new Gtk::MenuItem(name, true));
   menuitem_name->signal_activate().connect(s);
   namemenu->append(*menuitem_name);
+
+     if (name == "_New"){menuitem_new = menuitem_name;}
+     else if (name =="_Open"){menuitem_open = menuitem_name;}
+     else if (name =="_Save"){menuitem_save = menuitem_name;}
+     else if (name =="_Test"){menuitem_test = menuitem_name;}
+     else if (name =="_Quit"){menuitem_quit = menuitem_name;}
+     else if (name =="_Order"){menuitem_order = menuitem_name;}
+     else if (name =="_Customer"){menuitem_customer = menuitem_name;}
+     else if (name =="_Item"){menuitem_item = menuitem_name;}
+     else if (name =="_Server"){menuitem_server = menuitem_name;}
+     else if (name =="_Fill Order"){menuitem_fill_order = menuitem_name;}
+     else if (name =="_Payment"){menuitem_pay_for_order = menuitem_name;}
+     else if (name =="_Cancel Order"){menuitem_cancel_order = menuitem_name;}
+     else if (name =="_Restock"){menuitem_restock = menuitem_name;}
+  
 }
 
 void Main_window::create_toggletoolbuttons_with_toolbar (Person *person,Gtk::Box *vbox) {
@@ -179,284 +283,96 @@ void Main_window::create_toggletoolbuttons_with_toolbar (Person *person,Gtk::Box
 ///Private FUnctions for Person//
 ///////////////////////
 void Main_window::show_window_for_owner(Person* person) {
-  //
-  //OWNER
-  //
-  set_default_size (768,768);
-  //Put verticalbox container
-  vbox = Gtk::manage(new Gtk::Box(Gtk::ORIENTATION_VERTICAL, 0));
-  add(*vbox);
-  // //////////
-  // M E N U B A R///
-  // Add a menu bar as the top item in the vertical box
-  Gtk::MenuBar *menubar = Gtk::manage(new Gtk::MenuBar());
-  vbox->pack_start(*menubar, Gtk::PACK_SHRINK, 0);
-  //SUBMENUS FOR FILE 
-  std::vector<std::string> sub_names= {"_New","_Open","_Save","_Save As","_Properties","_Test","_Quit"};
-  //     FILE
-  create_menu_items(menubar,"_File", sub_names);
+    menuitem_new->set_sensitive(true);
+    menuitem_open->set_sensitive(true);
+    menuitem_save->set_sensitive(true);
+    menuitem_test->set_sensitive(true);
+    menuitem_quit->set_sensitive(true);
+    menuitem_order->set_sensitive(true);
+    menuitem_customer->set_sensitive(true);
+    menuitem_item->set_sensitive(true);
+    menuitem_server->set_sensitive(true);
+    menuitem_fill_order->set_sensitive(true);
+    menuitem_pay_for_order->set_sensitive(true);
+    menuitem_cancel_order->set_sensitive(true);
+    menuitem_restock->set_sensitive(false);
 
-  //SUBMENUS FOR EDIT
-  sub_names= {"_Undo","_Customer","_Server","_Manager","_Owner"};
-  //     EDIT
-  create_menu_items(menubar,"_Edit", sub_names);
-  //         Quit for file
-  // Append Quit to the File menu
- 
-  //SUBMENUS FOR CREATE
-  sub_names= {"_Order","_Customer","_Item","_Server"};
-  //    CREATE
-  create_menu_items(menubar,"_Create", sub_names);
-  //SUBMENUS FOR REPORT
-  sub_names = {"_Servers","_Customer","_Inventory","_Orders","_P&L"};
-  //    REPORT
-  create_menu_items(menubar,"_Report", sub_names);
-  //SUBMENUS FOR ROLE
-  sub_names= {"_Owner","_Manager", "_Server","_Customer"};
-  //    ROLE
-  create_menu_items(menubar,"_Role", sub_names);
-  //    HELP
-  create_menu_items(menubar,"_Help", sub_names);
+    server_button->set_active(false);
+    customer_button->set_active(false);
+    manager_button->set_active(false);
+    owner_button->set_active(true);
 
- // /////////////
-  //T O P  T O O L B A R
-  // Add a toolbar to the vertical box below the menu
-  Gtk::Toolbar *toptoolbar = Gtk::manage(new Gtk::Toolbar);   
-  vbox->add(*toptoolbar);
-  //     N E W   E M P O R I UM
-  // Add a new emporium icon
-  Gtk::ToolButton *new_emporium_button = Gtk::manage(new Gtk::ToolButton(Gtk::Stock::NEW));
-  new_emporium_button->set_tooltip_markup("Create a New Emporium");
-  //new_emporium_button->signal_clicked().connect(sigc::mem_fun(*this, &Mainwin::on_new_emporium_click));
-  toptoolbar->append(*new_emporium_button);
-
-  //     Q U I T
-  // Add a icon for quitting
-  Gtk::ToolButton *quit_button = Gtk::manage(new Gtk::ToolButton(Gtk::Stock::QUIT));
-  quit_button->set_tooltip_markup("Exit MICE");
-  quit_button->signal_clicked().connect(sigc::mem_fun(*this, &Main_window::on_quit_click));
-  Gtk::SeparatorToolItem *sep = Gtk::manage(new Gtk::SeparatorToolItem());
-  sep->set_expand(true);  // The expanding sep forces the Quit button to the right
-  toptoolbar->append(*sep);
-  toptoolbar->append(*quit_button); 
-  //////////////
-  //B O T T O M  T O O L  B A R
-  create_toggletoolbuttons_with_toolbar ( person,vbox); 
-   
-  //SHOW ALL ITEMS
-  vbox->show_all();
+    controller.set_person(person);
 }
 
 void Main_window::show_window_for_manager(Person* person) {
-  //
-  //MANAGER 
-  //
-  set_default_size (768,768);
-  //Put verticalbox container
-  vbox = Gtk::manage(new Gtk::Box(Gtk::ORIENTATION_VERTICAL, 0));
-  add(*vbox);
-  // //////////
-  // M E N U B A R///
-  // Add a menu bar as the top item in the vertical box
-  Gtk::MenuBar *menubar = Gtk::manage(new Gtk::MenuBar());
-  vbox->pack_start(*menubar, Gtk::PACK_SHRINK, 0);
-  //SUBMENUS FOR FILE 
-  std::vector<std::string> sub_names= {"_Test","_Properties","_Quit"};
-  //     FILE
-  create_menu_items(menubar,"_File", sub_names);
-  //SUBMENUS FOR EDIT
-  sub_names= {"_Undo","_Customer","_Server","_Item"};
-  //     EDIT
-  create_menu_items(menubar,"_Edit", sub_names);
-  //         Quit for file
-  //SUBMENUS FOR CREATE
-  sub_names= {"_Order","_Customer","_Item","_Server"};
-  //    CREATE
-  create_menu_items(menubar,"_Create", sub_names);
-  //SUBMENUS FOR PROCESS
-  sub_names= {"_Cancel Order"};
-  //    PROCESS
-  create_menu_items(menubar,"_Process", sub_names);
-  //SUBMENUS FOR REPORT
-  sub_names = {"_Servers","_Customer","_Inventory","_Orders","_P&L"};
-  //    REPORT
-  create_menu_items(menubar,"_Report", sub_names);
-  //SUBMENUS FOR ROLE
-  sub_names= {"_Owner","_Manager", "_Server","_Customer"};
-  //    ROLE
-  create_menu_items(menubar,"_Role", sub_names);
-  //SUBMENUS FOR HELP
-  sub_names= {"_Manual","_About"};
-  //    HELP
-  create_menu_items(menubar,"_Help", sub_names);
+    menuitem_new->set_sensitive(false);
+    menuitem_open->set_sensitive(true);
+    menuitem_save->set_sensitive(true);
+    menuitem_test->set_sensitive(true);
+    menuitem_quit->set_sensitive(true);
+    menuitem_order->set_sensitive(true);
+    menuitem_customer->set_sensitive(true);
+    menuitem_item->set_sensitive(true);
+    menuitem_server->set_sensitive(true);
+    menuitem_fill_order->set_sensitive(true);
+    menuitem_pay_for_order->set_sensitive(true);
+    menuitem_cancel_order->set_sensitive(true);
+    menuitem_restock->set_sensitive(false);
 
- // /////////////
-  //T O P  T O O L B A R
-  // Add a toolbar to the vertical box below the menu
-  Gtk::Toolbar *toptoolbar = Gtk::manage(new Gtk::Toolbar);   
-  vbox->add(*toptoolbar);
-  //     N E W   E M P O R I UM
-  // Add a new emporium icon
-  Gtk::ToolButton *new_emporium_button = Gtk::manage(new Gtk::ToolButton(Gtk::Stock::NEW));
-  new_emporium_button->set_tooltip_markup("Create a New Emporium");
-  //new_emporium_button->signal_clicked().connect(sigc::mem_fun(*this, &Mainwin::on_new_emporium_click));
-  toptoolbar->append(*new_emporium_button);
+    server_button->set_active(false);
+    customer_button->set_active(false);
+    manager_button->set_active(true);
+    owner_button->set_active(false);
 
-  //     Q U I T
-  // Add a icon for quitting
-  Gtk::ToolButton *quit_button = Gtk::manage(new Gtk::ToolButton(Gtk::Stock::QUIT));
-  quit_button->set_tooltip_markup("Exit MICE");
-  quit_button->signal_clicked().connect(sigc::mem_fun(*this, &Main_window::on_quit_click));
-  Gtk::SeparatorToolItem *sep = Gtk::manage(new Gtk::SeparatorToolItem());
-  sep->set_expand(true);  // The expanding sep forces the Quit button to the right
-  toptoolbar->append(*sep);
-  toptoolbar->append(*quit_button); 
-  //////////////
-  //B O T T O M  T O O L  B A R
-  create_toggletoolbuttons_with_toolbar ( person,vbox); 
-
-  //SHOW ALL ITEMS
-  vbox->show_all();
+    controller.set_person(person);
 }
 
 void Main_window::show_window_for_server(Person* person) {
-  //
-  //SERVER
-  //
-  set_default_size (768,768);
-  //Put verticalbox container
-  vbox = Gtk::manage(new Gtk::Box(Gtk::ORIENTATION_VERTICAL, 0));
-  add(*vbox);
-  // //////////
-  // M E N U B A R///
-  // Add a menu bar as the top item in the vertical box
-  Gtk::MenuBar *menubar = Gtk::manage(new Gtk::MenuBar());
-  vbox->pack_start(*menubar, Gtk::PACK_SHRINK, 0);
-  //SUBMENUS FOR FILE
-  std::vector<std::string> sub_names= {"_Properties","_Test"};
-  //     FILE
-  create_menu_items(menubar,"_File", sub_names);
-  //SUBMENUS FOR EDIT
-  sub_names= {"_Undo","_Restock","_Customer"};
-  //     EDIT
-  create_menu_items(menubar,"_Edit", sub_names);
-  //         Quit for file
-  // Append Quit to the File menu
- 
-  //SUBMENUS FOR CREATE
-  sub_names= {"_Order","_Customer"};
-  //    CREATE
-  create_menu_items(menubar,"_Create", sub_names);
+    menuitem_new->set_sensitive(false);
+    menuitem_open->set_sensitive(false);
+    menuitem_save->set_sensitive(false);
+    menuitem_test->set_sensitive(false);
+    menuitem_quit->set_sensitive(true);
+    menuitem_order->set_sensitive(true);
+    menuitem_customer->set_sensitive(true);
+    menuitem_item->set_sensitive(false);
+    menuitem_server->set_sensitive(false);
+    menuitem_fill_order->set_sensitive(true);
+    menuitem_pay_for_order->set_sensitive(true);
+    menuitem_cancel_order->set_sensitive(true);
+    menuitem_restock->set_sensitive(true);
 
-  //SUBMENUS FOR PROCESS
-  sub_names= {"_Fill Order","_Payment", "_Cancel Order"};
-  //    PROCESS
-  create_menu_items(menubar,"_Process", sub_names);
-  //SUBMENUS FOR ROLE
-  sub_names= {"_Owner","_Manager", "_Server","_Customer"};
-  //    ROLE
-  create_menu_items(menubar,"_Role", sub_names);
-  //SUBMENUS FOR HELP
-  sub_names= {"_Manual","_About"};
-  //    HELP
-  create_menu_items(menubar,"_Help", sub_names);
+    server_button->set_active(true);
+    customer_button->set_active(false);
+    manager_button->set_active(false);
+    owner_button->set_active(false);
 
-  //T O P  T O O L B A R
-  // Add a toolbar to the vertical box below the menu
-  Gtk::Toolbar *toptoolbar = Gtk::manage(new Gtk::Toolbar);   
-  vbox->add(*toptoolbar);
-  //     N E W   E M P O R I UM
-  // Add a new emporium icon
-  Gtk::ToolButton *new_emporium_button = Gtk::manage(new Gtk::ToolButton(Gtk::Stock::NEW));
-  new_emporium_button->set_tooltip_markup("Create a New Emporium");
-  //new_emporium_button->signal_clicked().connect(sigc::mem_fun(*this, &Mainwin::on_new_emporium_click));
-  toptoolbar->append(*new_emporium_button);
+    controller.set_person(person);
 
-  //     Q U I T
-  // Add a icon for quitting
-  Gtk::ToolButton *quit_button = Gtk::manage(new Gtk::ToolButton(Gtk::Stock::QUIT));
-  quit_button->set_tooltip_markup("Exit MICE");
-  quit_button->signal_clicked().connect(sigc::mem_fun(*this, &Main_window::on_quit_click));
-  Gtk::SeparatorToolItem *sep = Gtk::manage(new Gtk::SeparatorToolItem());
-  sep->set_expand(true);  // The expanding sep forces the Quit button to the right
-  toptoolbar->append(*sep);
-  toptoolbar->append(*quit_button); 
-  //////////////
-  //B O T T O M  T O O L  B A R
-  create_toggletoolbuttons_with_toolbar ( person,vbox); 
-
-  //SHOW ALL ITEMS
-  vbox->show_all();
 }
 
 void Main_window::show_window_for_customer(Person* person) {
-  //
-  //CUSTOMER
-  //
-  set_default_size (768,768);
-  //Put verticalbox container
-  vbox = Gtk::manage(new Gtk::Box(Gtk::ORIENTATION_VERTICAL, 0));
-  add(*vbox);
-  // //////////
-  // M E N U B A R///
-  // Add a menu bar as the top item in the vertical box
-  Gtk::MenuBar *menubar = Gtk::manage(new Gtk::MenuBar());
-  vbox->pack_start(*menubar, Gtk::PACK_SHRINK, 0);
-  //SUBMENUS FOR FILE 
-  std::vector<std::string> sub_names= {"_Properties"};
-  //     FILE
-  create_menu_items(menubar,"_File", sub_names);
-  //SUBMENUS FOR EDIT
-  sub_names= {"_Undo","_Customer","_Server","_Manager","_Owner","_Item"};
-  //     EDIT
-  create_menu_items(menubar,"_Edit", sub_names);
-  //SUBMENUS FOR CREATE
-  sub_names= {"_Order","_Customer","_Item","_Server"};
-  //    CREATE
-  create_menu_items(menubar,"_Create", sub_names);
+    menuitem_new->set_sensitive(false);
+    menuitem_open->set_sensitive(false);
+    menuitem_save->set_sensitive(false);
+    menuitem_test->set_sensitive(false);
+    menuitem_quit->set_sensitive(false);
+    menuitem_order->set_sensitive(true);
+    menuitem_customer->set_sensitive(false);
+    menuitem_item->set_sensitive(false);
+    menuitem_server->set_sensitive(false);
+    menuitem_fill_order->set_sensitive(false);
+    menuitem_pay_for_order->set_sensitive(false);
+    menuitem_cancel_order->set_sensitive(true);
+    menuitem_restock->set_sensitive(false);
 
-  //SUBMENUS FOR PROCESS
-  sub_names= {"_Cancel Order"};
-  //    PROCESS
-  create_menu_items(menubar,"_Process", sub_names);
-  //SUBMENUS FOR ROLE
-  sub_names= {"_Owner","_Manager", "_Server","_Customer"};
-  //    ROLE
-  create_menu_items(menubar,"_Role", sub_names);
-  //SUBMENUS FOR HELP
-  sub_names= {"_About"};
-  //    HELP
-  create_menu_items(menubar,"_Help", sub_names);
+    server_button->set_active(false);
+    customer_button->set_active(true);
+    manager_button->set_active(false);
+    owner_button->set_active(false);
 
- // /////////////
-  //T O P  T O O L B A R
-  // Add a toolbar to the vertical box below the menu
-  Gtk::Toolbar *toptoolbar = Gtk::manage(new Gtk::Toolbar);   
-  vbox->add(*toptoolbar);
-  //     N E W   E M P O R I UM
-  // Add a new emporium icon
-  Gtk::ToolButton *new_emporium_button = Gtk::manage(new Gtk::ToolButton(Gtk::Stock::NEW));
-  new_emporium_button->set_tooltip_markup("Create a New Emporium");
-  //new_emporium_button->signal_clicked().connect(sigc::mem_fun(*this, &Mainwin::on_new_emporium_click));
-  toptoolbar->append(*new_emporium_button);
-
-  //     Q U I T
-  // Add a icon for quitting
-  Gtk::ToolButton *quit_button = Gtk::manage(new Gtk::ToolButton(Gtk::Stock::QUIT));
-  quit_button->set_tooltip_markup("Exit MICE");
-  quit_button->signal_clicked().connect(sigc::mem_fun(*this, &Main_window::on_quit_click));
-  Gtk::SeparatorToolItem *sep = Gtk::manage(new Gtk::SeparatorToolItem());
-  sep->set_expand(true);  // The expanding sep forces the Quit button to the right
-  toptoolbar->append(*sep);
-  toptoolbar->append(*quit_button); 
-  //////////////
-  //B O T T O M  T O O L  B A R
-  create_toggletoolbuttons_with_toolbar ( person,vbox); 
-   
-
-
-  //SHOW ALL ITEMS
-  vbox->show_all();
+    controller.set_person(person);
 }
 
 
@@ -492,7 +408,7 @@ void Main_window::on_test_click() {
     for (int i = index ; i< controller.get_emporium().number_of_orders();i++) add_row(i);
 }
 void Main_window::on_switch_person_click() {
-  remove ();
+  //remove ();
   show_window_for_person();
 }
 void Main_window::on_restock_click() {
@@ -534,9 +450,13 @@ void Main_window::on_load_click() {
     //Handle the response:
     if (result == 1) {
         std::ifstream ifs{dialog.get_filename(), std::ifstream::in};
+        //delete_rows();
         controller.get_emporium().load(ifs);
         //refresh
+        show_window_for_person();
+        for (int i = 0 ; i< controller.get_emporium().number_of_orders();i++) add_row(i);
        // view.set_file_name(dialog.get_filename());
+       //ERROR NEED TO FIX
     }
 
 }
@@ -554,12 +474,27 @@ void Main_window::update_rows() {
     Gtk::TreeIter iter = m_refTreeModel->get_iter("0");
     for(int i=0; i<controller.get_emporium().number_of_orders(); ++i) {
         //Update state
+        int id = i;
+        std::string server = controller.get_emporium().get_orders()[i]->get_server().get_name();
+        std::string customer = controller.get_emporium().get_orders()[i]->get_customer().get_name();
         std::string state = controller.get_emporium().get_orders()[i]->get_state_string();
+        std::string price = std::to_string(controller.get_emporium().get_orders()[i]->get_price());
         (*iter)[m_Columns.m_col_state] = state;
+        (*iter)[m_Columns.m_col_id] = id;
+        (*iter)[m_Columns.m_col_server] = server;
+        (*iter)[m_Columns.m_col_customer] = customer;
+        (*iter)[m_Columns.m_col_state] = state;
+        (*iter)[m_Columns.m_col_price] = price;
         iter++;
     }
 }
-
+void Main_window::delete_rows(){
+    Gtk::TreeIter iter = m_refTreeModel->get_iter("0");
+    for(int i=0; i<controller.get_emporium().number_of_orders()-1; ++i) {
+       m_refTreeModel->erase(iter);
+       iter++;
+    }
+}
 void Main_window:: add_row (int order_index) {
 
   Gtk::TreeModel::Row row = *(m_refTreeModel->append());
@@ -570,6 +505,7 @@ void Main_window:: add_row (int order_index) {
   std::string customer = controller.get_emporium().get_orders()[order_index]->get_customer().get_name();
   std::string state = controller.get_emporium().get_orders()[order_index]->get_state_string();
   std::string price = std::to_string(controller.get_emporium().get_orders()[order_index]->get_price());
+  std::cout << "Price:" << price <<std::endl;
 
   row[m_Columns.m_col_id] = id;
   row[m_Columns.m_col_server] = server;

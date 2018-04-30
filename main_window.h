@@ -22,6 +22,7 @@ class Main_window: public Gtk::Window {
     void show_window_for_person();
     //Tree View
     void add_row (int order_index);
+    void delete_rows();
     void update_rows();
     //Persons
     void show_window_for_owner(Person* person);
@@ -35,7 +36,22 @@ class Main_window: public Gtk::Window {
     Gtk::ToggleToolButton *customer_button;
     Gtk::ToggleToolButton *server_button;
     Gtk::ToolButton *switch_person_button;
-    //Tree View
+
+        Gtk::MenuItem *menuitem_new;
+        Gtk::MenuItem *menuitem_open;
+        Gtk::MenuItem *menuitem_save;
+        Gtk::MenuItem *menuitem_test;
+        Gtk::MenuItem *menuitem_quit;
+        Gtk::MenuItem *menuitem_order;
+        Gtk::MenuItem *menuitem_customer;
+        Gtk::MenuItem *menuitem_item;
+        Gtk::MenuItem *menuitem_server;
+        Gtk::MenuItem *menuitem_fill_order;
+        Gtk::MenuItem *menuitem_pay_for_order;
+        Gtk::MenuItem *menuitem_cancel_order;
+        Gtk::MenuItem *menuitem_restock;
+
+
     
   protected:
     void on_quit_click();
@@ -70,10 +86,9 @@ class Main_window: public Gtk::Window {
         Gtk::TreeModelColumn<Glib::ustring> m_col_state;
         Gtk::TreeModelColumn<Glib::ustring> m_col_price;
     };
-    
-    ModelColumns m_Columns;  
     Gtk::ScrolledWindow m_ScrolledWindow;
     Gtk::TreeView m_TreeView;
+    ModelColumns m_Columns;  
     Glib::RefPtr<Gtk::TreeStore> m_refTreeModel;
     //Gtk::ButtonBox m_ButtonBox;
 

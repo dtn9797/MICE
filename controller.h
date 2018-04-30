@@ -17,6 +17,7 @@ class Controller {
     void cli ();
     void execute_cmd (int cmd);
     void set_person (Person* per);
+    Person* get_person_ptr();
 };
 
 

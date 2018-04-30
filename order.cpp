@@ -45,8 +45,8 @@
 
     void Order::add_serving(Serving& serving) {
       servings.push_back(serving);
-      cost+= serving.get_retail_price();
-      price+= serving.get_wholesale_cost();
+      cost+= serving.get_wholesale_cost();
+      price+= serving.get_retail_price();
     }
 
     int Order::get_id_number () {return id_number;}

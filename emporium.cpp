@@ -140,7 +140,6 @@
     }
 
     void Emporium::save(std::ostream& ost) {
-      ost << "MICE" << std::endl << "0.1" << std::endl; // magic cookie
       ost << "#" << std::endl << "EMPORIUM" << std::endl; // header
       //ost << name << std::endl;
       //ost << cash_register << std::endl;
@@ -213,23 +212,28 @@
 
     void Emporium::auto_add() {
       //add sample to choose from
-      add_scoop(new Scoop ("Vanilla","General",1,1));
-      add_scoop(new Scoop ("Cookies", "Sweet",1,1));
+      add_scoop(new Scoop ("Vanilla","General",.5,1));
+      add_scoop(new Scoop ("Cookies", "Sweet",.5,1));
+      add_scoop(new Scoop ("Strawberry", "Chunks of strawberry wrapped in vanilla ice cream", 0.20, 0.50));
 
-      add_top(new Topping ("Whipped Cream","General",1,1,1));
-      add_top(new Topping ("Chocolate Sauce", "Sweet",1,1,1));
+      add_top(new Topping ("Whipped Cream","General",.1,.2,0));
+      add_top(new Topping ("Chocolate Sauce", "Sweet",.1,.25,0));
+      add_top(new Topping ("Cherry", "Classic marichino cherry", 0.1, 0.2, 0));
 
-      add_container(new Container ("Cup","General",1,1,1));
-      add_container(new Container ("Bowl", "Sweet",1,1,1));  
+      add_container(new Container ("Cup","General",.35,.75,3));
+      add_container(new Container ("Bowl", "Sweet",1,1,5));  
+      add_container(new Container ("Cone", "Crispy airy delight", 0.25, 0.50, 1));
       
       //Create Person
       //  Server (std::string na, int id, double sal)
       add_server (new Server("D-Server",1,11));
+      add_server (new Server("Henry Jackson", 2, 15.00));
       //Customer (std::string na, int id, std::string ph)
       add_customer (new Customer ("D-Customer", 1, "6829999999"));
+      add_customer (new Customer ("Elton John", 2, "817-555-1313"));
       //Create serving
       //Serving(Container con,std::vector<Scoop> scos,std::vector<Topping> tops) ;
-      std::vector<Scoop> scoops = {Scoop ("Vanilla","General",1,1),Scoop ("Cookies", "Sweet",1,1)};
+      std::vector<Scoop> scoops = {Scoop ("Strawberry","Chunks of strawberry wrapped in vanilla ice cream", 0.2,.5),Scoop ("Cookies", "Sweet",.5,1)};
       std::vector<Topping> tops = {Topping("Whipped Cream","General",1,1,1), Topping("Chocolate Sauce", "Sweet",1,1,1) };
       Serving serving0 ( Container ("Cup","General",1,1,1), scoops, tops );
        
