@@ -14,6 +14,7 @@ class Main_window: public Gtk::Window {
   public: 
     Main_window (Controller& con);
     virtual ~Main_window();
+    Main_window () : Main_window(controller){}
   private:
     Controller& controller;
     void create_menu_items(Gtk::MenuBar *menubar, std::string name, std::vector<std::string> sub_names);
@@ -22,6 +23,7 @@ class Main_window: public Gtk::Window {
     void show_window_for_person();
     //Tree View
     void add_row (int order_index);
+    void add_rows ();
     void delete_rows();
     void update_rows();
     //Persons
@@ -36,6 +38,12 @@ class Main_window: public Gtk::Window {
     Gtk::ToggleToolButton *customer_button;
     Gtk::ToggleToolButton *server_button;
     Gtk::ToolButton *switch_person_button;
+    Gtk::ToolButton *item_button;
+    Gtk::ToolButton *order_button;
+    Gtk::ToolButton *fill_button;
+    Gtk::ToolButton *payment_button;
+    Gtk::ToolButton *cancel_button;
+
 
         Gtk::MenuItem *menuitem_new;
         Gtk::MenuItem *menuitem_open;

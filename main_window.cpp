@@ -54,13 +54,30 @@ Main_window::Main_window (Controller& con): controller{con} {
   // Add a toolbar to the vertical box below the menu
   Gtk::Toolbar *toptoolbar = Gtk::manage(new Gtk::Toolbar);   
   vbox->add(*toptoolbar);
-  //     N E W   E M P O R I UM
-  // Add a new emporium icon
-  Gtk::ToolButton *new_emporium_button = Gtk::manage(new Gtk::ToolButton(Gtk::Stock::NEW));
-  new_emporium_button->set_tooltip_markup("Create a New Emporium");
-  //new_emporium_button->signal_clicked().connect(sigc::mem_fun(*this, &Mainwin::on_new_emporium_click));
-  toptoolbar->append(*new_emporium_button);
-
+  //A D D  O R D E R  
+  Gtk::Image *order_button_image = Gtk::manage(new Gtk::Image("add_order.png"));
+  order_button = Gtk::manage(new Gtk::ToolButton(*order_button_image));
+  order_button->set_tooltip_markup("Create New Order");
+  order_button->signal_clicked().connect(sigc::mem_fun(*this, &Main_window::on_create_order_click));   
+  toptoolbar->append(*order_button); 
+  //Fill  O R D E R  
+  Gtk::Image *fill_button_image = Gtk::manage(new Gtk::Image("fill_order.png"));
+  fill_button = Gtk::manage(new Gtk::ToolButton(*fill_button_image));
+  fill_button->set_tooltip_markup("Fill Order");
+  fill_button->signal_clicked().connect(sigc::mem_fun(*this, &Main_window::on_filled_click));   
+  toptoolbar->append(*fill_button);
+  //P A Y M E N T
+  Gtk::Image *payment_button_image = Gtk::manage(new Gtk::Image("pay.png"));
+  payment_button = Gtk::manage(new Gtk::ToolButton(*payment_button_image));
+  payment_button->set_tooltip_markup("Pay Order");
+  payment_button->signal_clicked().connect(sigc::mem_fun(*this, &Main_window::on_pay_click));    
+  toptoolbar->append(*payment_button);
+   //Cancel  O R D E R  
+  Gtk::Image *cancel_button_image = Gtk::manage(new Gtk::Image("cancel_order.png"));
+  cancel_button = Gtk::manage(new Gtk::ToolButton(*cancel_button_image));
+  cancel_button->set_tooltip_markup("Cancel Order");
+  cancel_button->signal_clicked().connect(sigc::mem_fun(*this, &Main_window::on_cancel_click));  
+  toptoolbar->append(*cancel_button); 
   //     Q U I T
   // Add a icon for quitting
   Gtk::ToolButton *quit_button = Gtk::manage(new Gtk::ToolButton(Gtk::Stock::QUIT));
@@ -70,6 +87,7 @@ Main_window::Main_window (Controller& con): controller{con} {
   sep->set_expand(true);  // The expanding sep forces the Quit button to the right
   toptoolbar->append(*sep);
   toptoolbar->append(*quit_button); 
+
   //////////////
   //B O T T O M  T O O L  B A R
   create_toggletoolbuttons_with_toolbar ( controller.get_person_ptr(),vbox); 
@@ -99,8 +117,6 @@ Main_window::Main_window (Controller& con): controller{con} {
   m_TreeView.append_column("Customer", m_Columns.m_col_customer);
   m_TreeView.append_column("State", m_Columns.m_col_state);
   m_TreeView.append_column("Price", m_Columns.m_col_price);
-
-  show_window_for_person();
 
   show_all_children();
    
@@ -302,6 +318,11 @@ void Main_window::show_window_for_owner(Person* person) {
     manager_button->set_active(false);
     owner_button->set_active(true);
 
+    order_button->set_sensitive(menuitem_order->get_sensitive());
+    fill_button->set_sensitive(menuitem_fill_order->get_sensitive());
+    payment_button->set_sensitive(menuitem_pay_for_order->get_sensitive());
+    cancel_button->set_sensitive(menuitem_cancel_order->get_sensitive());
+
     controller.set_person(person);
 }
 
@@ -320,10 +341,16 @@ void Main_window::show_window_for_manager(Person* person) {
     menuitem_cancel_order->set_sensitive(true);
     menuitem_restock->set_sensitive(false);
 
+    order_button->set_sensitive(menuitem_order->get_sensitive());
+    fill_button->set_sensitive(menuitem_fill_order->get_sensitive());
+    payment_button->set_sensitive(menuitem_pay_for_order->get_sensitive());
+    cancel_button->set_sensitive(menuitem_cancel_order->get_sensitive());
+
     server_button->set_active(false);
     customer_button->set_active(false);
     manager_button->set_active(true);
     owner_button->set_active(false);
+
 
     controller.set_person(person);
 }
@@ -342,6 +369,11 @@ void Main_window::show_window_for_server(Person* person) {
     menuitem_pay_for_order->set_sensitive(true);
     menuitem_cancel_order->set_sensitive(true);
     menuitem_restock->set_sensitive(true);
+
+    order_button->set_sensitive(menuitem_order->get_sensitive());
+    fill_button->set_sensitive(menuitem_fill_order->get_sensitive());
+    payment_button->set_sensitive(menuitem_pay_for_order->get_sensitive());
+    cancel_button->set_sensitive(menuitem_cancel_order->get_sensitive());
 
     server_button->set_active(true);
     customer_button->set_active(false);
@@ -367,6 +399,12 @@ void Main_window::show_window_for_customer(Person* person) {
     menuitem_cancel_order->set_sensitive(true);
     menuitem_restock->set_sensitive(false);
 
+    order_button->set_sensitive(menuitem_order->get_sensitive());
+    fill_button->set_sensitive(menuitem_fill_order->get_sensitive());
+    payment_button->set_sensitive(menuitem_pay_for_order->get_sensitive());
+    cancel_button->set_sensitive(menuitem_cancel_order->get_sensitive());
+
+
     server_button->set_active(false);
     customer_button->set_active(true);
     manager_button->set_active(false);
@@ -388,28 +426,31 @@ void Main_window::on_quit_click() {
     hide();
 }
 void Main_window::on_properties_click() {
-
+    delete_rows();
     std::cout<< " On _properties_clicked\n";
 }
 void Main_window::on_create_order_click() {
-   int index = controller.get_emporium().number_of_orders();
+   //int index = controller.get_emporium().number_of_orders();
    //create serving
    controller.execute_cmd(8);
-   for (int i = index ; i< controller.get_emporium().number_of_orders();i++) add_row(i);
+   //for (int i = index ; i< controller.get_emporium().number_of_orders();i++) add_row(i);
+   delete_rows(); add_rows();
 }
 void Main_window::on_create_item_click() {
     std::cout<< " On _item_clicked\n";
     controller.execute_cmd(7);
 }
 void Main_window::on_test_click() {
-    int index = controller.get_emporium().number_of_orders();
+    //int index = controller.get_emporium().number_of_orders();
     std::cout<< " On _test_clicked\n";
     controller.execute_cmd(99);  
-    for (int i = index ; i< controller.get_emporium().number_of_orders();i++) add_row(i);
+    //for (int i = index ; i< controller.get_emporium().number_of_orders();i++) add_row(i);
+    delete_rows(); add_rows();
 }
 void Main_window::on_switch_person_click() {
   //remove ();
   show_window_for_person();
+  delete_rows();add_rows();
 }
 void Main_window::on_restock_click() {
   std::cout<< " On _restock_clicked" << std::endl;
@@ -450,13 +491,9 @@ void Main_window::on_load_click() {
     //Handle the response:
     if (result == 1) {
         std::ifstream ifs{dialog.get_filename(), std::ifstream::in};
-        //delete_rows();
         controller.get_emporium().load(ifs);
-        //refresh
-        show_window_for_person();
+        delete_rows();
         for (int i = 0 ; i< controller.get_emporium().number_of_orders();i++) add_row(i);
-       // view.set_file_name(dialog.get_filename());
-       //ERROR NEED TO FIX
     }
 
 }
@@ -489,13 +526,15 @@ void Main_window::update_rows() {
     }
 }
 void Main_window::delete_rows(){
-    Gtk::TreeIter iter = m_refTreeModel->get_iter("0");
-    for(int i=0; i<controller.get_emporium().number_of_orders()-1; ++i) {
+   // Gtk::TreeIter iter = m_refTreeModel->get_iter("0");
+   /* for(int i=0; i<controller.get_emporium().number_of_orders()+1; ++i) {
+       Gtk::TreeIter iter = m_refTreeModel->get_iter(std::to_string(i));
        m_refTreeModel->erase(iter);
-       iter++;
-    }
+    }*/
+  m_refTreeModel->clear();
 }
 void Main_window:: add_row (int order_index) {
+
 
   Gtk::TreeModel::Row row = *(m_refTreeModel->append());
   // This line of code cause the error 
@@ -516,6 +555,45 @@ void Main_window:: add_row (int order_index) {
   //child row
   Gtk::TreeModel::Row childrow = *(m_refTreeModel->append(row.children()));
   std::string servings = controller.get_emporium().servings_to_string(order_index);
-  childrow[m_Columns.m_col_server] = "Serving Info :\n"+ servings;
+  childrow[m_Columns.m_col_server] = "### S E R V I N G  I N F O ###\n\n\n"+ servings;
+}
+
+void Main_window:: add_rows () {
+  Person* person_ptr = controller.get_person_ptr();
+  for (int i = 0 ; i< controller.get_emporium().number_of_orders();i++){
+     int id = i;
+     int order_index = i;
+     std::string server = controller.get_emporium().get_orders()[order_index]->get_server().get_name();
+     std::string customer = controller.get_emporium().get_orders()[order_index]->get_customer().get_name();
+     if (person_ptr->get_name() == customer){
+       Gtk::TreeModel::Row row = *(m_refTreeModel->append());
+       std::string state = controller.get_emporium().get_orders()[order_index]->get_state_string();
+       std::string price = std::to_string(controller.get_emporium().get_orders()[order_index]->get_price());
+       row[m_Columns.m_col_id] = id;
+       row[m_Columns.m_col_server] = server;
+       row[m_Columns.m_col_customer] = customer;
+       row[m_Columns.m_col_state] = state;
+       row[m_Columns.m_col_price] = price;
+       //child row
+       Gtk::TreeModel::Row childrow = *(m_refTreeModel->append(row.children()));
+       std::string servings = controller.get_emporium().servings_to_string(order_index);
+       childrow[m_Columns.m_col_server] = "### S E R V I N G  I N F O ###\n\n\n"+ servings;
+     }
+     else if (person_ptr->type()== "Owner" || person_ptr->type()== "Manager"|| person_ptr->type()== "Server")  {
+       Gtk::TreeModel::Row row = *(m_refTreeModel->append());
+       std::string state = controller.get_emporium().get_orders()[order_index]->get_state_string();
+       std::string price = std::to_string(controller.get_emporium().get_orders()[order_index]->get_price());
+       row[m_Columns.m_col_id] = id;
+       //row[m_Columns.m_col_server] = server;
+       //row[m_Columns.m_col_customer] = customer;
+       row[m_Columns.m_col_state] = state;
+       row[m_Columns.m_col_price] = price;
+       //child row
+       Gtk::TreeModel::Row childrow = *(m_refTreeModel->append(row.children()));
+       std::string servings = controller.get_emporium().servings_to_string(order_index);
+       childrow[m_Columns.m_col_server] = "### S E R V I N G  I N F O ###\n\n\n"+ servings;
+     } 
+  }
+
 }
 

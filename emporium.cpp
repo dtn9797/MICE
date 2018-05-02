@@ -64,8 +64,12 @@
     std::string Emporium::topping_to_string(int index){return classify_type<std::vector<Item*>>(get_items(),"Topping")[index]->to_string();}
     std::string Emporium::servings_to_string (int order_index) {
        std::string result = "";
+       int i = 0;
        for (Serving serving : orders[order_index]->get_servings()){
+          result += "## Serving "+ std::to_string(i) +" ##"+ "\n";
           result += serving.to_string_serving();
+          result += "\n\n";
+          i++;
        }
        return result;
     }

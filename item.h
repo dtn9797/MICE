@@ -15,7 +15,7 @@ class Item {
       description{d},
       wholesale_cost{c},
       retail_price{p},
-      stock_remaining{0} {}
+      stock_remaining{25} {}
     Item (): Item("","",0,0){}
      void restock (int amount =25);
      void consume (int amount =1);
@@ -34,7 +34,7 @@ class Item {
     std::string description;
     double wholesale_cost=0;
     double retail_price=0;
-    int stock_remaining=0;
+    int stock_remaining=25;
     //Image picture;
 };
 

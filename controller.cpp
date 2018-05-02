@@ -178,7 +178,8 @@ void Controller::execute_cmd (int cmd){
     emporium.save(ofs);
 }
  else if (cmd==14){//Load
-
+    //std::ifstream ifs{dialog.get_filename(), std::ifstream::in};
+    //emporium().load(ifs);
 }
 
  else if (cmd==99) {//Test

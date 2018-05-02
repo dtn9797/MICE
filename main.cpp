@@ -7,7 +7,7 @@
 int main (int argc, char *argv[]) {
  auto app = Gtk::Application::create (argc, argv,"edu.com.uta.cse1325.mice");
  Emporium em;
- Owner *owner = new Owner ("New Owner",1);
+ Owner *owner = new Owner ("Default Owner",1);
  em.add_owner(owner);
  Controller con(em);
  con.set_person (owner);

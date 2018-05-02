@@ -252,10 +252,9 @@ int View::show_filled_orders () {
     c_order.set_size_request(160);
 
     vector<Order*> filled_orders = emporium.get_filled_orders();
-
-
+    if (filled_orders.size()<=0) throw std:: runtime_error ("No filled order to show "); 
     for (Order* filled_order : filled_orders){
-      std::string filled_order_info = std::to_string(filled_order -> get_id_number())+ "(Cost: " +std::to_string(filled_order->get_cost())+')';
+      std::string filled_order_info = std::to_string(filled_order -> get_id_number())+ "(Price: " +std::to_string(filled_order->get_price())+')';
       c_order.append(filled_order_info);
     }
 
@@ -346,18 +345,25 @@ void View::create_scoop_for_serving (Order* order_ptr,Serving& serving, int scoo
     b_scoop.pack_start(c_scoop, Gtk::PACK_SHRINK);
     dialog.get_vbox()->pack_start(b_scoop, Gtk::PACK_SHRINK);  
 
+    
+
     // Show dialog
     dialog.add_button("Cancel", 0);
     if (scoop_amount > 0){ dialog.add_button("Complete Serving",1);}
     dialog.add_button("Add Scoop", 2);
     if (scoop_amount != 0)dialog.add_button("Go to Topping", 3);
     dialog.add_button ("Serving Info",4);
+    dialog.add_button("Show Image",5);
     dialog.show_all();
     int result = dialog.run();
 
     dialog.close();
     while (Gtk::Main::events_pending())  Gtk::Main::iteration();   
     if (result ==0 )return;
+   if (c_scoop.get_active_row_number() == -1 && (result ==5 || result == 2 )) throw runtime_error ("Need to select a scoop first"); 
+    /*      create_message_dialog ("Error","Need to select a scoop first");
+         create_scoop_for_serving (order_ptr,serving,scoop_amount,scoop_limit);
+    }*/
 
     if (result == 2){//add scoop
        if (scoop_amount+1 >= 0  && scoop_amount+1 <= scoop_limit){
@@ -390,6 +396,11 @@ void View::create_scoop_for_serving (Order* order_ptr,Serving& serving, int scoo
     }
     else if (result==4){
        show_serving_info (serving);
+       create_scoop_for_serving (order_ptr,serving,scoop_amount,scoop_limit);
+    }
+    else if (result == 5){
+       Gtk::Image image("test.jpeg");
+       create_image_dialog("Test",image);
        create_scoop_for_serving (order_ptr,serving,scoop_amount,scoop_limit);
     }
 
@@ -611,6 +622,26 @@ void View::create_message_dialog(std::string title, std::string msg) {
     while (Gtk::Main::events_pending())  Gtk::Main::iteration();
 
     delete dialog;
+}
+void View::create_image_dialog(std::string title,Gtk::Image& image) {
+    Gtk::Dialog *dialog = new Gtk::Dialog();
+    dialog->set_title(title);
+
+    Gtk::HBox b_image;
+
+    std::cout << "Adding Image" << std::endl;
+    b_image.pack_start(image , Gtk::PACK_SHRINK);
+    dialog->get_vbox()->pack_start(b_image, Gtk::PACK_SHRINK);  
+
+    //Show all 
+    dialog->add_button("OK", 1);
+    dialog->show_all();
+    dialog->run();
+    dialog->close();
+    while (Gtk::Main::events_pending())  Gtk::Main::iteration();
+
+    delete dialog;
+
 }
 // A question is a message that allows the user to respond with a button
 int View::question(std::string msg, std::string title, std::vector<std::string> buttons) {

@@ -18,6 +18,7 @@ class View {
     //dialog
     int question(std::string msg, std::string title,
              std::vector<std::string> buttons);
+    void create_image_dialog ( std::string title, Gtk::Image& image);
     std::string file_name = "untitle.cpt";
   public:
    View (Emporium& emp): emporium{emp} {}
