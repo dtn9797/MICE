@@ -34,6 +34,7 @@ class View {
    int show_filled_orders();
    int show_unfilled_orders_for_customer(Person *person_ptr);
    //dialog
+   std::string input_dialog(std::string msg, std::string title);
    int entry_amount_dialog(std::string title, std::string msg);
    void create_message_dialog(std::string title, std::string msg);  
    std::string get_file_name(); 

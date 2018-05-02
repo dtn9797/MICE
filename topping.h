@@ -16,6 +16,10 @@ class Topping:public Item{
   public:
     Topping(std::string na,std::string de,double wh,double re, int am):
      Item(na,de,wh,re){_amount = am;}
+    Topping(std::string na,std::string de,double wh,double re):
+     Item(na,de,wh,re){}
+    Topping(std::string na,std::string de,double wh,double re, int am,std::string i):
+     Item(na,de,wh,re,i){_amount = am;}
     Topping(std::istream &ist);
     std::string to_string() override;
     std::string type() override;

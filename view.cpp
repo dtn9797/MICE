@@ -4,6 +4,7 @@
 #include <stdlib.h>
 #include <exception>
 #include <stdexcept>
+#include <regex>
 
 using namespace std;
 void View::show_menu (){
@@ -102,7 +103,7 @@ void View::show_create_item_dialog(){
 
     dialog->close();
     while (Gtk::Main::events_pending())  Gtk::Main::iteration();
-
+    if (result !=0 && c_type.get_active_row_number() == -1) throw runtime_error ("Need to choose a type first");
     if (result == 1){
       type = c_type.get_active_row_number();
       //type = 1: Containter , 2: Ice Cream Flavor, 3: Topping
@@ -124,7 +125,8 @@ void View::show_create_serving_dialog(Order* order_ptr){
 
     Gtk::ComboBoxText c_container;
     c_container.set_size_request(160);
-    vector<Item*> containers = emporium.classify_type<vector<Item*>>(emporium.get_items(),"Container");;
+    vector<Item*> containers = emporium.classify_type<vector<Item*>>(emporium.get_items(),"Container");
+    if (containers.size() < 0) throw runtime_error ("No Container To Show");
     for (int i=0 ; i < emporium.number_of_containers();i++){
       std::string container_info = containers[i] -> get_name ()+"," + containers[i]->get_description() + "(Scoop Limit: " +std::to_string(dynamic_cast<Container*>(containers[i])->get_scoop_limit())+')';
       c_container.append(container_info);
@@ -139,11 +141,15 @@ void View::show_create_serving_dialog(Order* order_ptr){
     // Show dialog
     dialog.add_button("Cancel", 0);
     dialog.add_button("Add Container", 1);
+    dialog.add_button("Show Image", 2);
+
     dialog.show_all();
     int result = dialog.run();
 
     dialog.close();
     while (Gtk::Main::events_pending())  Gtk::Main::iteration();   
+
+    if (c_container.get_active_row_number() == -1 && result!= 0 ) throw runtime_error("Need to select a container first");
 
     if (result == 1){
        int index  = c_container.get_active_row_number();
@@ -154,6 +160,15 @@ void View::show_create_serving_dialog(Order* order_ptr){
 
        create_scoop_for_serving (order_ptr,serving,0,scoop_limit);
     }
+   else if (result ==2 ){
+       int index = c_container.get_active_row_number();
+       std::string image_name = containers[index]->get_image_name();
+       Gtk::Image image(image_name);
+       create_image_dialog("Container",image);
+       show_create_serving_dialog(order_ptr);
+    }
+
+
 }
 
 int View::show_items () {
@@ -214,7 +229,7 @@ int View::show_unfilled_orders () {
     if (unfilled_orders.size()<=0) throw std:: runtime_error ("No order to show"); 
 //    std::cout << "Unfilled_orderr size in view :" << unfilled_orders.size() << std::endl;
     for (Order* unfilled_order : unfilled_orders){
-      std::string unfilled_order_info = std::to_string(unfilled_order -> get_id_number())+ "(Cost: " +std::to_string(unfilled_order->get_cost())+')';
+      std::string unfilled_order_info = std::to_string(unfilled_order -> get_id_number())+ "(Price: " +std::to_string(unfilled_order->get_price())+')';
       c_order.append(unfilled_order_info);
     }
 
@@ -360,7 +375,7 @@ void View::create_scoop_for_serving (Order* order_ptr,Serving& serving, int scoo
     dialog.close();
     while (Gtk::Main::events_pending())  Gtk::Main::iteration();   
     if (result ==0 )return;
-   if (c_scoop.get_active_row_number() == -1 && (result ==5 || result == 2 )) throw runtime_error ("Need to select a scoop first"); 
+    if (c_scoop.get_active_row_number() == -1 && (result ==5 || result == 2 )) throw runtime_error ("Need to select a scoop first"); 
     /*      create_message_dialog ("Error","Need to select a scoop first");
          create_scoop_for_serving (order_ptr,serving,scoop_amount,scoop_limit);
     }*/
@@ -399,7 +414,9 @@ void View::create_scoop_for_serving (Order* order_ptr,Serving& serving, int scoo
        create_scoop_for_serving (order_ptr,serving,scoop_amount,scoop_limit);
     }
     else if (result == 5){
-       Gtk::Image image("test.jpeg");
+       int index = c_scoop.get_active_row_number();
+       std::string image_name = scoops[index]->get_image_name();
+       Gtk::Image image(image_name);
        create_image_dialog("Test",image);
        create_scoop_for_serving (order_ptr,serving,scoop_amount,scoop_limit);
     }
@@ -452,6 +469,7 @@ void View::create_topping_for_serving (Order* order_ptr, Serving& serving) {
     dialog->add_button("Go to Scoop", 2);
     dialog->add_button("Add Topping", 3);
     dialog->add_button("Serving Info", 4);
+    dialog->add_button("Show Image", 5);
 
     dialog->show_all();
     int result = dialog->run();
@@ -461,6 +479,9 @@ void View::create_topping_for_serving (Order* order_ptr, Serving& serving) {
 
     int scoop_amount = serving.get_number_scoops();
     int scoop_limit = serving.get_container().get_scoop_limit();
+
+    if (c_top.get_active_row_number() == -1 && (result ==5 || result == 3 )) throw runtime_error ("Need to select a top first"); 
+
     if (result == 2){//go to scoop
        create_scoop_for_serving (order_ptr,serving,scoop_amount,scoop_limit);
     }
@@ -490,6 +511,13 @@ void View::create_topping_for_serving (Order* order_ptr, Serving& serving) {
        show_serving_info (serving);
        create_scoop_for_serving (order_ptr, serving,scoop_amount,scoop_limit);
     }
+    else if (result == 5){
+       int index = c_top.get_active_row_number();
+       std::string image_name = tops[index]->get_image_name();
+       Gtk::Image image(image_name);
+       create_image_dialog("Image",image);
+       create_topping_for_serving(order_ptr,serving);
+    }
 }
 
 //Show info for Serving
@@ -500,8 +528,8 @@ void View::show_serving_info (Serving& serving){
 
 
 void View::create_chosen_type_dialog(std::string type_name){
-    Gtk::Dialog *dialog = new Gtk::Dialog();
-    dialog->set_title("Create "+type_name);
+    Gtk::Dialog dialog;
+    dialog.set_title("Create "+type_name);
 
     std::string name,description;
     double wholesale_cost, retail_price;
@@ -517,7 +545,7 @@ void View::create_chosen_type_dialog(std::string type_name){
     Gtk::Entry e_name;
     e_name.set_max_length(50);
     b_name.pack_start(e_name, Gtk::PACK_SHRINK);
-    dialog->get_vbox()->pack_start(b_name, Gtk::PACK_SHRINK);
+    dialog.get_vbox()->pack_start(b_name, Gtk::PACK_SHRINK);
     
     //Description
     Gtk::HBox b_description;
@@ -529,7 +557,7 @@ void View::create_chosen_type_dialog(std::string type_name){
     Gtk::Entry e_description;
     e_description.set_max_length(50);
     b_description.pack_start(e_description, Gtk::PACK_SHRINK);
-    dialog->get_vbox()->pack_start(b_description, Gtk::PACK_SHRINK);
+    dialog.get_vbox()->pack_start(b_description, Gtk::PACK_SHRINK);
 
     //Wholesale_cost
     Gtk::HBox b_wholesale_cost;
@@ -541,7 +569,21 @@ void View::create_chosen_type_dialog(std::string type_name){
     Gtk::Entry e_wholesale_cost;
     e_wholesale_cost.set_max_length(50);
     b_wholesale_cost.pack_start(e_wholesale_cost, Gtk::PACK_SHRINK);
-    dialog->get_vbox()->pack_start(b_wholesale_cost, Gtk::PACK_SHRINK);
+    dialog.get_vbox()->pack_start(b_wholesale_cost, Gtk::PACK_SHRINK);
+  /*
+    // Image Link
+    Gtk::HBox b_retail_price;
+
+    Gtk::Label l_retail_price{"Retail Price:"};
+    l_retail_price.set_width_chars(15);
+    b_retail_price.pack_start(l_retail_price, Gtk::PACK_SHRINK);
+
+    Gtk::Entry e_retail_price;
+    e_retail_price.set_max_length(50);
+    b_retail_price.pack_start(e_retail_price, Gtk::PACK_SHRINK);
+    dialog.get_vbox()->pack_start(b_retail_price, Gtk::PACK_SHRINK);
+ */
+
 
     // Retail_price
     Gtk::HBox b_retail_price;
@@ -553,62 +595,86 @@ void View::create_chosen_type_dialog(std::string type_name){
     Gtk::Entry e_retail_price;
     e_retail_price.set_max_length(50);
     b_retail_price.pack_start(e_retail_price, Gtk::PACK_SHRINK);
-    dialog->get_vbox()->pack_start(b_retail_price, Gtk::PACK_SHRINK);
+    dialog.get_vbox()->pack_start(b_retail_price, Gtk::PACK_SHRINK);
     
     Gtk::Entry e_scoop_limit;
+    Gtk::HBox b_scoop_limit;
+    Gtk::Label l_scoop_limit{"Scoop Limit:"};
     if (type_name == "Container"){
      // Scoop limit
-     Gtk::HBox b_scoop_limit;
 
-     Gtk::Label l_scoop_limit{"Retail Price:"};
      l_scoop_limit.set_width_chars(15);
      b_scoop_limit.pack_start(l_scoop_limit, Gtk::PACK_SHRINK);
 
      e_scoop_limit.set_max_length(50);
      b_scoop_limit.pack_start(e_scoop_limit, Gtk::PACK_SHRINK);
-     dialog->get_vbox()->pack_start(b_scoop_limit, Gtk::PACK_SHRINK);
-    }
-    Gtk::ComboBoxText c_amount;
-    if (type_name == "Topping"){
-    //Amount of topping
-    Gtk::HBox b_amount;
-
-    Gtk::Label l_amount{"Amount:"};
-    l_amount.set_width_chars(15);
-    b_amount.pack_start(l_amount, Gtk::PACK_SHRINK);
-
-    c_amount.set_size_request(160);
-    c_amount.append("Light");
-    c_amount.append("Normal");
-    c_amount.append("Extra");
-    c_amount.append("Drenched");
-    b_amount.pack_start(c_amount, Gtk::PACK_SHRINK);
-    dialog->get_vbox()->pack_start(b_amount, Gtk::PACK_SHRINK);     
-}
-
+     dialog.get_vbox()->pack_start(b_scoop_limit, Gtk::PACK_SHRINK);
+  }
     // Show dialog
-    dialog->add_button("Cancel", 0);
-    dialog->add_button("OK", 1);
-    dialog->show_all();
-    int result = dialog->run();
+    dialog.add_button("Cancel", 0);
+    dialog.add_button("OK", 1);
+    dialog.show_all();
 
-    dialog->close();
     while (Gtk::Main::events_pending())  Gtk::Main::iteration();
-    if ( result == 0) { show_create_item_dialog();return;}
+    bool valid_data=false;
+    std::regex word{"(\\w+ ?)+"};
 
-    name = e_name.get_text();
-    description = e_description.get_text();
-    wholesale_cost = atof (e_wholesale_cost.get_text().c_str());
-    retail_price = atof (e_retail_price.get_text().c_str());
-    limit =atoi(e_scoop_limit.get_text().c_str());
-    amount =c_amount.get_active_row_number()+1;
-
-    if(result==1){
-      if (type_name == "Container") emporium.add_container(new Container(name, description,wholesale_cost,retail_price,limit));
-      else if (type_name == "Ice Cream Flavor")emporium.add_scoop(new Scoop(name, description,wholesale_cost,retail_price));
-      else if (type_name == "Topping") emporium.add_top(new Topping(name, description,wholesale_cost,retail_price,amount));
-      show_create_item_dialog();
+    while (!valid_data){
+      if (dialog.run()!=1){
+       dialog.close();
+       //show_create_item_dialog();
+       return ;
+       }
+       valid_data = true;
+       try {
+        wholesale_cost =  std::stod (e_wholesale_cost.get_text());
+       }
+      catch (std::exception e) {
+        e_wholesale_cost.set_text("***Invalid Amount***");
+        valid_data=false;  
+      }
+      try {
+        retail_price = std::stod (e_retail_price.get_text());
+      }
+      catch (std::exception e) {
+        e_retail_price.set_text("***Invalid Amount***");
+        valid_data=false;  
+      }
+      if(type_name == "Container"){
+        try {
+          limit =std::stoi(e_scoop_limit.get_text().c_str());
+        }
+        catch (std::exception e) {
+          e_scoop_limit.set_text("***Invalid Amount***");
+          valid_data=false;  
+        }
+      }
+      //R E G U L A R  E X P R E S S
+      std::string name_str =e_name.get_text();
+      if (std::regex_match (name_str,word)){
+        name = e_name.get_text();
+      }
+      else {
+        e_name.set_text("***Invalid Input***"); 
+        valid_data=false; 
+      }
+      std::string description_str =e_description.get_text();
+      if (std::regex_match (description_str,word)){
+        description = e_description.get_text();
+        description = e_description.get_text();
+      }
+      else {
+        e_description.set_text("***Invalid Input***");
+        valid_data=false; 
+      }
     }
+    //std::string image_link = e_image_link.get_text();
+    if (type_name == "Container") emporium.add_container(new Container(name, description,wholesale_cost,retail_price,limit/*,image_link*/));
+    else if (type_name == "Ice Cream Flavor")emporium.add_scoop(new Scoop(name, description,wholesale_cost,retail_price/*,image_link*/));
+    else if (type_name == "Topping") emporium.add_top(new Topping(name, description,wholesale_cost,retail_price/*,image_link*/));
+    dialog.close();
+     // show_create_item_dialog(); 
+         
 }
 /////////////////////
 /////D I A L O G////
@@ -626,7 +692,7 @@ void View::create_message_dialog(std::string title, std::string msg) {
 void View::create_image_dialog(std::string title,Gtk::Image& image) {
     Gtk::Dialog *dialog = new Gtk::Dialog();
     dialog->set_title(title);
-
+    dialog->set_default_size (200,200) ;
     Gtk::HBox b_image;
 
     std::cout << "Adding Image" << std::endl;
@@ -664,6 +730,32 @@ int View::question(std::string msg, std::string title, std::vector<std::string> 
     delete dialog;
 
     return result;
+}
+std::string View::input_dialog(std::string msg, std::string title) {
+    Gtk::Dialog *dialog = new Gtk::Dialog();
+    dialog->set_title(title);
+
+    Gtk::HBox b;
+    Gtk::Entry e;
+    e.set_text(msg);
+    e.set_max_length(50);
+    b.pack_start(e, Gtk::PACK_SHRINK);
+    dialog->get_vbox()->pack_start(b, Gtk::PACK_SHRINK);
+
+    dialog->add_button("Cancel", 0);
+    dialog->add_button("OK", 1);
+    dialog->show_all();
+
+    int result = dialog->run();
+    dialog->close();
+    if (result == 1 ){
+       return e.get_text();
+    }
+    else {
+      return "none";
+     }
+
+
 }
 int View::entry_amount_dialog(std::string msg, std::string title){
  Gtk::Dialog *dialog = new Gtk::Dialog();

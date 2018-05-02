@@ -2,11 +2,11 @@
 EMPORIUM
 #
 Scoop
-Vanilla
+Chocolate
 General
 0.5 1 #
 Scoop
-Cookies
+Vanilla
 Sweet
 0.5 1 #
 Scoop
@@ -16,7 +16,7 @@ Chunks of strawberry wrapped in vanilla ice cream
 Topping
 Whipped Cream
 General
-0.1 0.2 1 #
+0.1 0.2 0 #
 Topping
 Chocolate Sauce
 Sweet
@@ -38,7 +38,7 @@ Cone
 Crispy airy delight
 0.25 0.5 1 #
 Owner
-New Owner
+Default Owner
 1 1 #
 Server
 D-Server
@@ -57,15 +57,15 @@ Elton John
 2
 #
 ORDER
-1 3 3.7 4.5 #
+1 1 3.7 4.5 #
 Customer
 
 00
 0
 #
 Server
-Duy
-1 1 100 0 #
+Henry Jackson
+2 1 15 1 #
 SERVING
 3.7 4.5 #
 Container
@@ -93,7 +93,7 @@ END SERVING
 END ORDER
 #
 ORDER
-0 2 0.85 1.75 #
+0 3 0.85 1.75 #
 Customer
 
 00
@@ -101,7 +101,7 @@ Customer
 #
 Server
 Henry Jackson
-2 1 15 1 #
+2 1 15 0 #
 SERVING
 0.85 1.75 #
 Container
@@ -109,65 +109,9 @@ Cup
 General
 0.35 0.75 3 #
 Scoop
-Vanilla
+Chocolate
 General
 0.5 1 #
-END SERVING
-#
-END ORDER
-#
-ORDER
-1 3 2 3 #
-Customer
-D-Customer
-6829999999
-1
-#
-Server
-
-0 1 0 0 #
-SERVING
-2 3 #
-Container
-Bowl
-Sweet
-1 1 5 #
-Scoop
-Vanilla
-General
-0.5 1 #
-Scoop
-Cookies
-Sweet
-0.5 1 #
-END SERVING
-#
-END ORDER
-#
-ORDER
-2 0 0.55 1.2 #
-Customer
-Elton John
-817-555-1313
-2
-#
-Server
-
-0 1 0 0 #
-SERVING
-0.55 1.2 #
-Container
-Cone
-Crispy airy delight
-0.25 0.5 1 #
-Scoop
-Strawberry
-Chunks of strawberry wrapped in vanilla ice cream
-0.2 0.5 #
-Topping
-Whipped Cream
-General
-0.1 0.2 1 #
 END SERVING
 #
 END ORDER

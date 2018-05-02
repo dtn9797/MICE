@@ -216,17 +216,17 @@
 
     void Emporium::auto_add() {
       //add sample to choose from
-      add_scoop(new Scoop ("Vanilla","General",.5,1));
-      add_scoop(new Scoop ("Cookies", "Sweet",.5,1));
-      add_scoop(new Scoop ("Strawberry", "Chunks of strawberry wrapped in vanilla ice cream", 0.20, 0.50));
+      add_scoop(new Scoop ("Chocolate","General",.5,1,"./pictures/chocolate_scoop.jpg"));
+      add_scoop(new Scoop ("Vanilla", "Sweet",.5,1,"./pictures/vanilla_scoop.jpg"));
+      add_scoop(new Scoop ("Strawberry", "Chunks of strawberry wrapped in vanilla ice cream", 0.20, 0.50,"./pictures/straw_berry_scoop.jpg"));
 
-      add_top(new Topping ("Whipped Cream","General",.1,.2,0));
-      add_top(new Topping ("Chocolate Sauce", "Sweet",.1,.25,0));
-      add_top(new Topping ("Cherry", "Classic marichino cherry", 0.1, 0.2, 0));
+      add_top(new Topping ("Whipped Cream","General",.1,.2,0,"./pictures/whipped_cream_topping.jpg"));
+      add_top(new Topping ("Chocolate Sauce", "Sweet",.1,.25,0,"./pictures/chocolate_sauce_topping.jpg"));
+      add_top(new Topping ("Cherry", "Classic marichino cherry", 0.1, 0.2, 0,"./pictures/fruit_scoop.jpg"));
 
-      add_container(new Container ("Cup","General",.35,.75,3));
-      add_container(new Container ("Bowl", "Sweet",1,1,5));  
-      add_container(new Container ("Cone", "Crispy airy delight", 0.25, 0.50, 1));
+      add_container(new Container ("Cup","General",.35,.75,3,"./pictures/cup.jpeg"));
+      add_container(new Container ("Bowl", "Sweet",1,1,5,"./pictures/bowl.jpeg"));  
+      add_container(new Container ("Cone", "Crispy airy delight", 0.25, 0.50, 1,"./pictures/cone.jpeg"));
       
       //Create Person
       //  Server (std::string na, int id, double sal)

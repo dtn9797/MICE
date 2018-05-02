@@ -71,6 +71,7 @@ class Main_window: public Gtk::Window {
     void on_cancel_click();
     void on_pay_click();
     void on_save_click();
+    void on_save_as_click();
     void on_load_click();
     
 

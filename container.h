@@ -15,6 +15,8 @@ class Container:public Item {
   public:
     Container(std::string na,std::string de,double wh,double re,int li): 
     Item(na,de,wh,re){ scoop_limit = li;}
+    Container(std::string na,std::string de,double wh,double re,int li,std::string i): 
+    Item(na,de,wh,re,i){ scoop_limit = li;}
     Container(): Container("","",0,0,0){}
     Container(std::istream& ist);
 

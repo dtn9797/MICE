@@ -124,8 +124,13 @@ void Controller::execute_cmd (int cmd){
 }
  else if (cmd==8){ // Create serving in dialogs
     order_id+=1;
-    Order* order_ptr = new Order(order_id, *person_ptr); 
-    view.show_create_serving_dialog( order_ptr);
+    try{
+     Order* order_ptr = new Order(order_id, *person_ptr); 
+     view.show_create_serving_dialog( order_ptr);
+    }
+    catch (std::exception &e){
+      view.create_message_dialog("Error",e.what());
+    } 
 }
  else if (cmd==9){ // Restock items
     int item_index = view.show_items();
@@ -177,9 +182,19 @@ void Controller::execute_cmd (int cmd){
     std::ofstream ofs(view.get_file_name(),std::ofstream::out);
     emporium.save(ofs);
 }
- else if (cmd==14){//Load
-    //std::ifstream ifs{dialog.get_filename(), std::ifstream::in};
-    //emporium().load(ifs);
+ else if (cmd==14){//Save As
+    std::string file_name = view.input_dialog("Enter File Name", "Set File Name");
+    if (file_name == "none"){
+      return;
+    }
+    else {
+      file_name = file_name+".cpt";
+      view.set_file_name(file_name);
+      std::cout << "FIle name in save as :" << view.get_file_name()<<std::endl;
+      std::ofstream ofs(view.get_file_name(),std::ofstream::out);
+      emporium.save(ofs);    
+    }
+    
 }
 
  else if (cmd==99) {//Test

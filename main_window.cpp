@@ -219,7 +219,7 @@ void Main_window::create_menu_items(Gtk::MenuBar *menubar, std::string name, std
 							{"_Payment", sigc::mem_fun(*this, &Main_window::on_pay_click)},
 							{"_Save", sigc::mem_fun(*this, &Main_window::on_save_click)},
 							{"_Open", sigc::mem_fun(*this, &Main_window::on_load_click)},
-
+                                                        {"_Save As", sigc::mem_fun(*this, &Main_window::on_save_as_click)},
 							};
   for(std::string sub_name:sub_names){
      create_submenu_items(namemenu ,sub_name,str_to_func[sub_name]);
@@ -476,6 +476,10 @@ void Main_window::on_save_click() {
   std::cout<< " On _save_clicked" << std::endl;
   controller.execute_cmd(13);
 }
+void Main_window::on_save_as_click() {
+  std::cout<< " On _save_as_clicked" << std::endl;
+  controller.execute_cmd(14);
+}
 void Main_window::on_load_click() {
   std::cout<< " On _load_clicked" << std::endl;
     Gtk::FileChooserDialog dialog("Please choose a file",
@@ -494,6 +498,7 @@ void Main_window::on_load_click() {
         controller.get_emporium().load(ifs);
         delete_rows();
         for (int i = 0 ; i< controller.get_emporium().number_of_orders();i++) add_row(i);
+        show_window_for_person();
     }
 
 }
@@ -584,8 +589,8 @@ void Main_window:: add_rows () {
        std::string state = controller.get_emporium().get_orders()[order_index]->get_state_string();
        std::string price = std::to_string(controller.get_emporium().get_orders()[order_index]->get_price());
        row[m_Columns.m_col_id] = id;
-       //row[m_Columns.m_col_server] = server;
-       //row[m_Columns.m_col_customer] = customer;
+       row[m_Columns.m_col_server] = server;
+       row[m_Columns.m_col_customer] = customer;
        row[m_Columns.m_col_state] = state;
        row[m_Columns.m_col_price] = price;
        //child row
