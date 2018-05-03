@@ -235,15 +235,17 @@
       //Customer (std::string na, int id, std::string ph)
       add_customer (new Customer ("D-Customer", 1, "6829999999"));
       add_customer (new Customer ("Elton John", 2, "817-555-1313"));
+     /*
       //Create serving
       //Serving(Container con,std::vector<Scoop> scos,std::vector<Topping> tops) ;
       std::vector<Scoop> scoops = {Scoop ("Strawberry","Chunks of strawberry wrapped in vanilla ice cream", 0.2,.5),Scoop ("Cookies", "Sweet",.5,1)};
       std::vector<Topping> tops = {Topping("Whipped Cream","General",1,1,1), Topping("Chocolate Sauce", "Sweet",1,1,1) };
-      Serving serving0 ( Container ("Cup","General",1,1,1), scoops, tops );
+      Serving serving0 ( Container ("Cup","General",1,1,2), scoops, tops );
        
       //add order 
       Server server ("Duy",1,100);
       Order* order_ptr = new Order (1,server);
       order_ptr->add_serving(serving0);
       add_order(order_ptr);      
+*/
     }

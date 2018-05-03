@@ -75,6 +75,122 @@ void View::list_toppings(){
 ///////////////////
 ///////////GUI//////
 //////////////////////
+void View::show_create_person_dialog(std::string role) {
+
+    const int WIDTH = 15;
+
+    Gtk::Dialog dialog{"Create " + role};
+
+    // Name 
+    Gtk::HBox b_name;
+
+    Gtk::Label l_name{"Name:"};
+    l_name.set_width_chars(WIDTH);
+    b_name.pack_start(l_name, Gtk::PACK_SHRINK);
+
+    Gtk::Entry e_name;
+    e_name.set_max_length(WIDTH*4);
+    b_name.pack_start(e_name, Gtk::PACK_SHRINK);
+    dialog.get_vbox()->pack_start(b_name, Gtk::PACK_SHRINK);
+
+    // ID
+    Gtk::HBox b_id;
+
+    Gtk::Label l_id{"ID:"};
+    l_id.set_width_chars(WIDTH);
+    b_id.pack_start(l_id, Gtk::PACK_SHRINK);
+
+    Gtk::Entry e_id;
+    e_id.set_max_length(WIDTH*4);
+    b_id.pack_start(e_id, Gtk::PACK_SHRINK);
+    dialog.get_vbox()->pack_start(b_id, Gtk::PACK_SHRINK);
+
+    // Phone
+    Gtk::HBox b_phone;
+
+    Gtk::Label l_phone{"Phone:"};
+    l_phone.set_width_chars(WIDTH);
+    b_phone.pack_start(l_phone, Gtk::PACK_SHRINK);
+
+    Gtk::Entry e_phone;
+    e_phone.set_max_length(WIDTH*4);
+    b_phone.pack_start(e_phone, Gtk::PACK_SHRINK);
+    dialog.get_vbox()->pack_start(b_phone, Gtk::PACK_SHRINK);
+
+    // Salary (Server and Manager only)
+    Gtk::HBox b_salary;
+
+    Gtk::Label l_salary{"Hourly Wage:"};
+    l_salary.set_width_chars(WIDTH);
+    b_salary.pack_start(l_salary, Gtk::PACK_SHRINK);
+
+    Gtk::Entry e_salary;
+    e_salary.set_max_length(WIDTH*4);
+    b_salary.pack_start(e_salary, Gtk::PACK_SHRINK);
+    if (role == "Server" || role == "Manager") {
+        dialog.get_vbox()->pack_start(b_salary, Gtk::PACK_SHRINK);
+    }
+
+    // Show dialog
+    dialog.add_button("Cancel", 0);
+    dialog.add_button("OK", 1);
+    dialog.show_all();
+
+    double d_salary;
+    int i_id;
+    bool valid_data = false;
+
+    while(!valid_data) {
+        if (dialog.run() != 1) {
+            dialog.close();
+            return;
+        }
+
+        // Data validation
+        valid_data = true;
+
+        if (e_name.get_text().length() == 0) {
+            e_name.set_text("*** name is required ***");
+            valid_data = false;
+        }
+
+        try {
+          i_id = std::stoi (e_id.get_text());
+        } catch (std::exception e){
+          e_id.set_text ("*** invalid id ***");
+          valid_data = false;
+        }
+
+        if (e_phone.get_text().length() == 0) {
+            e_phone.set_text("*** phone is required ***");
+            valid_data = false;
+        }
+
+        if (role == "Server" || role == "Manager") {
+            try {
+                d_salary = std::stod(e_salary.get_text());
+            } catch(std::exception e) {
+                e_salary.set_text("*** invalid salary ***");
+                valid_data = false;
+            }
+        }
+
+    }
+        
+    // Instance person
+    if (role == "Server") {
+        Server *s = new Server {e_name.get_text(), i_id, d_salary};
+        emporium.add_server(s);
+    } else if (role == "Customer") {
+        Customer *c = new Customer {e_name.get_text(), i_id, e_phone.get_text()};
+        emporium.add_customer(c);
+    }else if (role == "Manager") {
+        Manager *m = new Manager {e_name.get_text(), i_id, d_salary};
+        emporium.add_manager(m);
+    }
+    
+    dialog.close();
+}
 void View::show_create_item_dialog(){
     int type;
 
@@ -649,7 +765,7 @@ void View::create_chosen_type_dialog(std::string type_name){
           valid_data=false;  
         }
       }
-      //R E G U L A R  E X P R E S S
+      //REGEX  R E G U L A R  E X P R E S S
       std::string name_str =e_name.get_text();
       if (std::regex_match (name_str,word)){
         name = e_name.get_text();

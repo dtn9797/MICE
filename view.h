@@ -28,6 +28,7 @@ class View {
    void list_toppings();
    //GUI
    void show_create_item_dialog();
+   void show_create_person_dialog(std::string role);
    void show_create_serving_dialog(Order* order_ptr);
    int show_items();
    int show_unfilled_orders();

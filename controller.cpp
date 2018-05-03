@@ -196,6 +196,16 @@ void Controller::execute_cmd (int cmd){
     }
     
 }
+ else if (cmd==15){//Create new Customer
+   view.show_create_person_dialog("Customer");
+}
+ else if (cmd==16){//Create new Server
+   view.show_create_person_dialog("Server");
+}
+ else if (cmd==17){//Create new Manager
+   view.show_create_person_dialog("Manager");
+}
+
 
  else if (cmd==99) {//Test
     emporium.auto_add();

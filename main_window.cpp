@@ -29,7 +29,7 @@ Main_window::Main_window (Controller& con): controller{con} {
   // Append Quit to the File menu
  
   //SUBMENUS FOR CREATE
-  sub_names= {"_Order","_Customer","_Item","_Server"};
+  sub_names= {"_Order","_Customer","_Item","_Server","_Manager"};
   //    CREATE
   create_menu_items(menubar,"_Create", sub_names);
   //SUBMENUS FOR PROCESS
@@ -220,6 +220,10 @@ void Main_window::create_menu_items(Gtk::MenuBar *menubar, std::string name, std
 							{"_Save", sigc::mem_fun(*this, &Main_window::on_save_click)},
 							{"_Open", sigc::mem_fun(*this, &Main_window::on_load_click)},
                                                         {"_Save As", sigc::mem_fun(*this, &Main_window::on_save_as_click)},
+                                                        {"_Customer", sigc::mem_fun(*this, &Main_window::on_create_customer_click)},
+                                                        {"_Server", sigc::mem_fun(*this, &Main_window::on_create_server_click)},
+                                                        {"_Manager", sigc::mem_fun(*this, &Main_window::on_create_manager_click)},
+
 							};
   for(std::string sub_name:sub_names){
      create_submenu_items(namemenu ,sub_name,str_to_func[sub_name]);
@@ -244,6 +248,7 @@ void Main_window::create_submenu_items(Gtk::Menu *namemenu,std::string name,sigc
      else if (name =="_Payment"){menuitem_pay_for_order = menuitem_name;}
      else if (name =="_Cancel Order"){menuitem_cancel_order = menuitem_name;}
      else if (name =="_Restock"){menuitem_restock = menuitem_name;}
+     else if (name =="_Manager"){menuitem_manager = menuitem_name;}
   
 }
 
@@ -308,10 +313,11 @@ void Main_window::show_window_for_owner(Person* person) {
     menuitem_customer->set_sensitive(true);
     menuitem_item->set_sensitive(true);
     menuitem_server->set_sensitive(true);
-    menuitem_fill_order->set_sensitive(true);
+    menuitem_fill_order->set_sensitive(false);
     menuitem_pay_for_order->set_sensitive(true);
     menuitem_cancel_order->set_sensitive(true);
     menuitem_restock->set_sensitive(false);
+    menuitem_manager->set_sensitive(true);
 
     server_button->set_active(false);
     customer_button->set_active(false);
@@ -340,6 +346,7 @@ void Main_window::show_window_for_manager(Person* person) {
     menuitem_pay_for_order->set_sensitive(true);
     menuitem_cancel_order->set_sensitive(true);
     menuitem_restock->set_sensitive(false);
+    menuitem_manager->set_sensitive(false);
 
     order_button->set_sensitive(menuitem_order->get_sensitive());
     fill_button->set_sensitive(menuitem_fill_order->get_sensitive());
@@ -369,6 +376,7 @@ void Main_window::show_window_for_server(Person* person) {
     menuitem_pay_for_order->set_sensitive(true);
     menuitem_cancel_order->set_sensitive(true);
     menuitem_restock->set_sensitive(true);
+    menuitem_manager->set_sensitive(false);
 
     order_button->set_sensitive(menuitem_order->get_sensitive());
     fill_button->set_sensitive(menuitem_fill_order->get_sensitive());
@@ -398,6 +406,7 @@ void Main_window::show_window_for_customer(Person* person) {
     menuitem_pay_for_order->set_sensitive(false);
     menuitem_cancel_order->set_sensitive(true);
     menuitem_restock->set_sensitive(false);
+    menuitem_manager->set_sensitive(false);
 
     order_button->set_sensitive(menuitem_order->get_sensitive());
     fill_button->set_sensitive(menuitem_fill_order->get_sensitive());
@@ -497,10 +506,18 @@ void Main_window::on_load_click() {
         std::ifstream ifs{dialog.get_filename(), std::ifstream::in};
         controller.get_emporium().load(ifs);
         delete_rows();
-        for (int i = 0 ; i< controller.get_emporium().number_of_orders();i++) add_row(i);
         show_window_for_person();
+        add_rows();
     }
-
+}
+void Main_window::on_create_customer_click(){
+    controller.execute_cmd(15);
+}
+void Main_window::on_create_server_click(){
+     controller.execute_cmd(16);
+}
+void Main_window::on_create_manager_click(){
+     controller.execute_cmd(17);
 }
 
 ///////////////////////////////
@@ -551,7 +568,7 @@ void Main_window:: add_row (int order_index) {
   std::string price = std::to_string(controller.get_emporium().get_orders()[order_index]->get_price());
   std::cout << "Price:" << price <<std::endl;
 
-  row[m_Columns.m_col_id] = id;
+  row[m_Columns.m_col_id] = id+1;
   row[m_Columns.m_col_server] = server;
   row[m_Columns.m_col_customer] = customer;
   row[m_Columns.m_col_state] = state;
@@ -566,7 +583,7 @@ void Main_window:: add_row (int order_index) {
 void Main_window:: add_rows () {
   Person* person_ptr = controller.get_person_ptr();
   for (int i = 0 ; i< controller.get_emporium().number_of_orders();i++){
-     int id = i;
+     int id = i+1;
      int order_index = i;
      std::string server = controller.get_emporium().get_orders()[order_index]->get_server().get_name();
      std::string customer = controller.get_emporium().get_orders()[order_index]->get_customer().get_name();

@@ -53,6 +53,7 @@ class Main_window: public Gtk::Window {
         Gtk::MenuItem *menuitem_order;
         Gtk::MenuItem *menuitem_customer;
         Gtk::MenuItem *menuitem_item;
+        Gtk::MenuItem *menuitem_manager;
         Gtk::MenuItem *menuitem_server;
         Gtk::MenuItem *menuitem_fill_order;
         Gtk::MenuItem *menuitem_pay_for_order;
@@ -73,8 +74,9 @@ class Main_window: public Gtk::Window {
     void on_save_click();
     void on_save_as_click();
     void on_load_click();
-    
-
+    void on_create_customer_click();
+    void on_create_server_click();
+    void on_create_manager_click();
     void on_switch_person_click();
 
     void on_test_click();

@@ -1,0 +1,425 @@
+#
+EMPORIUM
+#
+Scoop
+Chocolate
+General
+0.5 1 #
+Scoop
+Vanilla
+Sweet
+0.5 1 #
+Scoop
+Strawberry
+Chunks of strawberry wrapped in vanilla ice cream
+0.2 0.5 #
+Topping
+Whipped Cream
+General
+0.1 0.2 0 #
+Topping
+Chocolate Sauce
+Sweet
+0.1 0.25 0 #
+Topping
+Cherry
+Classic marichino cherry
+0.1 0.2 2 #
+Container
+Cup
+General
+0.35 0.75 3 #
+Container
+Bowl
+Sweet
+1 1 5 #
+Container
+Cone
+Crispy airy delight
+0.25 0.5 1 #
+Owner
+Default Owner
+1 1 #
+Server
+D-Server
+1 1 11 6 #
+Server
+Henry Jackson
+2 1 15 3 #
+Customer
+D-Customer
+6829999999
+1
+#
+Customer
+Elton John
+817-555-1313
+2
+#
+Customer
+Nancy
+1235
+29
+#
+Customer
+New Customer 
+123214
+99
+#
+ORDER
+1 2 3.65 6.4 #
+Customer
+
+00
+0
+#
+Server
+D-Server
+1 1 11 1 #
+SERVING
+2.8 4.7 #
+Container
+Bowl
+Sweet
+1 1 5 #
+Scoop
+Vanilla
+Sweet
+0.5 1 #
+Scoop
+Strawberry
+Chunks of strawberry wrapped in vanilla ice cream
+0.2 0.5 #
+Scoop
+Vanilla
+Sweet
+0.5 1 #
+Scoop
+Vanilla
+Sweet
+0.5 1 #
+Topping
+Cherry
+Classic marichino cherry
+0.1 0.2 2 #
+END SERVING
+#
+SERVING
+0.85 1.7 #
+Container
+Cone
+Crispy airy delight
+0.25 0.5 1 #
+Scoop
+Vanilla
+Sweet
+0.5 1 #
+Topping
+Cherry
+Classic marichino cherry
+0.1 0.2 2 #
+END SERVING
+#
+END ORDER
+#
+ORDER
+2 2 3.65 5.5 #
+Customer
+D-Customer
+6829999999
+1
+#
+Server
+D-Server
+1 1 11 3 #
+SERVING
+1.5 2 #
+Container
+Bowl
+Sweet
+1 1 5 #
+Scoop
+Vanilla
+Sweet
+0.5 1 #
+END SERVING
+#
+SERVING
+0.45 1 #
+Container
+Cone
+Crispy airy delight
+0.25 0.5 1 #
+Scoop
+Strawberry
+Chunks of strawberry wrapped in vanilla ice cream
+0.2 0.5 #
+END SERVING
+#
+SERVING
+1.7 2.5 #
+Container
+Bowl
+Sweet
+1 1 5 #
+Scoop
+Vanilla
+Sweet
+0.5 1 #
+Scoop
+Strawberry
+Chunks of strawberry wrapped in vanilla ice cream
+0.2 0.5 #
+END SERVING
+#
+END ORDER
+#
+ORDER
+3 3 1.2 1.5 #
+Customer
+
+00
+0
+#
+Server
+D-Server
+1 1 11 1 #
+SERVING
+1.2 1.5 #
+Container
+Bowl
+Sweet
+1 1 5 #
+Scoop
+Strawberry
+Chunks of strawberry wrapped in vanilla ice cream
+0.2 0.5 #
+END SERVING
+#
+END ORDER
+#
+ORDER
+0 2 1.5 2 #
+Customer
+
+00
+0
+#
+Server
+D-Server
+1 1 11 2 #
+SERVING
+1.5 2 #
+Container
+Bowl
+Sweet
+1 1 5 #
+Scoop
+Chocolate
+General
+0.5 1 #
+END SERVING
+#
+END ORDER
+#
+ORDER
+1 3 0.85 1.75 #
+Customer
+
+00
+0
+#
+Server
+D-Server
+1 1 11 2 #
+SERVING
+0.85 1.75 #
+Container
+Cup
+General
+0.35 0.75 3 #
+Scoop
+Vanilla
+Sweet
+0.5 1 #
+END SERVING
+#
+END ORDER
+#
+ORDER
+2 1 1.4 2 #
+Customer
+Elton John
+817-555-1313
+2
+#
+Server
+Henry Jackson
+2 1 15 1 #
+SERVING
+1.4 2 #
+Container
+Bowl
+Sweet
+1 1 5 #
+Scoop
+Strawberry
+Chunks of strawberry wrapped in vanilla ice cream
+0.2 0.5 #
+Scoop
+Strawberry
+Chunks of strawberry wrapped in vanilla ice cream
+0.2 0.5 #
+END SERVING
+#
+END ORDER
+#
+ORDER
+3 2 0.45 1 #
+Customer
+Nancy
+1235
+29
+#
+Server
+D-Server
+1 1 11 4 #
+SERVING
+0.45 1 #
+Container
+Cone
+Crispy airy delight
+0.25 0.5 1 #
+Scoop
+Strawberry
+Chunks of strawberry wrapped in vanilla ice cream
+0.2 0.5 #
+END SERVING
+#
+END ORDER
+#
+ORDER
+4 3 0.75 1.5 #
+Customer
+Nancy
+1235
+29
+#
+Server
+
+0 1 0 0 #
+SERVING
+0.75 1.5 #
+Container
+Cone
+Crispy airy delight
+0.25 0.5 1 #
+Scoop
+Vanilla
+Sweet
+0.5 1 #
+END SERVING
+#
+END ORDER
+#
+ORDER
+5 2 0.75 1.5 #
+Customer
+
+00
+0
+#
+Server
+Henry Jackson
+2 1 15 2 #
+SERVING
+0.75 1.5 #
+Container
+Cone
+Crispy airy delight
+0.25 0.5 1 #
+Scoop
+Vanilla
+Sweet
+0.5 1 #
+END SERVING
+#
+END ORDER
+#
+ORDER
+6 2 1.35 2.75 #
+Customer
+Nancy
+1235
+29
+#
+Server
+Henry Jackson
+2 1 15 3 #
+SERVING
+1.35 2.75 #
+Container
+Cup
+General
+0.35 0.75 3 #
+Scoop
+Vanilla
+Sweet
+0.5 1 #
+Scoop
+Vanilla
+Sweet
+0.5 1 #
+END SERVING
+#
+END ORDER
+#
+ORDER
+7 2 0.85 1.75 #
+Customer
+Nancy
+1235
+29
+#
+Server
+D-Server
+1 1 11 5 #
+SERVING
+0.85 1.75 #
+Container
+Cup
+General
+0.35 0.75 3 #
+Scoop
+Vanilla
+Sweet
+0.5 1 #
+END SERVING
+#
+END ORDER
+#
+ORDER
+8 2 0.75 1.5 #
+Customer
+Nancy
+1235
+29
+#
+Server
+D-Server
+1 1 11 6 #
+SERVING
+0.75 1.5 #
+Container
+Cone
+Crispy airy delight
+0.25 0.5 1 #
+Scoop
+Vanilla
+Sweet
+0.5 1 #
+END SERVING
+#
+END ORDER
+#
+END EMPORIUM
